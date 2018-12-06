@@ -6,9 +6,11 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 
 // Views
 const Dashboard = () => import('@/views/Dashboard')
+const Details = () => import('@/views/Details')
 
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
+const Diagnose = () => import('@/views/expert/Diagnose')
 
 const Charts = () => import('@/views/Charts')
 const Widgets = () => import('@/views/Widgets')
@@ -78,22 +80,28 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: 'theme',
-          redirect: '/theme/colors',
-          name: 'Theme',
+          path: '/:id/details',
+          name : 'Details',
+          component: Details
+        },
+        
+        {
+          path: 'expert-system',
+          redirect: '/expert-system/diagnose',
+          name: 'Expert System',
           component: {
             render (c) { return c('router-view') }
           },
           children: [
+            // {
+            //   path: 'colors',
+            //   name: 'Colors',
+            //   component: Colors
+            // },
             {
-              path: 'colors',
-              name: 'Colors',
-              component: Colors
-            },
-            {
-              path: 'typography',
-              name: 'Typography',
-              component: Typography
+              path: 'diagnose',
+              name: 'Diagnose',
+              component: Diagnose
             }
           ]
         },

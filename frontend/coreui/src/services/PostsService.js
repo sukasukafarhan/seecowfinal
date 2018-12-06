@@ -13,10 +13,17 @@ export default {
   loginPost(params){
     return axios.post(Api.userUrl()+'signin',params)
   },
-  getSapi(){
+  getSapi(token){
     return axios.get(Api.sapiUrl()+'showsapi',{
       headers:{
-        Authorization:'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyIkX18iOnsic3RyaWN0TW9kZSI6dHJ1ZSwic2VsZWN0ZWQiOnt9LCJnZXR0ZXJzIjp7fSwid2FzUG9wdWxhdGVkIjpmYWxzZSwiYWN0aXZlUGF0aHMiOnsicGF0aHMiOnsicm9sZSI6ImluaXQiLCJwYXNzd29yZCI6ImluaXQiLCJ1c2VybmFtZSI6ImluaXQiLCJfX3YiOiJpbml0IiwiX2lkIjoiaW5pdCJ9LCJzdGF0ZXMiOnsiaWdub3JlIjp7fSwiZGVmYXVsdCI6e30sImluaXQiOnsiX192Ijp0cnVlLCJyb2xlIjp0cnVlLCJwYXNzd29yZCI6dHJ1ZSwidXNlcm5hbWUiOnRydWUsIl9pZCI6dHJ1ZX0sIm1vZGlmeSI6e30sInJlcXVpcmUiOnt9fSwic3RhdGVOYW1lcyI6WyJyZXF1aXJlIiwibW9kaWZ5IiwiaW5pdCIsImRlZmF1bHQiLCJpZ25vcmUiXX0sImVtaXR0ZXIiOnsiX2V2ZW50cyI6e30sIl9ldmVudHNDb3VudCI6MCwiX21heExpc3RlbmVycyI6MH19LCJpc05ldyI6ZmFsc2UsIl9kb2MiOnsiX192IjowLCJyb2xlIjoyLCJwYXNzd29yZCI6IiQyYSQxMCQuTEpNVmJMVk5PQ3FOWndWRDIzUnEuMHpaNEJHekdPck9ybjEyZ0xoZDgzeFNIblhVMzB4QyIsInVzZXJuYW1lIjoiZmFydXFmYWRoaWwiLCJfaWQiOiI1YmI3MTMyZjBiMzM1MDAwMTBhOWUxOTIifSwiaWF0IjoxNTQwODAzNjQxfQ.PA84ycGClF5n3kB8-0NHHuAEdbCYtSBtJLf3zhM9es0'
+        Authorization:token
+      }
+    })
+  },
+  getSapiDetail(token,id){
+    return axios.get(Api.sapiUrl()+id+'/sapidetail',{
+      headers:{
+        Authorization:token
       }
     })
   }

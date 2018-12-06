@@ -141,11 +141,11 @@
               <strong>{{data.value}}</strong>
             </div>
             <div slot="key-kondisi" slot-scope="data">
-              <b-badge :variant="getKondisi(data.item.perangkat.data[data.item.perangkat.data.length-1].suhu,data.item.perangkat.data[data.item.perangkat.data.length-1].jantung)">{{CurrentConditions}}</b-badge>
+              <b-badge :variant="getKondisi(data.item.perangkat.data[data.item.perangkat.data.length-1].kondisi)">{{CurrentConditions}}</b-badge>
             </div>
             <div slot="key-tanggal" slot-scope="data">
+              <b-badge :variant="dateFormatter(data.item.perangkat.data[data.item.perangkat.data.length-1].tanggal)">{{dateOnFormat}}</b-badge>
               
-              <strong>{{data.item.perangkat.data[data.item.perangkat.data.length-1].tanggal}}</strong>
             </div>
             <div slot="key-suhu" slot-scope="data">
               
@@ -159,6 +159,9 @@
             </div>
             <div slot="key-status" slot-scope="data">
               <b-badge :variant="getBadge(data.item.perangkat.status)">{{statusDeviceInStr}}</b-badge>
+            </div>
+            <div slot="key-action" slot-scope="data">
+              <b-button variant="primary" size="sm" @click="toDetail(data.item._id)">Show Details</b-button>
             </div>
           </b-table>
           </b-row>
@@ -313,8 +316,8 @@
                     <b-progress height={} class="progress-xs" :value="43" variant="warning"></b-progress>
                   </div>
                 </div>
-                <div class="progress-group mb-5">
                   <div class="progress-group-header">
+                <div class="progress-group mb-5">
                     <i class="icon-user-female progress-group-icon"></i>
                     <span class="title">Female</span>
                     <span class="ml-auto font-weight-bold">37%</span>
@@ -402,7 +405,6 @@ export default {
   },
   data() {
     return {
-      title: [],
       DeviceActive:0,
       DeviceNonActive:0,
       TemperatureAverage:0,
@@ -411,6 +413,7 @@ export default {
       CurrentConditions:"",
       suhuArrange:[],
       statusDeviceInStr:"",
+      dateOnFormat:"",
       sapiList:[],
       selected: 'Month',
       tableItems: [],
@@ -435,6 +438,10 @@ export default {
         },
         { key: 'key-status', 
           label: 'Device Status'
+        },
+        {
+          key: 'key-action',
+          label: 'Actions'
         }
       ]
     }
@@ -443,11 +450,20 @@ export default {
       // setInterval(function () {
       //   this.getds();
       // }.bind(this), 60000);
-      setInterval(function () { 
-        this.getds();
-      }.bind(this), 25000); 
+      // setInterval(function () { 
+      //   this.getds();
+      // }.bind(this), 25000);
+      this.checkSession(); 
   },
   methods: {
+    checkSession(){
+      // window.localStorage.removeItem("token")
+      if(window.localStorage.getItem("token") ==null){
+        this.$router.push({ name: 'Login' })  
+      }else{
+        this.firstLoad();
+      }
+    },
     variant (value) {
       let $variant
       if (value <= 25) {
@@ -464,23 +480,38 @@ export default {
     flag (value) {
       return 'flag-icon flag-icon-' + value
     },
-    async getPosts() {
-      const response = await PostsService.fetchPosts();
-      this.title.push(response.data);
-    },
-    countArrange: function(datas){
-      var rata=0;
-      // for (var i=0;i<datas.length;i++){
-      //   rata+=datas.perangkat.data[datas.perangkat.data.length-1].suhu
-      // }
-      // rata = rata/datas.length
-      console.log(datas)
-    },
     async fetchDataSapi(){
-      const response = await PostsService.getSapi();
+      const response = await PostsService.getSapi(window.localStorage.getItem("token"));
       return response.data;
     },
+    async firstLoad(){
+      // console.log(window.localStorage.getItem("token"));
+      const response = await this.fetchDataSapi();
+      let sapiData = response.sapi;
+      var active =0,inActive =0,avgSuhu=0,avgHeart=0;
+      for(var i=0;i<sapiData.length;i++){
+        avgSuhu += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].suhu);
+        avgHeart += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].jantung);
+        if(sapiData[i].perangkat.status == 1){
+          active++;
+        }else{
+          inActive++;
+        }
+      }
+      avgSuhu = avgSuhu/sapiData.length;
+      avgHeart = avgHeart/sapiData.length;
+      this.tableItems = sapiData;
+      this.DeviceActive = active;
+      this.DeviceNonActive = inActive;
+      this.TemperatureAverage = avgSuhu.toFixed(2);
+      this.HeartRateAverage = avgHeart.toFixed(2);
+      setInterval(function () { 
+        this.getds();
+      }.bind(this), 25000);
+      // console.log(this.tableItems);
+    },
     async getds(){
+      // console.log(window.localStorage.getItem("token"));
       const response = await this.fetchDataSapi();
       let sapiData = response.sapi;
       var active =0,inActive =0,avgSuhu=0,avgHeart=0;
@@ -510,16 +541,33 @@ export default {
       }
       return status == 0 ? 'danger' : 'success'
     },
-    getKondisi(tmp,hr){
+    getKondisi(tmp){
       
       var kondisiPointer = 0;
-      if(Number(tmp) < 20 || Number(tmp) > 40 || Number(hr) < 53 || Number(hr) > 80){
-        this.CurrentConditions="Tidak Normal";
+      if(Number(tmp) == 0 ){
+        this.CurrentConditions="Upnormal";
       }else{
         kondisiPointer = 1;
         this.CurrentConditions="Normal";
       }
       return kondisiPointer == 0 ? 'danger' : 'success'
+    },
+    dateFormatter(date){
+      var created_date = new Date(date);
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var year = created_date.getFullYear();
+      var month = months[created_date.getMonth()];
+      var date = created_date.getDate();
+      var hour = created_date.getHours();
+      var min = created_date.getMinutes();
+      var sec = created_date.getSeconds();
+      var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;    // final date with time, you can use this according your requirement
+      this.dateOnFormat = time;
+      return 'secondary';
+    },
+    toDetail (id){
+       this.$router.push({ name: 'Details', params: {id : id} })
+      console.log(id);
     }
   } 
 }

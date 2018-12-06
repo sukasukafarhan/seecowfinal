@@ -10,7 +10,7 @@
               </ul>
               <hr>
               <p class="mb-0">
-               Silahkan periksa kembali isian anda.
+               Please check again your form field.
               </p>
             </b-alert>
             <b-alert show variant="success" v-if="successAlert.length > 0">
@@ -28,7 +28,7 @@
             <b-card-body class="p-4">
               <b-form>
                 <h1>Register</h1>
-                <p class="text-muted">Buat akun anda</p>
+                <p class="text-muted">Create your account</p>
                 <b-input-group class="mb-3">
                   <b-input-group-prepend>
                     <b-input-group-text><i class="icon-user"></i></b-input-group-text>
@@ -55,24 +55,24 @@
                   <b-input-group-prepend>
                     <b-input-group-text><i class="fa fa-address-card"></i></b-input-group-text>
                   </b-input-group-prepend>
-                  <b-form-input type="text" class="form-control" placeholder="Nama" autocomplete="Name" v-model="nama" />
+                  <b-form-input type="text" class="form-control" placeholder="Name" autocomplete="Name" v-model="nama" />
                 </b-input-group>
 
                 <b-input-group class="mb-4">
                   <b-input-group-prepend>
                     <b-input-group-text><i class="fa fa-map-pin"></i></b-input-group-text>
                   </b-input-group-prepend>
-                  <b-form-input type="text" class="form-control" placeholder="Alamat" autocomplete="Address" v-model="alamat" />
+                  <b-form-input type="text" class="form-control" placeholder="Address" autocomplete="Address" v-model="alamat" />
                 </b-input-group>
                 
                 <b-input-group class="mb-4">
                   <b-input-group-prepend>
                     <b-input-group-text><i class="fa fa-phone"></i></b-input-group-text>
                   </b-input-group-prepend>
-                  <b-form-input type="number" class="form-control" placeholder="Telp" autocomplete="Phone" v-model="telp" />
+                  <b-form-input type="number" class="form-control" placeholder="Phone" autocomplete="Phone" v-model="telp" />
                 </b-input-group>
 
-                <b-button variant="warning" block @click="checkForm">Buat Akun</b-button>
+                <b-button variant="warning" block @click="checkForm">Create</b-button>
               </b-form>
             </b-card-body>
             
@@ -101,19 +101,19 @@ export default {
       }
       this.errors = []
       if(!this.username){
-        this.errors.push('Username tidak boleh kosong');
+        this.errors.push('Username cant blank !');
       }
       if(!this.password){
-        this.errors.push('Password tidak boleh kosong');
+        this.errors.push('Password cant blank !');
       }
       if(!this.nama){
-        this.errors.push('Nama tidak boleh kosong');
+        this.errors.push('Name cant blank !');
       }
       if(!this.alamat){
-        this.errors.push('Alamat tidak boleh kosong');
+        this.errors.push('Address cant blank !');
       }
       if(!this.telp){
-        this.errors.push('No Telp tidak boleh kosong');
+        this.errors.push('Phone cant blank !');
       }
       e.preventDefault();
     },
@@ -130,7 +130,7 @@ export default {
                           telp: this.telp
                         });
       if(response.data.success){
-        this.successAlert.push('Anda berhasil membuat akun baru, silahkan klik tombol dibawah ini untuk login ');
+        this.successAlert.push('Congratulation,You have successfully created a new account, please click the button to login');
           
       }
       
