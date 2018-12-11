@@ -18,13 +18,15 @@ const createRefreshResponse = function (refresh) {
 const emitEvent = function (eventName, body) {
     publicSocket.emit(eventName, body);
 };
-// const notifyCowsData = function(token,data){
-//     emitEvent('/topic/cows/'+token,data)
-// }
-const coba = function(data){
-    emitEvent('/topic/coba',data)
+const notifyCowsData = function(id,data){
+    emitEvent('/topic/cows/'+id,data)
 }
+const notifyDetailCows = function(cowsId,data){
+    emitEvent('/topic/cows/detail/'+cowsId,data)
+}
+
 module.exports = {
     configure,
-    coba
+    notifyCowsData,
+    notifyDetailCows
 }

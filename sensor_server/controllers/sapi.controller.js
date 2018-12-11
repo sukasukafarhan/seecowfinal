@@ -182,14 +182,38 @@ exports.data_update = function (req, res) {
         success: false,
         msg: 'updated failed'
       });
+      Sapi.findById(req.params.id, function (err, sapi) {
+        /**
+         * create topic each cows, and emmit when update data..
+         */
+        socketApp.notifyDetailCows(req.params.id,sapi)
+        /**
+         * call function..
+         */
+        this.sapiById(sapi.idPeternak)
+      });
       res.json({
         success: true,
         msg: 'updated successfully!'
       });
+     
     }
   );
 
 };
+/**
+ * Get cows by farmers, and emmit to socket.
+ */
+sapiById = function(idPeternak){
+  Sapi.find({
+    idPeternak: idPeternak
+  }, function (err, sapi_2) {
+    if (err) return next(err);
+    socketApp.notifyCowsData(idPeternak,sapi_2)
+  });
+  return true;
+};
+
 exports.sapi_update = function (req, res) {
   Sapi.findByIdAndUpdate(req.params.id, {
     $set: req.body
@@ -219,7 +243,6 @@ exports.sapi_delete = function (req, res) {
 };
 exports.sapi_show_by_farmer = function (req, res) {
   var token = getToken(req.headers);
-  socketApp.coba('ehehehe')
   if (token) {
     jwt.verify(token, config.secret, function (err, decoded) {
       if (err) return res.json({
@@ -241,6 +264,7 @@ exports.sapi_show_by_farmer = function (req, res) {
           idPeternak: peternak._id
         }, function (err, sapi) {
           if (err) return next(err);
+          
           res.json({
             success: true,
             sapi: sapi
