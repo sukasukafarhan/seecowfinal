@@ -7,6 +7,16 @@ var Sapi = require("../models/sapi.model");
 var Peternak = require("../models/peternak.model");
 var Perangkat = require("../models/perangkat.model");
 const axios = require('axios');
+const socketApp = require('../socket/socket-app');
+// const io = require('socket.io')(server);
+
+// io.on('connection', function(socket) {
+//     console.log(socket.id)
+//     setInterval(function(){
+//         io.emit('stream', {'title': "A new title via Socket.IO!"});
+//     }, 1000);
+    
+// });
 //Simple version, without validation or sanitation
 exports.create = function (req, res) {
   var token = getToken(req.headers);
@@ -209,6 +219,7 @@ exports.sapi_delete = function (req, res) {
 };
 exports.sapi_show_by_farmer = function (req, res) {
   var token = getToken(req.headers);
+  socketApp.coba('ehehehe')
   if (token) {
     jwt.verify(token, config.secret, function (err, decoded) {
       if (err) return res.json({
