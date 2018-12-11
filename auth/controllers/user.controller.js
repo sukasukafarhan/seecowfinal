@@ -103,24 +103,57 @@ exports.user_update = function (req, res) {
     });
   });
 };
-exports.me = function (req, res, next) {
-  User.findById(req.userId, {
-    password: 0
-  }, function (err, user) {
-    if (err) return res.json({
-      success: false,
-      msg: 'There was a problem finding the user.'
-    });
-    if (!user) return res.json({
-      success: false,
-      msg: 'No user found'
+// exports.me = function (req, res, next) {
+//   User.findById(req.userId, {
+//     password: 0
+//   }, function (err, user) {
+//     if (err) return res.json({
+//       success: false,
+//       msg: 'There was a problem finding the user.'
+//     });
+//     if (!user) return res.json({
+//       success: false,
+//       msg: 'No user found'
+//     });
+
+//     res.json({
+//       success: true,
+//       user: user
+//     });
+//   });
+// };
+exports.me = function (req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    jwt.verify(token, config.secret, function (err, decoded) {
+      if (err) return res.json({
+        success: false,
+        msg: 'Failed to authenticate token.'
+      });
+      Peternak.findOne({
+        idUser: decoded._doc._id
+      }, function (err, peternak) {
+        if (err) return res.json({
+          success: false,
+          msg: 'There was a problem finding the peternak.'
+        });
+        if (!peternak) return res.json({
+          success: false,
+          msg: 'No peternak found.'
+        });
+        res.json({
+          success: true,
+          peternak: peternak
+        });
+      });
     });
 
-    res.json({
-      success: true,
-      user: user
+  } else {
+    return res.status(401).json({
+      success: false,
+      msg: 'Unauthorized.'
     });
-  });
+  }
 };
 
 exports.logout = function (req, res) {
