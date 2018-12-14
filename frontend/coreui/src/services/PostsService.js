@@ -1,3 +1,8 @@
+/**
+ * created by Faruq
+ * 13 dec 2018
+ * develop for final project :)
+ */
 import axios from 'axios'
 var Api = require("../services/Api")
 export default {
@@ -12,6 +17,20 @@ export default {
   },
   loginPost(params){
     return axios.post(Api.userUrl()+'signin',params)
+  },
+  createCow(token,params){
+    return axios.post(Api.sapiUrl()+'create',params,{
+      headers:{
+        Authorization:token
+      }
+    })
+  },
+  me(token){
+    return axios.get(Api.userUrl()+'me',{
+      headers:{
+        Authorization:token
+      }
+    })
   },
   getSapi(token){
     return axios.get(Api.sapiUrl()+'showsapi',{

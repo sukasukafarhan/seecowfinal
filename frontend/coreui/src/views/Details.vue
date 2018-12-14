@@ -115,6 +115,7 @@ import MainChartExample from './dashboard/MainChartExample'
 import SocialBoxChartExample from './dashboard/SocialBoxChartExample'
 import CalloutChartExample from './dashboard/CalloutChartExample'
 import { Callout } from '@coreui/vue'
+import io from 'socket.io-client'
 import PostsService from "@/services/PostsService";
 
 export default {
@@ -133,6 +134,7 @@ export default {
   data() {
     return {
       nameOfCow:"",
+      socket : io('206.189.36.70:3001'),
       CurrentConditions:"",
       dateOnFormat:"",
       currentTemp:0,
@@ -168,7 +170,7 @@ export default {
       // statusDeviceInStr:"",
       // dateOnFormat:"",
       // sapiList:[],
-      // selected: 'Month',
+      selected: 'Month',
       // tableItems: [],
       // tableFields: [
       //   {
@@ -221,28 +223,23 @@ export default {
       const response = await PostsService.getSapiDetail(window.localStorage.getItem("token"),this.$route.params.id);
       return response.data;
     },
-    goTo(){
-    setInterval(function () { 
-        this.getds();
-      }.bind(this), 25000);
+    soket(){
+      this.socket.on('/topic/cows/detail/'+this.$route.params.id, (sapiData) => {
+        this.nameOfCow = sapiData.namaSapi;
+        this.tableItems = sapiData.perangkat.data;
+        this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu.toFixed(2);
+        this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung.toFixed(2);
+      })
     },
-    async getds(){
-      const response = await this.fetchDataSapi();
-      let sapiData = response.sapi;
-      this.nameOfCow = sapiData.namaSapi;
-      this.tableItems = sapiData.perangkat.data;
-      this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu;
-      this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung;
-      
-    },
+    
     async firstLoad(){
       const response = await this.fetchDataSapi();
       let sapiData = response.sapi;
       this.nameOfCow = sapiData.namaSapi;
       this.tableItems = sapiData.perangkat.data;
-      this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu;
-      this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung;
-      this.goTo();
+      this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu.toFixed(2);
+      this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung.toFixed(2);
+      this.soket();
     },
     getBadge (status) {
       if(status==0){

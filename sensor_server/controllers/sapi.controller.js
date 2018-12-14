@@ -42,6 +42,7 @@ exports.create = function (req, res) {
          * perangkat status
          * 1 -> active
          * 0 -> non-active
+         * 2 -> pending
          * kondisi
          * 1 -> normal
          * 0 -> tidak normal
@@ -49,7 +50,7 @@ exports.create = function (req, res) {
         var today = new Date();
         var initial_suhu = 38;
         var initial_jantung = 60;
-        var initial_status = 0;
+        var initial_status = 2;
         var initial_kondisi = 0;
         let sub_data = {
           tanggal: today,

@@ -1,6 +1,13 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
+      <b-alert show variant="success" v-if="successAlert.length > 0">
+              <h4 class="alert-heading">Congratulation !</h4>
+              <ul>
+                <li v-for="item in successAlert" :key="item">{{ item }}</li>
+              </ul>
+              
+      </b-alert>
       <b-col sm="6" lg="6">
         <b-card  bg-variant="info" text-variant="white">
           <h1 class="card-text">
@@ -95,10 +102,25 @@
     </b-row> -->
     <b-row>
       <b-col md="12">
-        <b-card header="Cow List">
-          <b-row>
+        <b-card header="Cow List" class="card-accent-warning">
+           <div slot="header">
+              <b>Cow List</b>
+              <div class="card-header-actions">
+                <b-button type="button" variant="warning" @click="showModal" class="mr-1">Register Cow</b-button>
+                <!-- <b-link @click="warningModal = true" class="card-header-action btn-setting">
+                   <i class="icon-plus icons font-2xl d-block mt-4"></i>
+                </b-link>
+                <b-link class="card-header-action btn-minimize" v-b-toggle.collapse1>
+                  <i class="icon-arrow-up"></i>
+                </b-link>
+                <b-link href="#" class="card-header-action btn-close" v-on:click="show = !show">
+                  <i class="icon-close"></i>
+                </b-link> -->
+              </div>
+          </div>
+          <b-row>        
              <b-col sm="12" lg="12">
-              <b-row>
+              <b-row v-if="existingData == true">
                 <b-col sm="6">
                   <Callout variant="info">
                     <b-row>
@@ -135,10 +157,18 @@
              </b-col>
           </b-row>
           <b-row>
-            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
+            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light"  v-if="existingData == true">
             <div slot="namaSapi" slot-scope="data">
               <img src="img/cow/cow (2).png" width="50px" alt="CoreUI Logo">
               <strong>{{data.value}}</strong>
+              <b-link class="card-header-action btn-minimize" v-b-toggle.collapse1>
+                  <i v-bind:id="data.item._id" class="icon-eye"></i>
+              </b-link>
+              <b-popover v-bind:target="data.item._id" title="Cow ID">
+                <!-- <strong>{{data.item._id}}</strong> -->
+                <h5><b-badge variant="secondary">{{data.item._id}}</b-badge></h5>
+              </b-popover>
+              <!-- <div class="small text-muted">{{data.item._id}}</div> -->
             </div>
             <div slot="key-kondisi" slot-scope="data">
               <b-badge :variant="getKondisi(data.item.perangkat.data[data.item.perangkat.data.length-1].kondisi)">{{CurrentConditions}}</b-badge>
@@ -163,12 +193,35 @@
             <div slot="key-action" slot-scope="data">
               <b-button variant="primary" size="sm" @click="toDetail(data.item._id)">Show Details</b-button>
             </div>
-          </b-table>
-          </b-row>
-          
+          </b-table> 
+          </b-row> 
+            <b-alert v-if="existingData == false" show variant="warning">
+              You don't have a cow in our system, let's manage your first cow by clicking the register cow button.
+            </b-alert>
         </b-card>
       </b-col>
     </b-row>
+          
+    <b-modal variant="warning" class="modal-warning"  ref="myModalRef" hide-footer title="Register">
+      <div class="d-block text-center">
+        <b-alert show variant="danger" v-if="errors.length > 0">
+              <h4 class="alert-heading">Error !</h4>
+              <ul>
+                <li v-for="item in errors" :key="item">{{ item }}</li>
+              </ul>
+              <hr>
+              <p class="mb-0">
+               Please check again your form field.
+              </p>
+          </b-alert>
+        <b-form-group>
+          <b-form-input type="text" id="name" v-model="cowName" placeholder="Enter your cow ID or name"></b-form-input>
+        </b-form-group>
+      </div>
+      <b-btn class="mt-3" variant="outline-warning" block @click="createCow">Register</b-btn>
+    </b-modal>
+
+  
     <!-- <b-row>
       <b-col md="12">
         <b-card header="Traffic &amp; Sales">
@@ -388,6 +441,7 @@ import MainChartExample from './dashboard/MainChartExample'
 import SocialBoxChartExample from './dashboard/SocialBoxChartExample'
 import CalloutChartExample from './dashboard/CalloutChartExample'
 import { Callout } from '@coreui/vue'
+import io from 'socket.io-client'
 import PostsService from "@/services/PostsService";
 
 export default {
@@ -406,6 +460,9 @@ export default {
   data() {
     return {
       DeviceActive:0,
+      cowName:"",
+      socket : io('206.189.36.70:3001'),
+      warningModal: false,
       DeviceNonActive:0,
       TemperatureAverage:0,
       HeartRateAverage:0,
@@ -414,9 +471,12 @@ export default {
       suhuArrange:[],
       statusDeviceInStr:"",
       dateOnFormat:"",
+      existingData:false,
       sapiList:[],
       selected: 'Month',
       tableItems: [],
+      errors: [],
+      successAlert: [],
       tableFields: [
         {
           key:'namaSapi',
@@ -447,17 +507,49 @@ export default {
     }
   },
   created(){
-      // setInterval(function () {
-      //   this.getds();
-      // }.bind(this), 60000);
-      // setInterval(function () { 
-      //   this.getds();
-      // }.bind(this), 25000);
       this.checkSession(); 
   },
   methods: {
+    showModal () {
+      /**
+       * this function for show create cow form on modal
+       */
+      this.errors = []
+      this.$refs.myModalRef.show()
+    },
+    async postCreateCowData() {
+      /**
+       * post create cow data
+       */
+      this.successAlert = []
+      const response = await PostsService.createCow(window.localStorage.getItem("token"),{
+                          namaSapi: this.cowName
+                        });
+      this.$refs.myModalRef.hide()
+      if(response.data.respon.success){
+        this.successAlert.push('Congratulation,You have successfully register a new cow, cow ID : '+response.data.respon.perangkat.idPerangkatOnServer+' please wait, our team will prepare your device');
+      }
+      // setTimeout(location.reload(), 5000)
+      
+    },
+    createCow() {
+      /**
+       * this function for action when register cow button on clik
+       */
+      if(this.cowName){
+        
+        this.postCreateCowData()
+      }
+      this.errors = []
+      if(!this.cowName){
+        this.errors.push('cow ID cant blank !');
+      }
+     
+    },
     checkSession(){
-      // window.localStorage.removeItem("token")
+      /**
+       * check session and do action
+       */
       if(window.localStorage.getItem("token") ==null){
         this.$router.push({ name: 'Login' })  
       }else{
@@ -484,62 +576,73 @@ export default {
       const response = await PostsService.getSapi(window.localStorage.getItem("token"));
       return response.data;
     },
+    soket(){
+      this.socket.on('/topic/cows/'+window.localStorage.getItem("peternak_id"), (sapiData) => {
+            this.tableItems = sapiData;
+            var active =0,inActive =0,avgSuhu=0,avgHeart=0;
+            for(var i=0;i<sapiData.length;i++){
+            avgSuhu += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].suhu);
+            avgHeart += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].jantung);
+            if(sapiData[i].perangkat.status == 1){
+              active++;
+            }else{
+              inActive++;
+            }
+          }
+          avgSuhu = avgSuhu/sapiData.length;
+          avgHeart = avgHeart/sapiData.length;
+          this.tableItems = sapiData;
+          this.DeviceActive = active;
+          this.DeviceNonActive = inActive;
+          this.TemperatureAverage = avgSuhu.toFixed(2);
+          this.HeartRateAverage = avgHeart.toFixed(2);
+            
+      });
+    },
     async firstLoad(){
       // console.log(window.localStorage.getItem("token"));
       const response = await this.fetchDataSapi();
       let sapiData = response.sapi;
-      var active =0,inActive =0,avgSuhu=0,avgHeart=0;
-      for(var i=0;i<sapiData.length;i++){
-        avgSuhu += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].suhu);
-        avgHeart += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].jantung);
-        if(sapiData[i].perangkat.status == 1){
-          active++;
-        }else{
-          inActive++;
-        }
+      if(sapiData.length > 0){
+          this.existingData = true
+          var active =0,inActive =0,avgSuhu=0,avgHeart=0;
+          for(var i=0;i<sapiData.length;i++){
+            avgSuhu += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].suhu);
+            avgHeart += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].jantung);
+            if(sapiData[i].perangkat.status == 1){
+              active++;
+            }else{
+              inActive++;
+            }
+          }
+          avgSuhu = avgSuhu/sapiData.length;
+          avgHeart = avgHeart/sapiData.length;
+          this.tableItems = sapiData;
+          this.DeviceActive = active;
+          this.DeviceNonActive = inActive;
+          this.TemperatureAverage = avgSuhu.toFixed(2);
+          this.HeartRateAverage = avgHeart.toFixed(2);
+          this.soket();
+      }else{
+        this.existingData=false
       }
-      avgSuhu = avgSuhu/sapiData.length;
-      avgHeart = avgHeart/sapiData.length;
-      this.tableItems = sapiData;
-      this.DeviceActive = active;
-      this.DeviceNonActive = inActive;
-      this.TemperatureAverage = avgSuhu.toFixed(2);
-      this.HeartRateAverage = avgHeart.toFixed(2);
-      setInterval(function () { 
-        this.getds();
-      }.bind(this), 25000);
+      
       // console.log(this.tableItems);
     },
-    async getds(){
-      // console.log(window.localStorage.getItem("token"));
-      const response = await this.fetchDataSapi();
-      let sapiData = response.sapi;
-      var active =0,inActive =0,avgSuhu=0,avgHeart=0;
-      for(var i=0;i<sapiData.length;i++){
-        avgSuhu += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].suhu);
-        avgHeart += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].jantung);
-        if(sapiData[i].perangkat.status == 1){
-          active++;
-        }else{
-          inActive++;
-        }
-      }
-      avgSuhu = avgSuhu/sapiData.length;
-      avgHeart = avgHeart/sapiData.length;
-      this.tableItems = sapiData;
-      this.DeviceActive = active;
-      this.DeviceNonActive = inActive;
-      this.TemperatureAverage = avgSuhu.toFixed(2);
-      this.HeartRateAverage = avgHeart.toFixed(2);
-      console.log(this.tableItems);
-    },
+    
     getBadge (status) {
+      // var varian_='danger'
       if(status==0){
         this.statusDeviceInStr="Nonactive";
-      }else{
+      }else if(status==1){
         this.statusDeviceInStr="Active";
+        // this.varian_='success'
+      }else{
+        this.statusDeviceInStr="Pending"
+        // this.varian_='default'
       }
       return status == 0 ? 'danger' : 'success'
+      // return this.varian
     },
     getKondisi(tmp){
       

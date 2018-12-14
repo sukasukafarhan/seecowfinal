@@ -89,6 +89,11 @@ export default {
   name: 'Register',
   data: function(){
     return{
+      username:"",
+      password:"",
+      nama:"",
+      alamat:"",
+      telp:"",
        errors: [],
        successAlert: []
     }

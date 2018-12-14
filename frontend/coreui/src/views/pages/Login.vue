@@ -2,6 +2,7 @@
   <div class="app flex-row align-items-center">
     <div class="container">
       <b-row class="justify-content-center">
+        <!-- <h4>{{anu}}</h4> -->
         <b-col md="8">
           <b-alert show variant="danger" v-if="errors.length > 0">
               <h4 class="alert-heading">Error !</h4>
@@ -12,7 +13,7 @@
               <p class="mb-0">
                Please check again your form field.
               </p>
-            </b-alert>
+          </b-alert>
           <b-card-group>
             <b-card no-body class="p-4">
               <b-card-body>
@@ -38,7 +39,7 @@
                 </b-form>
               </b-card-body>
             </b-card>
-            <b-card no-body class="text-white bg-warning py-5 d-md-down-none" style="width:44%">
+            <b-card no-body class="text-white bg-warning py-5">
               <b-card-body class="text-center">
                 <div>
                   <h2>Sign up</h2>
@@ -53,18 +54,39 @@
     </div>
   </div>
 </template>
-
 <script>
 import PostsService from '@/services/PostsService'
+import io from 'socket.io-client';
 export default {
   name: 'Login',
   data: function(){
     return{
+       username:"",
+       password:"",
+       anu:"",
+      //  socket : io('localhost:3001'),
        errors: []
     }
    
   },
+  // created(){
+  //   //  var socket = io();
+  //   //  socket.on('chat message', function(msg){
+  //   //   this.anu=msg
+  //   //  });
+  //   this.nganu();
+  // },
   methods:{
+    // nganu(){
+    // //  var socket = io('http://localhost');
+    // //   socket.on('stream', function(data){
+    // //     this.anu = data.title;
+    // //   }); 
+    //    this.socket.on('/topic/coba', (data) => {
+    //         this.anu = data[0]._id;
+    //         // you can also do this.messages.push(data)
+    //     });
+    // },
     toRegis(){
       this.$router.push({ name: 'Register' })
     },
@@ -87,12 +109,24 @@ export default {
                           password: this.password
                         });
       if(response.data.success){
-          window.localStorage.setItem("token",response.data.token)
-          this.$router.push({ name: 'Dashboard' })
+          // window.localStorage.setItem("token",response.data.token)
+          // this.$router.push({ name: 'Dashboard' })
           // console.log(response.data)
+          this.getMe(response.data.token)
+      }else{
+         this.errors = []
+         this.errors.push('Wrong username or password !');
       }
       
+    },
+    async getMe(token){
+      const response = await PostsService.me(token);
+       window.localStorage.setItem("token",token)
+       window.localStorage.setItem("peternak_id",response.data.peternak._id)
+       this.$router.push({ name: 'Dashboard' })
+      // console.log(items);
     }
+
   }
 }
 </script>
