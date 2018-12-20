@@ -32,7 +32,12 @@ services:
   #   build: ./frontend/server/
   #   ports:
   #     - 3003:3000
-  
+  admin-mongo:
+    container_name: admin-mongo
+    build: ./adminMongo/
+    ports:
+      - 1234:1234
+
   mongo:  
     image: mvertes/alpine-mongo
     container_name: mongo-container

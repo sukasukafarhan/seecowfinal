@@ -15,7 +15,7 @@ const socketApp = require('../socket/socket-app');
 //     setInterval(function(){
 //         io.emit('stream', {'title': "A new title via Socket.IO!"});
 //     }, 1000);
-    
+
 // });
 //Simple version, without validation or sanitation
 exports.create = function (req, res) {
@@ -56,7 +56,7 @@ exports.create = function (req, res) {
           tanggal: today,
           suhu: initial_suhu,
           jantung: initial_jantung,
-          kondisi : initial_kondisi
+          kondisi: initial_kondisi
         }
 
         let sub_perangkat = {
@@ -82,11 +82,11 @@ exports.create = function (req, res) {
             console.log(response.data);
             Sapi.update({
               _id: sapi._id
-            },{
-              $set:{
+            }, {
+              $set: {
                 "perangkat.idOnRaspi": response.data.perangkat._id
               }
-            },function(err){
+            }, function (err) {
               if (err) {
                 return res.json({
                   success: false,
@@ -173,7 +173,7 @@ exports.data_update = function (req, res) {
   var tmpSuhu = Number(req.body.suhu)
   var tmpJantung = Number(req.body.jantung)
   var tmpKondisi = 1
-  if(tmpJantung < 20 || tmpJantung > 40 || tmpSuhu < 53 || tmpSuhu > 80){
+  if (tmpJantung < 20 || tmpJantung > 40 || tmpSuhu < 53 || tmpSuhu > 80) {
     tmpKondisi = 0
   }
 
@@ -201,7 +201,7 @@ exports.data_update = function (req, res) {
         /**
          * create topic each cows, and emmit when update data..
          */
-        socketApp.notifyDetailCows(req.params.id,sapi)
+        socketApp.notifyDetailCows(req.params.id, sapi)
         /**
          * call function..
          */
@@ -211,7 +211,7 @@ exports.data_update = function (req, res) {
         success: true,
         msg: 'updated successfully!'
       });
-     
+
     }
   );
 
@@ -219,12 +219,12 @@ exports.data_update = function (req, res) {
 /**
  * Get cows by farmers, and emmit to socket.
  */
-sapiById = function(idPeternak){
+sapiById = function (idPeternak) {
   Sapi.find({
     idPeternak: idPeternak
   }, function (err, sapi_2) {
     if (err) return next(err);
-    socketApp.notifyCowsData(idPeternak,sapi_2)
+    socketApp.notifyCowsData(idPeternak, sapi_2)
   });
   return true;
 };
@@ -279,7 +279,7 @@ exports.sapi_show_by_farmer = function (req, res) {
           idPeternak: peternak._id
         }, function (err, sapi) {
           if (err) return next(err);
-          
+
           res.json({
             success: true,
             sapi: sapi
