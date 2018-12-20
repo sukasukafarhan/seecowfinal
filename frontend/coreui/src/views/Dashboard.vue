@@ -166,7 +166,7 @@
               </b-link>
               <b-popover v-bind:target="data.item._id" title="Cow ID">
                 <!-- <strong>{{data.item._id}}</strong> -->
-                <h5><b-badge variant="secondary">{{data.item._id}}</b-badge></h5>
+                <h5><b-badge variant="secondary">{{data.item.perangkat.idOnRaspi}}</b-badge></h5>
               </b-popover>
               <!-- <div class="small text-muted">{{data.item._id}}</div> -->
             </div>

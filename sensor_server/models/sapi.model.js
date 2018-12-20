@@ -1,6 +1,9 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const PerangkatSchema = new Schema({
+  idOnRaspi: {
+    type: Schema.Types.ObjectId,
+  },
   status: Number,
   data: [{
     tanggal:{ type: Date, default: Date.now },

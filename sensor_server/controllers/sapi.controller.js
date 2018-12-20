@@ -80,8 +80,22 @@ exports.create = function (req, res) {
             idPerangkatOnServer: sapi._id
           }).then(function (response) {
             console.log(response.data);
-            return res.json({
-              respon: response.data
+            Sapi.update({
+              _id: sapi._id
+            },{
+              $set:{
+                "perangkat.idOnRaspi": response.data.perangkat._id
+              }
+            },function(err){
+              if (err) {
+                return res.json({
+                  success: false,
+                  msg: 'Create sapi failed.'
+                });
+              };
+              return res.json({
+                respon: response.data
+              })
             });
           }).catch(function (error) {
             console.log(error);
