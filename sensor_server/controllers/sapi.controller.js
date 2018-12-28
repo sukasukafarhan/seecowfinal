@@ -104,56 +104,6 @@ exports.create = function (req, res) {
               msg: 'failed creating perangkat'
             });
           });
-
-
-          // return res.json({
-          //   success: true,
-          //   sapi: sapi
-          // });
-          /**
-           * initial first data,
-           * perangkat status
-           * 1 -> active
-           * 0 -> non-active
-           */
-          // var today = new Date();
-          // var initial_suhu = 38;
-          // var initial_jantung = 60;
-          // var initial_status = 0;
-          // let sub_data = {
-          //   tanggal: today,
-          //   suhu: initial_suhu,
-          //   jantung: initial_jantung
-          // }
-          // var newPerangkat = new Perangkat({
-          //   idSapi: sapi._id,
-          //   status: initial_status,
-          //   data: [sub_data]
-          // });
-          // newPerangkat.save(function (err, docs) {
-          //   if (err) {
-          //     return res.json({
-          //       success: false,
-          //       msg: 'failed creating perangkat'
-          //     });
-          //   }
-          //   axios.post('http://10.8.0.10:3000/raspi/perangkat/create', {
-          //     idPerangkatOnServer: docs._id
-          //   }).then(function (response) {
-          //     console.log(response.data);
-          //     return res.json({
-          //       respon: response.data
-          //     });
-          //   }).catch(function (error) {
-          //     console.log(error);
-          //     return res.json({
-          //       success: false,
-          //       msg: 'failed creating perangkat'
-          //     });
-          //   });
-
-          // });
-
         });
       });
     });

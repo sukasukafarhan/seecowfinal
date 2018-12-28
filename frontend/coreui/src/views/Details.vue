@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-    <b-row>
+    <!-- <b-row>
         <b-col lg="12" md="12">
             <div class="brand-card">
               <div class="brand-card-header bg-linkedin">
@@ -18,16 +18,65 @@
               </div>
             </div>
         </b-col>
-    </b-row>
+    </b-row> -->
     <b-row>
       <b-col md="12">
-        <b-card header="History List">
-
+        <b-card header="Monitoring" class="card-accent-warning">
     <b-card>
       <b-row>
         <b-col sm="5">
-          <h4 id="traffic" class="card-title mb-0">Traffic</h4>
-          <div class="small text-muted">November 2017</div>
+          <h4><img src="img/cow/cow (2).png" width="50px" alt="CoreUI Logo"> {{nameOfCow}}</h4>
+          <!-- <h4 id="traffic" class="card-title mb-0">Graph</h4> -->
+          <!-- <div class="small text-muted">{{dateOnFormat}}</div> -->
+          <b-badge v-bind:variant="conditions">{{CurrentConditions}}</b-badge> 
+        </b-col>
+        <b-col sm="7">
+
+          <!-- <b-button type="button" variant="primary" class="float-right"><i class="icon-cloud-download"></i></b-button>
+          <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
+            <b-form-radio-group class="mr-3" id="radiosBtn" buttons button-variant="outline-secondary" v-model="selected" name="radiosBtn">
+              <b-form-radio class="mx-0" value="Day">Day</b-form-radio>
+              <b-form-radio class="mx-0" value="Month">Month</b-form-radio>
+              <b-form-radio class="mx-0" value="Year">Year</b-form-radio>
+            </b-form-radio-group>
+          </b-button-toolbar> -->
+           <h5> <b-badge class="float-right" v-bind:variant="statusDevice">{{statusDeviceInStr}}</b-badge></h5>
+        </b-col>
+      </b-row>
+      <line-chart :labels="labelsData" :dataheart="dataChartHeart" :datatemperature="dataChartTemp" :dataheartlimit="dataChartHeartLimit" :datatemperaturelimit="dataChartTemperatureLimit" :temperatureupperlimit="dataChartTemperatureUpperLimit" :heartupperlimit="dataChartHeartUpperLimit" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
+            
+      <!-- <main-chart-example chartId="main-chart-01" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example> -->
+      <div slot="footer">
+        <b-row class="text-center">
+          <b-col class="mb-sm-6 mb-0">
+            <div class="text-muted">Temperature</div>
+            <strong>{{currentTemp}}</strong>
+             <b-progress height={} class="progress-xs mt-2" :precision="1" v-bind:value="100"></b-progress>
+          </b-col>
+         
+          <b-col class="mb-sm-6 mb-0">
+            <div class="text-muted">Heart Rate</div>
+            <strong>{{currentHeart}}</strong>
+              <b-progress height={} class="progress-xs mt-2" :precision="1" variant="danger" v-bind:value="100"></b-progress>
+          </b-col>
+          
+        </b-row>
+      </div>
+    </b-card>
+             <button v-on:click="changeData">Change data</button>
+        </b-card>
+      </b-col>
+    </b-row>
+
+
+    <b-row>
+      <b-col md="12">
+        <b-card header="Monitoring" class="card-accent-warning">
+    <b-card>
+      <b-row>
+        <b-col sm="5">
+          <h4 id="traffic" class="card-title mb-0">Graph</h4>
+          <div class="small text-muted">{{dateOnFormat}}</div>
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
           <b-button type="button" variant="primary" class="float-right"><i class="icon-cloud-download"></i></b-button>
@@ -40,7 +89,9 @@
           </b-button-toolbar>
         </b-col>
       </b-row>
-      <main-chart-example chartId="main-chart-01" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
+      <line-chart :labels="labelsData" :dataheart="dataChartHeart" :datatemperature="dataChartTemp" :dataheartlimit="dataChartHeartLimit" :datatemperaturelimit="dataChartTemperatureLimit" :temperatureupperlimit="dataChartTemperatureUpperLimit" :heartupperlimit="dataChartHeartUpperLimit" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
+            
+      <!-- <main-chart-example chartId="main-chart-01" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example> -->
       <div slot="footer">
         <b-row class="text-center">
           <b-col class="mb-sm-2 mb-0">
@@ -71,8 +122,9 @@
         </b-row>
       </div>
     </b-card>
-          <b-row>
-            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
+          <!-- <b-row> -->
+             <button v-on:click="changeData">Change data</button>
+            <!-- <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
            
             <div slot="key-kondisi" slot-scope="data">
               <b-badge :variant="getKondisi(data.item.kondisi)">{{CurrentConditions}}</b-badge>
@@ -93,13 +145,13 @@
               
             </div>
             
-          </b-table>
+          </b-table> -->
           <!-- <b-row>
             <b-col md="6" class="my-1">
               <b-pagination :total-rows="totalRows" :per-page="perPage" v-model="currentPage" class="my-0" />
             </b-col>
           </b-row> -->
-          </b-row>
+          <!-- </b-row> -->
         </b-card>
       </b-col>
     </b-row>
@@ -112,6 +164,7 @@ import CardLine2ChartExample from './dashboard/CardLine2ChartExample'
 import CardLine3ChartExample from './dashboard/CardLine3ChartExample'
 import CardBarChartExample from './dashboard/CardBarChartExample'
 import MainChartExample from './dashboard/MainChartExample'
+import LineChart from './dashboard/LineChart'
 import SocialBoxChartExample from './dashboard/SocialBoxChartExample'
 import CalloutChartExample from './dashboard/CalloutChartExample'
 import { Callout } from '@coreui/vue'
@@ -123,6 +176,7 @@ export default {
   components: {
     Callout,
     // myComponent,
+    LineChart,
     CardLine1ChartExample,
     CardLine2ChartExample,
     CardLine3ChartExample,
@@ -133,6 +187,17 @@ export default {
   },
   data() {
     return {
+      dataChartHeart: [],
+      statusDeviceInStr:"",
+      statusDevice:"",
+      conditions:"",
+      dataChartTemp: [],
+      dataChartHeartLimit:[20,20,20,20,20,20,20],
+      dataChartHeartUpperLimit:[40,40,40,40,40,40,40],
+      dataChartTemperatureLimit:[53,53,53,53,53,53,53],
+      dataChartTemperatureUpperLimit:[80,80,80,80,80,80,80],
+      labelsData:[],
+      test: [4, 4, 4, 4, 4, 4],
       nameOfCow:"",
       socket : io('206.189.36.70:3001'),
       CurrentConditions:"",
@@ -211,6 +276,27 @@ export default {
       this.checkSession(); 
   },
   methods: {
+    changeData: function() {
+      // this.dataChart = [60, 6, 3, 5, 5, 6,6, 6, 3, 5, 5, 6];
+      this.dataChartHeart.push(120);
+      this.dataChartTemp.push(30);
+      this.dataChartHeartLimit.push(20);
+      this.dataChartHeartUpperLimit.push(40);
+      this.dataChartTemperatureLimit.push(53);
+      this.dataChartTemperatureUpperLimit.push(80);
+      
+      this.labelsData.push('nambah bulan');
+      // this.labelsData = [
+          
+      //     "February",
+      //     "March",
+      //     "April",
+      //     "May",
+      //     "June",
+      //     "July",
+      //     "January"
+      //   ]
+    },
      checkSession(){
       // window.localStorage.removeItem("token")
       if(window.localStorage.getItem("token") == null){
@@ -229,6 +315,19 @@ export default {
         this.tableItems = sapiData.perangkat.data;
         this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu.toFixed(2);
         this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung.toFixed(2);
+        this.getBadge(sapiData.perangkat.status);
+        this.getKondisi(sapiData.perangkat.data[sapiData.perangkat.data.length-1].kondisi);
+        this.dateFormatter(sapiData.perangkat.data[sapiData.perangkat.data.length-1].tanggal);
+        // Chart operation
+        this.dataChartHeart.push(this.currentHeart);
+        this.dataChartTemp.push(this.currentTemp);
+        this.dataChartHeartLimit.push(20);
+        this.dataChartHeartUpperLimit.push(40);
+        this.dataChartTemperatureLimit.push(53);
+        this.dataChartTemperatureUpperLimit.push(80);
+        this.labelsData.push(this.dateOnFormat);
+        //=======
+        
       })
     },
     
@@ -237,15 +336,19 @@ export default {
       let sapiData = response.sapi;
       this.nameOfCow = sapiData.namaSapi;
       this.tableItems = sapiData.perangkat.data;
+      this.getBadge(sapiData.perangkat.status);
+      this.getKondisi(sapiData.perangkat.data[sapiData.perangkat.data.length-1].kondisi);
       this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu.toFixed(2);
       this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung.toFixed(2);
       this.soket();
     },
     getBadge (status) {
       if(status==0){
-        this.statusDeviceInStr="Nonactive";
+        this.statusDeviceInStr="Device Nonactive";
+        this.statusDevice="danger"
       }else{
-        this.statusDeviceInStr="Active";
+        this.statusDeviceInStr="Device Active";
+        this.statusDevice="success"
       }
       return status == 0 ? 'danger' : 'success'
     },
@@ -254,9 +357,11 @@ export default {
       var kondisiPointer = 0;
       if(Number(tmp) == 0 ){
         this.CurrentConditions="Upnormal";
+        this.conditions="danger"
       }else{
         kondisiPointer = 1;
         this.CurrentConditions="Normal";
+        this.conditions="success"
       }
       return kondisiPointer == 0 ? 'danger' : 'success'
     },

@@ -527,7 +527,7 @@ export default {
                         });
       this.$refs.myModalRef.hide()
       if(response.data.respon.success){
-        this.successAlert.push('Congratulation,You have successfully register a new cow, cow ID : '+response.data.respon.perangkat.idPerangkatOnServer+' please wait, our team will prepare your device');
+        this.successAlert.push('Congratulation,You have successfully register a new cow, our team will prepare your device, please refresh this page');
       }
       // setTimeout(location.reload(), 5000)
       
