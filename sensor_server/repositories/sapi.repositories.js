@@ -78,7 +78,7 @@ const sapiRepositories = {
         var checkPeternak = await peternakRepositories.getPeternakByIdUser(id)
         if(checkPeternak != false){
             var result = await Sapi.find({
-                idPeternak:new ObjectId(checkPeternak._id)
+                idPeternak:checkPeternak._id
             })
             return result;
         }
