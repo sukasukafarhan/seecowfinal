@@ -73,9 +73,9 @@ const sapiRepositories = {
         ])
         return result;
   },
-  getSapiByFarmers: async(token)=>{
+  getSapiByFarmers: async(id)=>{
    
-        var checkPeternak = await peternakRepositories.getPeternakByIdUser(token)
+        var checkPeternak = await peternakRepositories.getPeternakByIdUser(id)
         if(checkPeternak != false){
             var result = await Sapi.find({
                 idPeternak:new ObjectId(checkPeternak._id)
