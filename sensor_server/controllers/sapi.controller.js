@@ -35,7 +35,9 @@ module.exports = {
     if(token){
       jwt.verify(token, config.secret, function (err, decoded) {
         result_decode = decoded._doc._id
+        
       });
+      console.log(result_decode);
       let response = new Response()
         try {
           response.setData(await sapiRepositories.getSapiByFarmers(result_decode))
