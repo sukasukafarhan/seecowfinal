@@ -9,7 +9,7 @@ var Perangkat = require("../models/perangkat.model");
 const axios = require('axios');
 const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
-var SapiRepo = require('../../repositories/sapi.repositories')
+var SapiRepo = require('../repositories/sapi.repositories')
 // const io = require('socket.io')(server);
 
 // io.on('connection', function(socket) {
