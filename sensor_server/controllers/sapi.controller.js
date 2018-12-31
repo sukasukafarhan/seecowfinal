@@ -31,10 +31,14 @@ module.exports = {
   },
   sapi_show_by_farmer: async(req, res)=>{
     var token = Token.authorizationToken(req.headers);
+    var result_decode="";
     if(token){
+      jwt.verify(token, config.secret, function (err, decoded) {
+        result_decode = decoded._doc._id
+      });
       let response = new Response()
         try {
-          response.setData(await sapiRepositories.getSapiByFarmers(token))
+          response.setData(await sapiRepositories.getSapiByFarmers(result_decode))
         } catch (e) {
           response.setStatus(false)
           response.setMessage(e)

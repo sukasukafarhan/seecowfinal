@@ -74,15 +74,15 @@ const sapiRepositories = {
         return result;
   },
   getSapiByFarmers: async(token)=>{
-    jwt.verify(token, config.secret, function (err, decoded) {
-        var checkPeternak = await peternakRepositories.getPeternakByIdUser(decoded._doc._id)
+   
+        var checkPeternak = await peternakRepositories.getPeternakByIdUser()
         if(checkPeternak != false){
             var result = await Sapi.find({
                 idPeternak:checkPeternak._id
             })
             return result;
         }
-      });
+     
   },
 
 }
