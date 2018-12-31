@@ -257,7 +257,7 @@ exports.get_specific_time = function(req,res){
         // Stage 1
         {
           $match: {
-              _id:ObjectId("5c24e8ca4c7cde0016387815")
+              _id:"5c24e8ca4c7cde0016387815"
           
           }
         },
