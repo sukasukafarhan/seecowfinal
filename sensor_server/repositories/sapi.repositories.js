@@ -9,8 +9,9 @@ var Perangkat = require("../models/perangkat.model");
 const axios = require('axios');
 const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
+var peternakRepositories = require('../repositories/peternak.repositories');
 
-const SapiRepo = {
+const sapiRepositories = {
   getSapiOnSpecificTime: async()=>{
     let result = await Sapi.aggregate(
 
@@ -71,7 +72,19 @@ const SapiRepo = {
       
         ])
         return result;
-  }
+  },
+  getSapiByFarmers: async(token)=>{
+    jwt.verify(token, config.secret, function (err, decoded) {
+        var checkPeternak = await peternakRepositories.getPeternakByIdUser(decoded._doc._id)
+        if(checkPeternak != false){
+            var result = await Sapi.find({
+                idPeternak:checkPeternak._id
+            })
+            return result;
+        }
+      });
+  },
+
 }
 
-module.exports = SapiRepo
+module.exports = sapiRepositories

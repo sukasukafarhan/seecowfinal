@@ -9,31 +9,42 @@ var Perangkat = require("../models/perangkat.model");
 const axios = require('axios');
 const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
-var SapiRepo = require('../repositories/sapi.repositories')
-var Token = require('../services/TokenAuthentication')
+var sapiRepositories = require('../repositories/sapi.repositories');
+var Token = require('../services/TokenAuthentication');
+var Response = require('../services/Response');
 
 module.exports = {
   get_specific_time: async(req, res)=>{
-    var token = Token.getToken(req.headers);
+    var token = Token.authorizationToken(req.headers);
       if(token){
+        let response = new Response()
         try {
-          let anu = await SapiRepo.getSapiOnSpecificTime();
-             res.json({
-              success: true,
-              sapi: anu
-            });
-        
-        }catch(e){
-          res.json({
-            success: false,
-            sapi: e
-          });
-
+          response.setData(await sapiRepositories.getSapiOnSpecificTime())
+        } catch (e) {
+          response.setStatus(false)
+          response.setMessage(e)
         }
-        
-
+        res.json(response)  
+      }else{
+        res.json(response.unAuthorized());
+      }
+  },
+  sapi_show_by_farmer: async(req, res)=>{
+    var token = Token.authorizationToken(req.headers);
+    if(token){
+      let response = new Response()
+        try {
+          response.setData(await sapiRepositories.getSapiByFarmers(token))
+        } catch (e) {
+          response.setStatus(false)
+          response.setMessage(e)
+        }
+        res.json(response) 
+    }else{
+      res.json(response.unAuthorized());
+    }
   }
-}
+
 }
 // const io = require('socket.io')(server);
 
@@ -233,46 +244,46 @@ module.exports = {
 //     });
 //   })
 // };
-// exports.sapi_show_by_farmer = function (req, res) {
-//   var token = getToken(req.headers);
-//   if (token) {
-//     jwt.verify(token, config.secret, function (err, decoded) {
-//       if (err) return res.json({
-//         success: false,
-//         msg: 'Failed to authenticate token.'
-//       });
-//       Peternak.findOne({
-//         idUser: decoded._doc._id
-//       }, function (err, peternak) {
-//         if (err) return res.json({
-//           success: false,
-//           msg: 'There was a problem finding the peternak.'
-//         });
-//         if (!peternak) return res.json({
-//           success: false,
-//           msg: 'No peternak found.'
-//         });
-//         Sapi.find({
-//           idPeternak: peternak._id
-//         }, function (err, sapi) {
-//           if (err) return next(err);
+exports.sapi_show_by_farmer = function (req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    jwt.verify(token, config.secret, function (err, decoded) {
+      if (err) return res.json({
+        success: false,
+        msg: 'Failed to authenticate token.'
+      });
+      Peternak.findOne({
+        idUser: decoded._doc._id
+      }, function (err, peternak) {
+        if (err) return res.json({
+          success: false,
+          msg: 'There was a problem finding the peternak.'
+        });
+        if (!peternak) return res.json({
+          success: false,
+          msg: 'No peternak found.'
+        });
+        Sapi.find({
+          idPeternak: peternak._id
+        }, function (err, sapi) {
+          if (err) return next(err);
 
-//           res.json({
-//             success: true,
-//             sapi: sapi
-//           });
-//         });
+          res.json({
+            success: true,
+            sapi: sapi
+          });
+        });
 
-//       });
-//     });
+      });
+    });
 
-//   } else {
-//     return res.status(401).json({
-//       success: false,
-//       msg: 'Unauthorized.'
-//     });
-//   }
-// };
+  } else {
+    return res.status(401).json({
+      success: false,
+      msg: 'Unauthorized.'
+    });
+  }
+};
 // exports.get_specific_time = async(req,res)=>{
 //   var token = getToken(req.headers);
 //   if(token){
