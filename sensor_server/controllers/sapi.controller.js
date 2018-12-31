@@ -248,10 +248,10 @@ exports.sapi_show_by_farmer = function (req, res) {
     });
   }
 };
-exports.get_specific_time = function(req,res){
+exports.get_specific_time = async(req,res)=>{
   var token = getToken(req.headers);
   if(token){
-    let anu = SapiRepo.getSapiOnSpecificTime();
+    let anu = await SapiRepo.getSapiOnSpecificTime();
          res.json({
           success: true,
           sapi: anu
