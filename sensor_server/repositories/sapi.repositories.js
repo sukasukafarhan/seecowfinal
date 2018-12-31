@@ -10,7 +10,7 @@ const axios = require('axios');
 const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
 
-const Sapi = {
+const SapiRepo = {
   getSapiOnSpecificTime: async()=>{
     let result = await Sapi.aggregate(
 
@@ -74,4 +74,4 @@ const Sapi = {
   }
 }
 
-module.exports = Sapi
+module.exports = SapiRepo
