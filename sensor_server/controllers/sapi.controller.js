@@ -310,6 +310,7 @@ exports.get_specific_time = function(req,res){
       ],function(err,result){
         if (err) return res.json({
           success: false,
+          error : err,
           msg: 'There was a problem finding the peternak.'
         });
 
