@@ -13,7 +13,7 @@ var ObjectId = require('mongoose').Types.ObjectId;
 const peternakRepositories = {
     getPeternakByIdUser: async(params) => {
         let result = await Peternak.findOne({
-            idUser:params
+            idUser:new ObjectId(params)
         });
         if(result.length>0)
             return result;
