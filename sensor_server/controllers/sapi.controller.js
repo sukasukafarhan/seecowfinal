@@ -9,6 +9,7 @@ var Perangkat = require("../models/perangkat.model");
 const axios = require('axios');
 const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
+var SapiRepo = require('../../repositories/sapi.repositories')
 // const io = require('socket.io')(server);
 
 // io.on('connection', function(socket) {
@@ -247,71 +248,10 @@ exports.sapi_show_by_farmer = function (req, res) {
     });
   }
 };
-doAgregate: async() => {
-  let result = await Sapi.aggregate(
-
-    // Pipeline
-    [
-      // Stage 1
-      {
-        $match: {
-            _id: new ObjectId("5c24e8ca4c7cde0016387815")
-        
-        }
-      },
-  
-      // Stage 2
-      {
-        $unwind: {
-            path : "$perangkat.data",
-            includeArrayIndex : "arrayIndex", // optional
-            preserveNullAndEmptyArrays : false // optional
-        }
-      },
-  
-      // Stage 3
-      {
-        $match: {
-            "perangkat.data.tanggal": {
-                $gte: new Date(),
-                $lte : new Date(new Date().setDate(new Date().getDate()+1))
-                }
-        }
-      },
-  
-      // Stage 4
-      {
-        $group: {
-            _id:{_id : "$_id",idPeternak: "$idPeternak",namaSapi: "$namaSapi",status: "$perangkat.status",idOnRaspi:"$perangkat.idOnRaspi"},
-            listResult : {$push: "$perangkat.data"}
-            
-        }
-      },
-  
-      // Stage 5
-      {
-        $project: {
-            // specifications
-            _id : "$_id._id",
-            idPeternak: "$_id.idPeternak",
-            namaSapi: "$_id.namaSapi",
-            perangkat:{
-              status : "$_id.status",
-              data: "$listResult",
-              idOnRaspi: "$_id.idOnRaspi"
-              
-            }
-            
-        }
-      },
-  
-    ])
-    return result;
-};
 exports.get_specific_time = function(req,res){
   var token = getToken(req.headers);
   if(token){
-    let anu = this.doAgregate();
+    let anu = SapiRepo.getSapiOnSpecificTime();
          res.json({
           success: true,
           sapi: anu
