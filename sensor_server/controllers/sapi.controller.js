@@ -311,7 +311,7 @@ doAgregate: async() => {
 exports.get_specific_time = function(req,res){
   var token = getToken(req.headers);
   if(token){
-    let anu = doAgregate();
+    let anu = this.doAgregate();
          res.json({
           success: true,
           sapi: anu
