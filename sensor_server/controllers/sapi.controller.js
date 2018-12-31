@@ -247,8 +247,8 @@ exports.sapi_show_by_farmer = function (req, res) {
     });
   }
 };
-doAgregate = function(){
-  let result = Sapi.aggregate(
+doAgregate: async() => {
+  let result = await Sapi.aggregate(
 
     // Pipeline
     [
