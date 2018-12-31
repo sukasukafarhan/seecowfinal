@@ -8,6 +8,7 @@ var Peternak = require("../models/peternak.model");
 var Perangkat = require("../models/perangkat.model");
 const axios = require('axios');
 const socketApp = require('../socket/socket-app');
+var ObjectId = require('mongoose').Types.ObjectId;
 // const io = require('socket.io')(server);
 
 // io.on('connection', function(socket) {
@@ -257,7 +258,7 @@ exports.get_specific_time = function(req,res){
         // Stage 1
         {
           $match: {
-              _id:"5c24e8ca4c7cde0016387815"
+              _id: new ObjectId("5c24e8ca4c7cde0016387815")
           
           }
         },
