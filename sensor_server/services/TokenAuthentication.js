@@ -1,6 +1,6 @@
 var jwt = require('jsonwebtoken');
 const Token = {
-    getToken: function(header){
+    getToken: function(headers){
               if (headers && headers.authorization) {
                 var parted = headers.authorization.split(' ');
                 if (parted.length === 2) {
