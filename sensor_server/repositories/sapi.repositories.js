@@ -1,5 +1,3 @@
-import { EWOULDBLOCK } from 'constants';
-
 var mongoose = require('mongoose');
 var passport = require('passport');
 var config = require('../config/database');
@@ -13,6 +11,7 @@ const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
 var peternakRepositories = require('../repositories/peternak.repositories');
 var ConnectRaspi = require('../service/ConnectRaspi');
+
 const sapiRepositories = {
   getSapiOnSpecificTime: async()=>{
     let result = await Sapi.aggregate(
