@@ -15,9 +15,7 @@ const peternakRepositories = {
         let result = await Peternak.findOne({
             idUser:params
         });
-        if(result.length>0)
-            return result;
-        return false;
+        return result;
     }
 }
 module.exports = peternakRepositories

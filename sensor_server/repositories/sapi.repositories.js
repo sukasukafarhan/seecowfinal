@@ -74,15 +74,13 @@ const sapiRepositories = {
         return result;
   },
   getSapiByFarmers: async(id)=>{
-   
-        var checkPeternak = await peternakRepositories.getPeternakByIdUser(id)
-        if(checkPeternak != false){
-            var result = await Sapi.find({
+        let checkPeternak = await peternakRepositories.getPeternakByIdUser(id)
+        if(checkPeternak){
+            let result = await Sapi.find({
                 idPeternak:checkPeternak._id
             })
             return result;
         }
-     
   },
 
 }
