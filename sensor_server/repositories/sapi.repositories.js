@@ -68,14 +68,7 @@ const sapiRepositories = {
             }
           },
       
-        ],
-        {
-          cursor: {
-              batchSize: 500
-          },
-          allowDiskUse: true,
-          explain: false
-        }, null)
+        ])
         return result;
   },
   getSapiByFarmers: async(id)=>{
