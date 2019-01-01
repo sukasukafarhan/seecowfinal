@@ -26,12 +26,12 @@ module.exports = {
   getDataToday : async(req,res)=>{
     let token = Token.authorizationToken(req.headers);
     var today = new Date();
-    var tomorrow = new Date();
-    tomorrow.setDate(today.getDate()+1);
+    var yesterday = new Date();
+    yesterday.setDate(today.getDate()-1);
       if(token){
         let response = new Response()
         try {
-          response.setData(await sapiRepositories.getSapiOnSpecificTime(req.body.idSapi,today.toISOString(),tomorrow.toISOString()))
+          response.setData(await sapiRepositories.getSapiOnSpecificTime(req.body.idSapi,yesterday.toISOString(),today.toISOString()))
         } catch (e) {
           response.setStatus(false)
           response.setMessage(e)
