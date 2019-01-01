@@ -36,8 +36,8 @@ const sapiRepositories = {
           {
             $match: {
                 "perangkat.data.tanggal": {
-                    $gte: new Date("2019-01-01T13:54:44.824+0000"),
-                    $lte : new Date("2019-01-02T13:54:44.824+0000")
+                    $gte: new Date("2019-01-01T13:58:52.174+0000"),
+                    $lte : new Date("2019-01-02T13:58:52.174+0000")
                     }
             }
           },
