@@ -15,7 +15,7 @@ var Response = require('../services/Response');
 
 module.exports = {
   get_specific_time: async(req, res)=>{
-    var token = Token.authorizationToken(req.headers);
+    let token = Token.authorizationToken(req.headers);
       if(token){
         let response = new Response()
         try {
@@ -30,12 +30,10 @@ module.exports = {
       }
   },
   sapi_show_by_farmer: async(req, res)=>{
-    var token = Token.authorizationToken(req.headers);
+    let token = Token.authorizationToken(req.headers);
     
     if(token){
       let result_decode = jwt.verify(token, config.secret)
-      // result_decode = decoded._doc._id
-      console.log(result_decode);
       let response = new Response()
         try {
           response.setData(await sapiRepositories.getSapiByFarmers(result_decode._doc._id))
@@ -47,8 +45,69 @@ module.exports = {
     }else{
       res.json(response.unAuthorized());
     }
+  },
+  data_update: async(req, res)=>{
+    let response = new Response()
+    try{
+      response.setData(await sapiRepositories.streamUpdateData(req.body.suhu,req.body.jantung,req.body.status,req.params.id))
+    }catch(e){
+      response.setStatus(false)
+      response.setMessage(e)
+    }
+    res.json(response) 
+  },
+  sapi_update: async(req,res)=>{
+    let response = new Response()
+    try{
+      response.setData(await sapiRepositories.updateSapi(req.params.id, req.body))
+    }catch(e){
+      response.setStatus(false)
+      response.setMessage(e)
+    }
+    res.json(response)
+  },
+  sapi_delete: async(req, res)=>{
+    let response = new Response();
+    try{
+      response.setData(await sapiRepositories.deleteSapi(req.params.id))
+    }catch(e){
+      response.setStatus(false)
+      response.setMessage(e)
+    }
+    res.json(response)
+  },
+  sapi_detail: async(req,res)=>{
+    let token = Token.authorizationToken(req.headers);
+      if(token){
+        let response = new Response()
+        try {
+          response.setData(await sapiRepositories.detailSapi(req.params.id))
+        } catch (e) {
+          response.setStatus(false)
+          response.setMessage(e)
+        }
+        res.json(response)  
+      }else{
+        res.json(response.unAuthorized());
+      }
+  },
+  create: async(req,res)=>{
+    let token = Token.authorizationToken(req.headers);
+    
+    if(token){
+      let result_decode = jwt.verify(token, config.secret)
+      let response = new Response()
+        try {
+          response.setData(await sapiRepositories.createSapi(result_decode._doc._id,req.body.namaSapi))
+        } catch (e) {
+          response.setStatus(false)
+          response.setMessage(e)
+        }
+        res.json(response) 
+    }else{
+      res.json(response.unAuthorized());
+    }
   }
-
 }
 // const io = require('socket.io')(server);
 
