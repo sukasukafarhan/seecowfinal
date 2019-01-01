@@ -10,7 +10,7 @@ var peternakRepositories = require('../repositories/peternak.repositories');
 var ConnectRaspi = require('../services/ConnectRaspi');
 
 const sapiRepositories = {
-  getSapiOnSpecificTime: async()=>{
+  getSapiOnSpecificTime: async(id,start,end)=>{
     let result = await Sapi.aggregate(
 
         // Pipeline
@@ -18,7 +18,7 @@ const sapiRepositories = {
           // Stage 1
           {
             $match: {
-                _id: new ObjectId("5c24e8ca4c7cde0016387815")
+                _id: new ObjectId(id)
             
             }
           },
@@ -36,8 +36,8 @@ const sapiRepositories = {
           {
             $match: {
                 "perangkat.data.tanggal": {
-                    $gte: new Date("2018-12-28T16:12:30.216+0000"),
-                    $lte : new Date("2018-12-28T16:13:00.176+0000")
+                    $gte: new Date(start),
+                    $lte : new Date(end)
                     }
             }
           },

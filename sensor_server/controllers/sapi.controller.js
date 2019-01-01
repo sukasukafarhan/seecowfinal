@@ -8,12 +8,30 @@ var Token = require('../services/TokenAuthentication');
 var Response = require('../services/Response');
 
 module.exports = {
-  get_specific_time: async(req, res)=>{
+  // get_specific_time: async(req, res)=>{
+  //   let token = Token.authorizationToken(req.headers);
+  //     if(token){
+  //       let response = new Response()
+  //       try {
+  //         response.setData(await sapiRepositories.getSapiOnSpecificTime())
+  //       } catch (e) {
+  //         response.setStatus(false)
+  //         response.setMessage(e)
+  //       }
+  //       res.json(response)  
+  //     }else{
+  //       res.json(response.unAuthorized());
+  //     }
+  // },
+  getDataToday : async(req,res)=>{
     let token = Token.authorizationToken(req.headers);
+    var today = new Date();
+    var tomorrow = new Date();
+    tomorrow.setDate(today.getDate()+1);
       if(token){
         let response = new Response()
         try {
-          response.setData(await sapiRepositories.getSapiOnSpecificTime())
+          response.setData(await sapiRepositories.getSapiOnSpecificTime(req.body.id,today,tomorrow))
         } catch (e) {
           response.setStatus(false)
           response.setMessage(e)
