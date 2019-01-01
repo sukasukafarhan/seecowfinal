@@ -18,7 +18,7 @@ const sapiRepositories = {
           // Stage 1
           {
             $match: {
-                _id: id
+                _id: new ObjectId(id)
             
             }
           }

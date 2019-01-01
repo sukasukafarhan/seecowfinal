@@ -31,7 +31,7 @@ module.exports = {
       if(token){
         let response = new Response()
         try {
-          response.setData(await sapiRepositories.getSapiOnSpecificTime(req.body.id,today.toISOString(),tomorrow.toISOString()))
+          response.setData(await sapiRepositories.getSapiOnSpecificTime("5c24e8ca4c7cde0016387815",today.toISOString(),tomorrow.toISOString()))
         } catch (e) {
           response.setStatus(false)
           response.setMessage(e)
