@@ -10,7 +10,7 @@ const axios = require('axios');
 const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
 var peternakRepositories = require('../repositories/peternak.repositories');
-var ConnectRaspi = require('../service/ConnectRaspi');
+var ConnectRaspi = require('../services/ConnectRaspi');
 
 const sapiRepositories = {
   getSapiOnSpecificTime: async()=>{
