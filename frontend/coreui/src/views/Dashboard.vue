@@ -526,7 +526,7 @@ export default {
                           namaSapi: this.cowName
                         });
       this.$refs.myModalRef.hide()
-      if(response.data.respon.success){
+      if(response.data.data.success){
         this.successAlert.push('Congratulation,You have successfully register a new cow, our team will prepare your device, please refresh this page');
       }
       // setTimeout(location.reload(), 5000)
@@ -602,7 +602,7 @@ export default {
     async firstLoad(){
       // console.log(window.localStorage.getItem("token"));
       const response = await this.fetchDataSapi();
-      let sapiData = response.sapi;
+      let sapiData = response.data;
       if(sapiData.length > 0){
           this.existingData = true
           var active =0,inActive =0,avgSuhu=0,avgHeart=0;

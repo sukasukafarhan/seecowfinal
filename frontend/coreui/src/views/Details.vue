@@ -333,7 +333,7 @@ export default {
     
     async firstLoad(){
       const response = await this.fetchDataSapi();
-      let sapiData = response.sapi;
+      let sapiData = response.data;
       this.nameOfCow = sapiData.namaSapi;
       this.tableItems = sapiData.perangkat.data;
       this.getBadge(sapiData.perangkat.status);
