@@ -21,10 +21,54 @@ const sapiRepositories = {
                 _id: new ObjectId("5c24e8ca4c7cde0016387815")
             
             }
-          }
+          },
       
-        ],
-        { explain: true })
+          // Stage 2
+          {
+            $unwind: {
+                path : "$perangkat.data",
+                includeArrayIndex : "arrayIndex", // optional
+                preserveNullAndEmptyArrays : false // optional
+            }
+          },
+      
+          // Stage 3
+          {
+            $match: {
+                "perangkat.data.tanggal": {
+                    $gte: new Date(),
+                    $lte : new Date(new Date().setDate(new Date().getDate()+1))
+                    }
+            }
+          },
+      
+          // Stage 4
+          {
+            $group: {
+                _id:{_id : "$_id",idPeternak: "$idPeternak",namaSapi: "$namaSapi",status: "$perangkat.status",idOnRaspi:"$perangkat.idOnRaspi"},
+                listResult : {$push: "$perangkat.data"}
+                
+            }
+          },
+      
+          // Stage 5
+          {
+            $project: {
+                // specifications
+                _id : "$_id._id",
+                idPeternak: "$_id.idPeternak",
+                namaSapi: "$_id.namaSapi",
+                perangkat:{
+                  status : "$_id.status",
+                  data: "$listResult",
+                  idOnRaspi: "$_id.idOnRaspi"
+                  
+                }
+                
+            }
+          },
+      
+        ]).cursor({}).exec().toArray()
         return result;
   },
   getSapiByFarmers: async(id)=>{
