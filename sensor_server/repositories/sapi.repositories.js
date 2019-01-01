@@ -35,8 +35,8 @@ const sapiRepositories = {
           // Stage 3
           {
             $match: {
-                "perangkat.data.suhu": {
-                    $gte: 38
+                "perangkat.data.tanggal": {
+                    $gte: new Date()
                     //$lte : new Date(new Date().setDate(new Date().getDate()+1))
                     }
             }
