@@ -68,7 +68,7 @@ const sapiRepositories = {
             }
           },
       
-        ]).cursor({})
+        ]).cursor({}).exec()
         return result;
   },
   getSapiByFarmers: async(id)=>{
