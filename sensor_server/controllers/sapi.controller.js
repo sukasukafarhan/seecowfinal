@@ -43,8 +43,12 @@ module.exports = {
   },
   getDataInTime : async(req,res)=>{
     let token = Token.authorizationToken(req.headers);
-    var start = req.body.start;
-    var yesterday = req.body.end;
+    var start_temp = new Date(req.body.start) 
+    var end_temp = new Date(req.body.end)
+    var start = start_temp.toISOString()
+    var end = end_temp.toISOString()
+    // var start = req.body.start;
+    // var yesterday = req.body.end;
     yesterday.setDate(today.getDate()-1);
       if(token){
         let response = new Response()

@@ -298,10 +298,10 @@ export default {
       //   ]
     },
     filterData: function(){
-      var start_temp = new Date(this.startDate) 
-      var end_temp = new Date(this.endDate)
-      this.startDate = start_temp.toISOString()
-      this.endDate = end_temp.toISOString()
+      // var start_temp = new Date(this.startDate) 
+      // var end_temp = new Date(this.endDate)
+      // this.startDate = start_temp.toISOString()
+      // this.endDate = end_temp.toISOString()
       this.processDataInTime()
 
     },
