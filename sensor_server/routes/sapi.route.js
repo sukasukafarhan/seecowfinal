@@ -12,5 +12,5 @@ router.get('/showsapi',passport.authenticate('jwt', { session: false}),sapi_cont
 router.get('/:id/sapidetail',passport.authenticate('jwt', { session: false}),sapi_controller.sapi_detail);
 router.put('/:id/updatedata',sapi_controller.data_update);
 router.post('/data-today',passport.authenticate('jwt', { session: false}), sapi_controller.getDataToday);
-router.post('/data-in-time',passport.authenticate('jwt', { session: false}), sapi_controller.getDataToday);
+router.post('/data-in-time',passport.authenticate('jwt', { session: false}), sapi_controller.getDataInTime);
 module.exports = router;
