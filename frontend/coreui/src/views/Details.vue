@@ -302,6 +302,7 @@ export default {
       // var end_temp = new Date(this.endDate)
       // this.startDate = start_temp.toISOString()
       // this.endDate = end_temp.toISOString()
+      console.log(this.startDate)
       this.processDataInTime()
 
     },

@@ -49,7 +49,6 @@ module.exports = {
     var end = end_temp.toISOString()
     // var start = req.body.start;
     // var yesterday = req.body.end;
-    yesterday.setDate(today.getDate()-1);
       if(token){
         let response = new Response()
         try {
