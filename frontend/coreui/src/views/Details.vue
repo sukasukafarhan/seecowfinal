@@ -28,7 +28,8 @@
           <h4><img src="img/cow/cow (2).png" width="50px" alt="CoreUI Logo"> {{nameOfCow}}</h4>
           <!-- <h4 id="traffic" class="card-title mb-0">Graph</h4> -->
           <!-- <div class="small text-muted">{{dateOnFormat}}</div> -->
-          <b-badge v-bind:variant="conditions">{{CurrentConditions}}</b-badge> 
+          <b-badge v-bind:variant="conditions">{{CurrentConditions}}</b-badge> | 
+           <b-badge v-bind:variant="statusDevice">{{statusDeviceInStr}}</b-badge> 
         </b-col>
         <b-col sm="7">
 
@@ -40,7 +41,15 @@
               <b-form-radio class="mx-0" value="Year">Year</b-form-radio>
             </b-form-radio-group>
           </b-button-toolbar> -->
-           <h5> <b-badge class="float-right" v-bind:variant="statusDevice">{{statusDeviceInStr}}</b-badge></h5>
+           <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
+            <b-form-radio-group class="mr-3" id="radiosBtn" buttons button-variant="outline-secondary" v-model="selected_filter" name="radiosBtn">
+               <b-form-radio class="mx-0" value="0">Streaming</b-form-radio>
+              <b-form-radio class="mx-0" value="1">24 Hours</b-form-radio>
+              <b-form-radio class="mx-0" value="2">Month</b-form-radio>
+              <b-form-radio class="mx-0" value="3">Year</b-form-radio>
+            </b-form-radio-group>
+          </b-button-toolbar>
+           <!-- <h5> <b-badge class="float-right" v-bind:variant="statusDevice">{{statusDeviceInStr}}</b-badge></h5> -->
         </b-col>
       </b-row>
       <line-chart :labels="labelsData" :dataheart="dataChartHeart" :datatemperature="dataChartTemp" :dataheartlimit="dataChartHeartLimit" :datatemperaturelimit="dataChartTemperatureLimit" :temperatureupperlimit="dataChartTemperatureUpperLimit" :heartupperlimit="dataChartHeartUpperLimit" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
@@ -80,13 +89,13 @@
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
           <b-button type="button" variant="primary" class="float-right"><i class="icon-cloud-download"></i></b-button>
-          <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
+          <!-- <b-button-toolbar class="float-right" aria-label="Toolbar with buttons group">
             <b-form-radio-group class="mr-3" id="radiosBtn" buttons button-variant="outline-secondary" v-model="selected" name="radiosBtn">
               <b-form-radio class="mx-0" value="Day">Day</b-form-radio>
               <b-form-radio class="mx-0" value="Month">Month</b-form-radio>
               <b-form-radio class="mx-0" value="Year">Year</b-form-radio>
             </b-form-radio-group>
-          </b-button-toolbar>
+          </b-button-toolbar> -->
         </b-col>
       </b-row>
       <line-chart :labels="labelsData" :dataheart="dataChartHeart" :datatemperature="dataChartTemp" :dataheartlimit="dataChartHeartLimit" :datatemperaturelimit="dataChartTemperatureLimit" :temperatureupperlimit="dataChartTemperatureUpperLimit" :heartupperlimit="dataChartHeartUpperLimit" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
@@ -124,6 +133,13 @@
     </b-card>
           <!-- <b-row> -->
              <button v-on:click="changeData">Change data</button>
+             <b-form-group
+            label="Date" label-for="date"
+            :label-cols="3"
+            :horizontal="true">
+            <b-form-input type="date" id="date" v-model="tanggalnya"></b-form-input>
+          </b-form-group>
+          <h4>{{tanggalnya_convert}}</h4>
             <!-- <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
            
             <div slot="key-kondisi" slot-scope="data">
@@ -188,15 +204,15 @@ export default {
   data() {
     return {
       dataChartHeart: [],
+      dataChartTemp: [],
+      dataChartHeartLimit:[],
+      dataChartHeartUpperLimit:[],
+      dataChartTemperatureLimit:[],
+      dataChartTemperatureUpperLimit:[],
+      labelsData:[],
       statusDeviceInStr:"",
       statusDevice:"",
       conditions:"",
-      dataChartTemp: [],
-      dataChartHeartLimit:[20,20,20,20,20,20,20],
-      dataChartHeartUpperLimit:[40,40,40,40,40,40,40],
-      dataChartTemperatureLimit:[53,53,53,53,53,53,53],
-      dataChartTemperatureUpperLimit:[80,80,80,80,80,80,80],
-      labelsData:[],
       test: [4, 4, 4, 4, 4, 4],
       nameOfCow:"",
       socket : io('206.189.36.70:3001'),
@@ -235,7 +251,9 @@ export default {
       // statusDeviceInStr:"",
       // dateOnFormat:"",
       // sapiList:[],
-      selected: 'Month',
+      selected_filter:"0",
+      tanggalnya:"",
+      tanggalnya_convert:"",
       // tableItems: [],
       // tableFields: [
       //   {
@@ -266,13 +284,16 @@ export default {
       // ]
     }
   },
+  watch:{ 
+    'selected_filter': function() {
+      this.changeTime(this.selected_filter)  
+    },
+    'tanggalnya': function(){
+      var temp = new Date(this.tanggalnya)
+      this.tanggalnya_convert = temp
+    } 
+  },
   created(){
-      // setInterval(function () {
-      //   this.getds();
-      // }.bind(this), 60000);
-      // setInterval(function () { 
-      //   this.getds();
-      // }.bind(this), 25000);
       this.checkSession(); 
   },
   methods: {
@@ -297,6 +318,14 @@ export default {
       //     "January"
       //   ]
     },
+    changeTime: function(select_iterator) {
+      if(select_iterator == 0){
+        this.firstLoad();
+      }else if(select_iterator==1){
+        this.oneDay();
+      }
+      
+    },
      checkSession(){
       // window.localStorage.removeItem("token")
       if(window.localStorage.getItem("token") == null){
@@ -307,6 +336,12 @@ export default {
     },
     async fetchDataSapi(){
       const response = await PostsService.getSapiDetail(window.localStorage.getItem("token"),this.$route.params.id);
+      return response.data;
+    },
+    async fetchDataToday(){
+      const response = await PostsService.getDataToday(window.localStorage.getItem("token"),{
+                          idSapi: this.$route.params.id
+                        });
       return response.data;
     },
     soket(){
@@ -332,15 +367,61 @@ export default {
     },
     
     async firstLoad(){
-      const response = await this.fetchDataSapi();
-      let sapiData = response.data;
+      this.dataChartHeart= []
+      this.dataChartTemp=[]
+      this.dataChartHeartLimit=[]
+      this.dataChartHeartUpperLimit=[]
+      this.dataChartTemperatureLimit=[]
+      this.dataChartTemperatureUpperLimit=[]
+      this.labelsData=[]
+      const response = await this.fetchDataToday();
+      let sapiData = response.data[0]; //because response data in array
+      // console.log(this.selected)
       this.nameOfCow = sapiData.namaSapi;
       this.tableItems = sapiData.perangkat.data;
       this.getBadge(sapiData.perangkat.status);
       this.getKondisi(sapiData.perangkat.data[sapiData.perangkat.data.length-1].kondisi);
       this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu.toFixed(2);
       this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung.toFixed(2);
+      // for(var i=0;i<sapiData.perangkat.data.length;i++){
+      //   this.dataChartHeart.push(sapiData.perangkat.data[i].suhu.toFixed(2));
+      //   this.dataChartTemp.push(sapiData.perangkat.data[i].jantung.toFixed(2));
+      //   this.dataChartHeartLimit.push(20);
+      //   this.dataChartHeartUpperLimit.push(40);
+      //   this.dataChartTemperatureLimit.push(53);
+      //   this.dataChartTemperatureUpperLimit.push(80);
+      //   this.dateFormatter(sapiData.perangkat.data[i].tanggal);
+      //   this.labelsData.push(this.dateOnFormat);
+      // }
       this.soket();
+    },
+    async oneDay(){
+      this.dataChartHeart= []
+      this.dataChartTemp=[]
+      this.dataChartHeartLimit=[]
+      this.dataChartHeartUpperLimit=[]
+      this.dataChartTemperatureLimit=[]
+      this.dataChartTemperatureUpperLimit=[]
+       this.labelsData=[]
+      const response = await this.fetchDataToday();
+      let sapiData = response.data[0]; //because response data in array
+      // console.log(this.selected)
+      this.nameOfCow = sapiData.namaSapi;
+      this.tableItems = sapiData.perangkat.data;
+      this.getBadge(sapiData.perangkat.status);
+      this.getKondisi(sapiData.perangkat.data[sapiData.perangkat.data.length-1].kondisi);
+      this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu.toFixed(2);
+      this.currentHeart = sapiData.perangkat.data[sapiData.perangkat.data.length-1].jantung.toFixed(2);
+      for(var i=0;i<sapiData.perangkat.data.length;i++){
+        this.dataChartHeart.push(sapiData.perangkat.data[i].suhu.toFixed(2));
+        this.dataChartTemp.push(sapiData.perangkat.data[i].jantung.toFixed(2));
+        this.dataChartHeartLimit.push(20);
+        this.dataChartHeartUpperLimit.push(40);
+        this.dataChartTemperatureLimit.push(53);
+        this.dataChartTemperatureUpperLimit.push(80);
+        this.dateFormatter(sapiData.perangkat.data[i].tanggal);
+        this.labelsData.push(this.dateOnFormat);
+      }
     },
     getBadge (status) {
       if(status==0){

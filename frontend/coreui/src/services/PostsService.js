@@ -45,5 +45,19 @@ export default {
         Authorization:token
       }
     })
+  },
+  getDataToday(token, params){
+    return axios.post(Api.sapiUrl()+'data-today',params,{
+      headers:{
+        Authorization:token
+      }
+    })
+  },
+  getDataInTime(token, params){
+    return axios.post(Api.sapiUrl()+'data-in-time',params,{
+      headers:{
+        Authorization:token
+      }
+    })
   }
 }

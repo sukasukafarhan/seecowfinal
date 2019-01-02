@@ -41,6 +41,24 @@ module.exports = {
         res.json(response.unAuthorized());
       }
   },
+  getDataInTime : async(req,res)=>{
+    let token = Token.authorizationToken(req.headers);
+    var start = req.body.start;
+    var yesterday = req.body.end;
+    yesterday.setDate(today.getDate()-1);
+      if(token){
+        let response = new Response()
+        try {
+          response.setData(await sapiRepositories.getSapiOnSpecificTime(req.body.idSapi,start,end))
+        } catch (e) {
+          response.setStatus(false)
+          response.setMessage(e)
+        }
+        res.json(response)  
+      }else{
+        res.json(response.unAuthorized());
+      }
+  },
   sapi_show_by_farmer: async(req, res)=>{
     let token = Token.authorizationToken(req.headers);
     
