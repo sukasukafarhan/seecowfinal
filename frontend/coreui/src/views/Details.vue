@@ -191,18 +191,18 @@ export default {
 
           this.dataChartHeart.push(this.currentHeart);
           this.dataChartTemp.push(this.currentTemp);
-          this.dataChartHeartLimit.push(20);
-          this.dataChartHeartUpperLimit.push(40);
-          this.dataChartTemperatureLimit.push(53);
-          this.dataChartTemperatureUpperLimit.push(80);
+          this.dataChartHeartLimit.push(48);
+          this.dataChartHeartUpperLimit.push(80);
+          this.dataChartTemperatureLimit.push(37);
+          this.dataChartTemperatureUpperLimit.push(39);
           this.labelsData.push(this.dateOnFormat);
         }else{
           this.dataChartHeart.push(this.currentHeart);
           this.dataChartTemp.push(this.currentTemp);
-          this.dataChartHeartLimit.push(20);
-          this.dataChartHeartUpperLimit.push(40);
-          this.dataChartTemperatureLimit.push(53);
-          this.dataChartTemperatureUpperLimit.push(80);
+          this.dataChartHeartLimit.push(48);
+          this.dataChartHeartUpperLimit.push(80);
+          this.dataChartTemperatureLimit.push(37);
+          this.dataChartTemperatureUpperLimit.push(39);
           this.labelsData.push(this.dateOnFormat);
         }
         
@@ -252,10 +252,10 @@ export default {
       for(var i=0;i<sapiData.perangkat.data.length;i++){
         this.dataChartHeart.push(sapiData.perangkat.data[i].suhu.toFixed(2));
         this.dataChartTemp.push(sapiData.perangkat.data[i].jantung.toFixed(2));
-        this.dataChartHeartLimit.push(20);
-        this.dataChartHeartUpperLimit.push(40);
-        this.dataChartTemperatureLimit.push(53);
-        this.dataChartTemperatureUpperLimit.push(80);
+        this.dataChartHeartLimit.push(48);
+        this.dataChartHeartUpperLimit.push(80);
+        this.dataChartTemperatureLimit.push(37);
+        this.dataChartTemperatureUpperLimit.push(39);
         this.dateFormatter(sapiData.perangkat.data[i].tanggal);
         this.labelsData.push(this.dateOnFormat);
       }
