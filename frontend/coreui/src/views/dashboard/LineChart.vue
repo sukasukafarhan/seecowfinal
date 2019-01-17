@@ -109,21 +109,18 @@ export default {
             }
           }
         },
-      //   scales: {
-      //     yAxes: [{
-      //         ticks: {
-                
-      //           max: 100
-      //         },
-      //         gridLines: {
-      //           display: true
-      //         }
-      //     }]
-      // },
-        responsive: true, 
+        elements: {
+        point: {
+          radius: 0,
+          hitRadius: 10,
+          hoverRadius: 4,
+          hoverBorderWidth: 3
+        }
+        },
+        // responsive: true, 
         maintainAspectRatio: false 
       }
-    );      
+    )
     }
   },
   watch: {

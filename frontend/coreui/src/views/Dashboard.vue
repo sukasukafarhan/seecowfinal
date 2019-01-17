@@ -131,7 +131,7 @@
                       <b-col sm="12" lg="6">
                     <!-- <div class="chart-wrapper"> -->
                       <!--<callout-chart-example :data="[35, 23, 56, 22, 97, 23, 64]" variant="#20a8d8" width="80" height="30" />-->
-                        <callout-chart-example chartId="callout-chart-01" v-bind:data="TemperatureGraph" variant="info" width="80" height="30" />
+                        <callout-chart-example chartId="callout-chart-01" :labels="labelsData" :data="TemperatureGraph" variant="info" width="80" height="30" />
                     <!-- </div> -->
                       </b-col>
                     </b-row>
@@ -146,7 +146,7 @@
                       </b-col>
                       <b-col sm="12" lg="6">
                         <!-- <div class="chart-wrapper"> -->
-                        <callout-chart-example chartId="callout-chart-02" :data="[0, 59, 84, 84, 51, 55, 40]" variant="danger" width="80" height="30" />
+                        <callout-chart-example chartId="callout-chart-02" :labels="labelsData" :data="HeartGraph" variant="danger" width="80" height="30" />
                         <!-- </div> -->
                       </b-col>
                     </b-row>
@@ -466,11 +466,14 @@ export default {
       DeviceNonActive:0,
       TemperatureAverage:0,
       HeartRateAverage:0,
-      TemperatureGraph:[0, 23, 56, 22, 97,100,100],
+      TemperatureGraph:[],
+      HeartGraph:[],
+      labelsData:[],
       CurrentConditions:"",
       suhuArrange:[],
       statusDeviceInStr:"",
       dateOnFormat:"",
+      dateOnFormatForAvg:"",
       existingData:false,
       sapiList:[],
       selected: 'Month',
@@ -583,6 +586,7 @@ export default {
             for(var i=0;i<sapiData.length;i++){
             avgSuhu += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].suhu);
             avgHeart += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].jantung);
+            this.dateFormatter(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].tanggal);
             if(sapiData[i].perangkat.status == 1){
               active++;
             }else{
@@ -596,6 +600,10 @@ export default {
           this.DeviceNonActive = inActive;
           this.TemperatureAverage = avgSuhu.toFixed(2);
           this.HeartRateAverage = avgHeart.toFixed(2);
+          // chart operation
+          this.HeartGraph.push(this.HeartRateAverage);
+          this.TemperatureGraph.push(this.TemperatureAverage);
+          this.labelsData.push(this.dateOnFormat)
             
       });
     },
@@ -609,6 +617,7 @@ export default {
           for(var i=0;i<sapiData.length;i++){
             avgSuhu += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].suhu);
             avgHeart += Number(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].jantung);
+            this.dateFormatter(sapiData[i].perangkat.data[sapiData[i].perangkat.data.length-1].tanggal);
             if(sapiData[i].perangkat.status == 1){
               active++;
             }else{
@@ -622,6 +631,12 @@ export default {
           this.DeviceNonActive = inActive;
           this.TemperatureAverage = avgSuhu.toFixed(2);
           this.HeartRateAverage = avgHeart.toFixed(2);
+          // chart operation
+          this.HeartGraph.push(this.HeartRateAverage);
+          this.TemperatureGraph.push(this.TemperatureAverage);
+          this.labelsData.push(this.dateOnFormat)
+          // this.TemperatureGraph = [1,2,3,4,5,6,7]
+          // this.labelsData = [1,2,3,4,5,6,7]
           this.soket();
       }else{
         this.existingData=false
@@ -631,24 +646,24 @@ export default {
     },
     
     getBadge (status) {
-      // var varian_='danger'
+      var varian_='danger'
       if(status==0){
         this.statusDeviceInStr="Nonactive";
       }else if(status==1){
         this.statusDeviceInStr="Active";
-        // this.varian_='success'
+        varian_='success'
       }else{
         this.statusDeviceInStr="Pending"
-        // this.varian_='default'
+        varian_='secondary'
       }
-      return status == 0 ? 'danger' : 'success'
-      // return this.varian
+      // return status == 0 ? 'danger' : 'success'
+      return varian_
     },
     getKondisi(tmp){
       
       var kondisiPointer = 0;
       if(Number(tmp) == 0 ){
-        this.CurrentConditions="Upnormal";
+        this.CurrentConditions="Abnormal";
       }else{
         kondisiPointer = 1;
         this.CurrentConditions="Normal";
@@ -668,6 +683,19 @@ export default {
       this.dateOnFormat = time;
       return 'secondary';
     },
+    // dateFormatterForAvg(date){
+    //   var created_date = new Date(date);
+    //   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    //   var year = created_date.getFullYear();
+    //   var month = months[created_date.getMonth()];
+    //   var date = created_date.getDate();
+    //   var hour = created_date.getHours();
+    //   var min = created_date.getMinutes();
+    //   var sec = created_date.getSeconds();
+    //   var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;    // final date with time, you can use this according your requirement
+    //   this.dateFormatterForAvg = time;
+    //   return 'secondary';
+    // },
     toDetail (id){
        this.$router.push({ name: 'Details', params: {id : id} })
       console.log(id);
