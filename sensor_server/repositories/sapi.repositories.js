@@ -88,7 +88,10 @@ const sapiRepositories = {
     var tmpSuhu = Number(suhu)
     var tmpJantung = Number(jantung)
     var tmpKondisi = 1
-    if (tmpJantung < 20 || tmpJantung > 40 || tmpSuhu < 53 || tmpSuhu > 80) {
+    if (tmpJantung < 48 || tmpJantung > 80 || tmpSuhu < 37 || tmpSuhu > 39) {
+      /**
+       * Abnormal
+       */
       tmpKondisi = 0
     }
     let sapiOnUpdate =  await 
