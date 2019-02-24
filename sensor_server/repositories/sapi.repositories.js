@@ -80,6 +80,11 @@ const sapiRepositories = {
         return result;
       }
   },
+  getAllSapi: async()=>{
+    let result = await Sapi.find()
+    return result
+  },
+  
   streamUpdateData : async(suhu, jantung, status,id) => {
     var today = new Date();
     /**
