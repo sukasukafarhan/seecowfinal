@@ -79,6 +79,21 @@ module.exports = {
       res.json(response.unAuthorized());
     }
   },
+  sapi_show_all: async(req, res)=>{
+    let token = Token.authorizationToken(req.headers); 
+    if(token){
+      let response = new Response()
+        try {
+          response.setData(await sapiRepositories.getAllSapi())
+        } catch (e) {
+          response.setStatus(false)
+          response.setMessage(e)
+        }
+        res.json(response) 
+    }else{
+      res.json(response.unAuthorized());
+    }
+  },
   data_update: async(req, res)=>{
     let response = new Response()
     try{
