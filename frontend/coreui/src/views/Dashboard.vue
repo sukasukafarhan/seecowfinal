@@ -194,6 +194,7 @@
               <b-button variant="primary" size="sm" @click="toDetail(data.item._id)">Show Details</b-button>
             </div>
           </b-table> 
+            
           </b-row> 
             <b-alert v-if="existingData == false" show variant="warning">
               You don't have a cow in our system, let's manage your first cow by clicking the register cow button.
@@ -442,7 +443,8 @@ import SocialBoxChartExample from './dashboard/SocialBoxChartExample'
 import CalloutChartExample from './dashboard/CalloutChartExample'
 import { Callout } from '@coreui/vue'
 import io from 'socket.io-client'
-import PostsService from "@/services/PostsService";
+import PostsService from "@/services/PostsService"
+import Constants from "@/services/Constants"
 
 export default {
   name: 'dashboard',
@@ -461,7 +463,7 @@ export default {
     return {
       DeviceActive:0,
       cowName:"",
-      socket : io('206.189.36.70:3001'),
+      socket : io(Constants.SOCKET_SERVER),
       warningModal: false,
       DeviceNonActive:0,
       TemperatureAverage:0,
@@ -553,10 +555,16 @@ export default {
       /**
        * check session and do action
        */
-      if(window.localStorage.getItem("token") ==null){
+      if(!window.localStorage.getItem("token")){
         this.$router.push({ name: 'Login' })  
       }else{
-        this.firstLoad();
+        if(window.localStorage.getItem("role") != Constants.ROLE_FARMERS){
+          // redirect to 404 page
+          this.$router.push({ name: 'Page404' })    
+        }else{
+          this.firstLoad();
+        }
+        
       }
     },
     variant (value) {

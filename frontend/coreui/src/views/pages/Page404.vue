@@ -4,21 +4,13 @@
       <b-row class="justify-content-center">
         <b-col md="6">
           <div class="clearfix">
-            <h1 class="float-left display-3 mr-4">404</h1>
-            <h4 class="pt-3">Oops! You're lost.</h4>
-            <p class="text-muted">The page you are looking for was not found.</p>
+            <img class="img-avatar" src="img/brand/logo.png" alt="admin@bootstrapmaster.com">
+            <h1 class="pt-3">Oops! Something wrong :(</h1>
+            <h4 class="text-muted">You cant access this page</h4>
           </div>
-          <b-input-group>
-            <b-input-group-prepend>
-              <b-input-group-text>
-                <i class="fa fa-search"></i>
-              </b-input-group-text>
-            </b-input-group-prepend>
-            <input id="prependedInput" class="form-control" size="16" type="text" placeholder="What are you looking for?">
-            <b-input-group-append>
-              <b-button variant="info">Search</b-button>
-            </b-input-group-append>
-          </b-input-group>
+          <div>
+            <b-button variant="warning" class="active mt-3" @click="toLogin">Login</b-button>
+          </div>
         </b-col>
       </b-row>
     </div>
@@ -27,6 +19,14 @@
 
 <script>
 export default {
-  name: 'Page404'
-}
+  name: "Page404",
+  methods:{
+    toLogin(){
+      window.localStorage.removeItem("token")
+      window.localStorage.removeItem("peternak_id")
+      window.localStorage.removeItem("role")
+      this.$router.push({ name: 'Login' })      
+    },
+  }
+};
 </script>

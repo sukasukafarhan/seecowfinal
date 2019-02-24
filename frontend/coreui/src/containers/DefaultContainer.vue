@@ -66,6 +66,7 @@ import nav from '@/_nav'
 import { Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Aside as AppAside, AsideToggler, Footer as TheFooter, Breadcrumb } from '@coreui/vue'
 import DefaultAside from './DefaultAside'
 import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
+import Constants from "@/services/Constants"
 
 export default {
   name: 'full',
@@ -87,7 +88,21 @@ export default {
   },
   data () {
     return {
-      nav: nav.items
+      nav:[]
+    }
+  },
+  created(){
+    this.loadNav()
+    //  nav.items
+  },
+  methods:{
+    loadNav:function(){
+      if(window.localStorage.getItem("role") == Constants.ROLE_FARMERS){
+          // redirect to 404 page
+           this.nav = nav.MENU_FARMERS
+        }else{
+          this.nav = nav.MENU_ADMIN
+        }
     }
   },
   computed: {

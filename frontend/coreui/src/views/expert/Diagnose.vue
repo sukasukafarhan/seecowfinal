@@ -439,7 +439,24 @@ export default {
       values: [ 15, 30, 20 ]
     }
   },
+  created(){
+    this.checkSession(); 
+  },
   methods: {
+    checkSession(){
+      /**
+       * check session and do action
+       */
+      if(!window.localStorage.getItem("token")){
+        this.$router.push({ name: 'Login' })  
+      }else{
+        if(window.localStorage.getItem("role") != Constants.ROLE_FARMERS){
+          // redirect to 404 page
+           this.$router.push({ name: 'Page404' })  
+        }
+        
+      }
+    },
     getStatus(tmp){
       
       var kondisiPointer = 0;

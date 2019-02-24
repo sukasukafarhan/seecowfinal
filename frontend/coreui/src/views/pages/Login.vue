@@ -56,7 +56,8 @@
 </template>
 <script>
 import PostsService from '@/services/PostsService'
-import io from 'socket.io-client';
+import io from 'socket.io-client'
+import Constants from "@/services/Constants"
 export default {
   name: 'Login',
   data: function(){
@@ -112,18 +113,23 @@ export default {
           // window.localStorage.setItem("token",response.data.token)
           // this.$router.push({ name: 'Dashboard' })
           // console.log(response.data)
-          this.getMe(response.data.token)
+          this.getMe(response.data.token,response.data.user.role)
       }else{
          this.errors = []
          this.errors.push('Wrong username or password !');
       }
       
     },
-    async getMe(token){
+    async getMe(token,role){
       const response = await PostsService.me(token);
        window.localStorage.setItem("token",token)
        window.localStorage.setItem("peternak_id",response.data.peternak._id)
-       this.$router.push({ name: 'Dashboard' })
+       window.localStorage.setItem("role",role)
+       if(role == Constants.ROLE_ADMIN){
+          this.$router.push({ name: 'Admin' })
+       }else{
+          this.$router.push({ name: 'Dashboard' })
+       }
       // console.log(items);
     }
 

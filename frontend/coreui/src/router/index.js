@@ -7,6 +7,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 // Views
 const Dashboard = () => import('@/views/Dashboard')
 const Details = () => import('@/views/Details')
+const Admin = () => import('@/views/admin/Admin')
 
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
@@ -84,7 +85,11 @@ export default new Router({
           name : 'Details',
           component: Details
         },
-        
+        {
+          path: '/admin/admin',
+          name : 'Admin',
+          component: Admin
+        },
         {
           path: 'expert-system',
           redirect: '/expert-system/diagnose',

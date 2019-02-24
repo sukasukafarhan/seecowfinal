@@ -42,7 +42,7 @@
       </div>
     </b-card>
             <b-row> 
-            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
+            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light" :current-page="page" :per-page="10">
            
             <div slot="key-kondisi" slot-scope="data">
               <b-badge :variant="getKondisi(data.item.kondisi)">{{CurrentConditions}}</b-badge>
@@ -63,6 +63,9 @@
               
             </div>
             </b-table>
+            <nav>
+              <b-pagination size="sm" :total-rows="tableItemsLength" :per-page="10" :limit="5" prev-text="prev" next-text="next" v-model="page"/>
+            </nav>
             </b-row>
         </b-card>
       </b-col>
@@ -82,7 +85,8 @@ import SocialBoxChartExample from './dashboard/SocialBoxChartExample'
 import CalloutChartExample from './dashboard/CalloutChartExample'
 import { Callout } from '@coreui/vue'
 import io from 'socket.io-client'
-import PostsService from "@/services/PostsService";
+import PostsService from "@/services/PostsService"
+import Constants from "@/services/Constants"
 
 export default {
   name: 'Details',
@@ -100,6 +104,8 @@ export default {
   },
   data() {
     return {
+      page:1,
+      tableItemsLength:0,
       dataChartHeart: [],
       dataChartTemp: [],
       dataChartHeartLimit:[],
@@ -146,11 +152,19 @@ export default {
       this.processDataInTime()
     },
     checkSession(){
-      // window.localStorage.removeItem("token")
-      if(window.localStorage.getItem("token") == null){
+      /**
+       * check session and do action
+       */
+      if(!window.localStorage.getItem("token")){
         this.$router.push({ name: 'Login' })  
       }else{
-        this.firstLoad();
+        if(window.localStorage.getItem("role") != Constants.ROLE_FARMERS){
+          // redirect to 404 page
+           this.$router.push({ name: 'Page404' })  
+        }else{
+          this.firstLoad();
+        }
+        
       }
     },
     async fetchDataSapi(){
@@ -245,6 +259,8 @@ export default {
       let sapiData = response.data[0]; //because response data in array
       // console.log(this.selected)
       this.tableItems = sapiData.perangkat.data;
+      this.tableItemsLength = this.tableItems.length;
+      console.log(this.tableItemsLength);
       this.getBadge(sapiData.perangkat.status);
       this.getKondisi(sapiData.perangkat.data[sapiData.perangkat.data.length-1].kondisi);
       this.currentTemp = sapiData.perangkat.data[sapiData.perangkat.data.length-1].suhu.toFixed(2);

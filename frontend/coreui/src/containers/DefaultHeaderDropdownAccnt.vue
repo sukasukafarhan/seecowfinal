@@ -53,7 +53,8 @@ export default {
   methods:{
     outSession(){
       window.localStorage.removeItem("token")
-       window.localStorage.removeItem("peternak_id")
+      window.localStorage.removeItem("peternak_id")
+      window.localStorage.removeItem("role")
       this.$router.push({ name: 'Login' })  
     }
   }
