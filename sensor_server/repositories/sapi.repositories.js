@@ -216,6 +216,7 @@ const sapiRepositories = {
     let result = await Sapi.find({
       "perangkat.status":Constants.DEVICE_PENDING
     })
+    return result
   }
 
 }
