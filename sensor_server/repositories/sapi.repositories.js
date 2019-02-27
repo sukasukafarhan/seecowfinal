@@ -8,6 +8,7 @@ const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
 var peternakRepositories = require('../repositories/peternak.repositories');
 var ConnectRaspi = require('../services/ConnectRaspi');
+var Constants = require('../services/Constants');
 
 const sapiRepositories = {
   getSapiOnSpecificTime: async(id,start,end)=>{
@@ -92,12 +93,12 @@ const sapiRepositories = {
      */
     var tmpSuhu = Number(suhu)
     var tmpJantung = Number(jantung)
-    var tmpKondisi = 1
-    if (tmpJantung < 48 || tmpJantung > 80 || tmpSuhu < 37 || tmpSuhu > 39) {
+    var tmpKondisi = Constants.NORMAL_CONDITION
+    if (tmpJantung < Constants.HEARTRATE_LOWER_LIMIT || tmpJantung > Constants.HEARTRATE_UPPER_LIMIT || tmpSuhu < Constants.TEMPERATURE_LOWER_LIMIT || tmpSuhu > Constants.TEMPERATURE_UPPER_LIMIT) {
       /**
        * Abnormal
        */
-      tmpKondisi = 0
+      tmpKondisi = Constants.ABNORMAL_CONDITION
     }
     let sapiOnUpdate =  await 
     Sapi.update({
@@ -170,9 +171,9 @@ const sapiRepositories = {
          */
         var today = new Date();
         var initial_suhu = 38;
-        var initial_jantung = 60;
-        var initial_status = 2;
-        var initial_kondisi = 0;
+        var initial_jantung = 49;
+        var initial_status = Constants.DEVICE_PENDING;
+        var initial_kondisi = Constants.NORMAL_CONDITION;
         let sub_data = {
           tanggal: today,
           suhu: initial_suhu,
@@ -210,6 +211,11 @@ const sapiRepositories = {
         }
      
     }
+  },
+  getRequestSapi: async()=>{
+    let result = await Sapi.find({
+      "perangkat.status":Constants.DEVICE_PENDING
+    })
   }
 
 }
