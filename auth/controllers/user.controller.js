@@ -30,7 +30,13 @@ module.exports = {
   signin: async(req,res)=>{
     let response = new Response()
     try{
-      response.setData(await userRepositories.signin(req.body.username,req.body.password))
+      let result = await userRepositories.signin(req.body.username,req.body.password)
+      if(result){
+        response.setData(result)
+      }else{
+        response.setStatus(false)
+        response.setMessage("Invalid username or password")
+      }
     }catch (e){
       response.setStatus(false)
       response.setMessage(e)

@@ -4,7 +4,6 @@ var config = require('../config/database');
 require('../config/passport')(passport);
 var jwt = require('jsonwebtoken');
 var User = require("../models/user");
-var Book = require("../models/book");
 var Peternak = require("../models/peternak.model");
 
 const userRepositories = {
@@ -33,13 +32,21 @@ const userRepositories = {
             username: username
         })
         if(user){
-            user.comparePassword(password,function(err,isMatch){
-                if(isMatch && !err){
-                    let token = jwt.sign(user,config.secret)
-                    user.token = token
-                    return user
+            if(bcrypt.compareSync(password, user.password)){
+                let token = jwt.sign(user,config.secret)
+                let newUserObj = {
+                    _id: user._id,
+                    username: user.username,
+                    password: user.password,
+                    role: user.role,
+                    token: 'JWT ' + token
                 }
-            })
+                return newUserObj
+            }else{
+                return false
+            }
+        }else{
+            return false
         }
     },
     userDelete: async(id)=>{
