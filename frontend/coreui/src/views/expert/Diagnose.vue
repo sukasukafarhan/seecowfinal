@@ -376,7 +376,7 @@
               </b-collapse>
             </b-card>
           </div>
-          <b-btn class="mt-4" variant="warning" @click="prev">Previous</b-btn> &nbsp
+          <b-btn class="mt-4" variant="warning" @click="prev">Previous</b-btn> 
           <b-btn class="mt-4" id="asd"  variant="warning" @click="clicked">Next Step</b-btn>
           
           

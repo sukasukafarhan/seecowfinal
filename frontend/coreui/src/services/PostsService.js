@@ -39,6 +39,13 @@ export default {
       }
     })
   },
+  getAllSapi(token){
+    return axios.get(Api.sapiUrl()+'sapi-show-all',{
+      headers:{
+        Authorization:token
+      }
+    })
+  },
   getSapiDetail(token,id){
     return axios.get(Api.sapiUrl()+id+'/sapidetail',{
       headers:{

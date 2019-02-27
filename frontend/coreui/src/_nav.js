@@ -1,39 +1,75 @@
-const MENU_FARMERS=[
-  {
-    name: 'Dashboard',
-    url: '/dashboard',
-    icon: 'icon-speedometer'
-    // badge: {
-    //   variant: 'primary',
-    //   text: 'NEW'
-    // }
-  },
-  {
-    title: true,
-    name: 'Expert System',
-    class: '',
-    wrapper: {
-      element: '',
-      attributes: {}
-    }
-  },
-  {
-    name: 'Diagnose',
-    url: '/expert-system/diagnose',
-    icon: 'icon-puzzle'
-  }
-]
-const MENU_ADMIN=[
-  {
-    name: 'Dashboard',
-    url: '/admin/admin',
-    icon: 'icon-speedometer'
+// const MENU_FARMERS=[
+//   {
+//     name: 'Dashboard',
+//     url: '/dashboard',
+//     icon: 'icon-speedometer'
+//     // badge: {
+//     //   variant: 'primary',
+//     //   text: 'NEW'
+//     // }
+//   },
+//   {
+//     title: true,
+//     name: 'Expert System',
+//     class: '',
+//     wrapper: {
+//       element: '',
+//       attributes: {}
+//     }
+//   },
+//   {
+//     name: 'Diagnose',
+//     url: '/expert-system/diagnose',
+//     icon: 'icon-puzzle'
+//   }
+// ]
+// const MENU_ADMIN=[
+//   {
+//     name: 'Dashboard',
+//     url: '/admin/admin',
+//     icon: 'icon-speedometer'
     
-  },
-]
-module.exports = {
-  MENU_ADMIN,
-  MENU_FARMERS
+//   },
+// ]
+// module.exports = {
+//   MENU_ADMIN,
+//   MENU_FARMERS
+// }
+export default{
+  MENU_ADMIN:[
+    {
+      name: 'Dashboard',
+      url: '/admin/admin',
+      icon: 'icon-speedometer'
+      
+    },
+
+  ],
+  MENU_FARMERS:[
+    {
+      name: 'Dashboard',
+      url: '/dashboard',
+      icon: 'icon-speedometer'
+      // badge: {
+      //   variant: 'primary',
+      //   text: 'NEW'
+      // }
+    },
+    {
+      title: true,
+      name: 'Expert System',
+      class: '',
+      wrapper: {
+        element: '',
+        attributes: {}
+      }
+    },
+    {
+      name: 'Diagnose',
+      url: '/expert-system/diagnose',
+      icon: 'icon-puzzle'
+    }
+  ]
 }
 // export default {
 //   items: [
