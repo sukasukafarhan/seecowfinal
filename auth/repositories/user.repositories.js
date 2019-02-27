@@ -5,6 +5,7 @@ require('../config/passport')(passport);
 var jwt = require('jsonwebtoken');
 var User = require("../models/user");
 var Peternak = require("../models/peternak.model");
+var bcrypt = require('bcrypt-nodejs');
 
 const userRepositories = {
     peternakSignup: async(username,password,nama,alamat,telp,role)=>{
