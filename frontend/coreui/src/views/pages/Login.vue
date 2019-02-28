@@ -109,11 +109,12 @@ export default {
                           username: this.username,
                           password: this.password
                         });
-      if(response.data.success){
+     
+      if(response.data.status){
           // window.localStorage.setItem("token",response.data.token)
           // this.$router.push({ name: 'Dashboard' })
           // console.log(response.data)
-          this.getMe(response.data.token,response.data.user.role)
+          this.getMe(response.data.data.token,response.data.data.role)
       }else{
          this.errors = []
          this.errors.push('Wrong username or password !');
@@ -123,7 +124,7 @@ export default {
     async getMe(token,role){
       const response = await PostsService.me(token);
        window.localStorage.setItem("token",token)
-       window.localStorage.setItem("peternak_id",response.data.peternak._id)
+       window.localStorage.setItem("peternak_id",response.data.data._id)
        window.localStorage.setItem("role",role)
        if(role == Constants.ROLE_ADMIN){
           this.$router.push({ name: 'Admin' })

@@ -46,6 +46,20 @@ export default {
       }
     })
   },
+  getRequestedSapi(token){
+    return axios.get(Api.sapiUrl()+'requested-sapi',{
+      headers:{
+        Authorization:token
+      }
+    })
+  },
+  getAllPeternak(token){
+    return axios.get(Api.userUrl()+'alluser',{
+      headers:{
+        Authorization:token
+      }
+    })
+  },
   getSapiDetail(token,id){
     return axios.get(Api.sapiUrl()+id+'/sapidetail',{
       headers:{

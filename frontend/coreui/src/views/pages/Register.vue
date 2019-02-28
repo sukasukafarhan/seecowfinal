@@ -134,7 +134,7 @@ export default {
                           alamat:this.alamat,
                           telp: this.telp
                         });
-      if(response.data.success){
+      if(response.data.status){
         this.successAlert.push('Congratulation,You have successfully created a new account, please click the button to login');
           
       }

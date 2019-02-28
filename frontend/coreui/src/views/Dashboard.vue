@@ -159,7 +159,7 @@
           <b-row>
             <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light"  v-if="existingData == true">
             <div slot="namaSapi" slot-scope="data">
-              <img src="img/cow/cow (2).png" width="50px" alt="CoreUI Logo">
+              <img src="img/cow/cow (2).png" width="50px" alt="cows logo">
               <strong>{{data.value}}</strong>
               <b-link class="card-header-action btn-minimize" v-b-toggle.collapse1>
                   <i v-bind:id="data.item._id" class="icon-eye"></i>
@@ -531,7 +531,7 @@ export default {
                           namaSapi: this.cowName
                         });
       this.$refs.myModalRef.hide()
-      if(response.data.data.success){
+      if(response.data.status){
         this.successAlert.push('Congratulation,You have successfully register a new cow, our team will prepare your device, please refresh this page');
       }
       // setTimeout(location.reload(), 5000)
@@ -691,19 +691,6 @@ export default {
       this.dateOnFormat = time;
       return 'secondary';
     },
-    // dateFormatterForAvg(date){
-    //   var created_date = new Date(date);
-    //   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    //   var year = created_date.getFullYear();
-    //   var month = months[created_date.getMonth()];
-    //   var date = created_date.getDate();
-    //   var hour = created_date.getHours();
-    //   var min = created_date.getMinutes();
-    //   var sec = created_date.getSeconds();
-    //   var time = date + ',' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;    // final date with time, you can use this according your requirement
-    //   this.dateFormatterForAvg = time;
-    //   return 'secondary';
-    // },
     toDetail (id){
        this.$router.push({ name: 'Details', params: {id : id} })
       console.log(id);

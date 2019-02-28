@@ -8,6 +8,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 const Dashboard = () => import('@/views/Dashboard')
 const Details = () => import('@/views/Details')
 const Admin = () => import('@/views/admin/Admin')
+const RequestedCows = () => import('@/views/admin/RequestedCows')
 
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
@@ -89,6 +90,11 @@ export default new Router({
           path: '/admin/admin',
           name : 'Admin',
           component: Admin
+        },
+        {
+          path: '/admin/requested-cows',
+          name : 'RequestedCows',
+          component: RequestedCows
         },
         {
           path: 'expert-system',

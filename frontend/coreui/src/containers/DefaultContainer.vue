@@ -8,8 +8,8 @@
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" />
       <b-navbar-nav class="d-md-down-none">
-        <b-nav-item class="px-3" to="/dashboard">Dashboard</b-nav-item>
-        <b-nav-item class="px-3" to="/users" exact>Users</b-nav-item>
+        <small class="text-muted text-uppercase font-weight-bold">Today : {{todayLogin}}</small>
+        
         <!-- <b-nav-item class="px-3">Settings</b-nav-item> -->
       </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
@@ -88,6 +88,7 @@ export default {
   },
   data () {
     return {
+      todayLogin:"",
       nav:[]
     }
   },
@@ -103,7 +104,23 @@ export default {
         }else{
           this.nav = nav.MENU_ADMIN
         }
-    }
+        var today = new Date();
+        this.dateFormatter(today)
+
+    },
+    dateFormatter(date){
+      var created_date = new Date(date);
+      var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      var year = created_date.getFullYear();
+      var month = months[created_date.getMonth()];
+      var date = created_date.getDate();
+      var hour = created_date.getHours();
+      var min = created_date.getMinutes();
+      var sec = created_date.getSeconds();
+      var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;    // final date with time, you can use this according your requirement
+      this.todayLogin = time;
+      return 'secondary';
+    },
   },
   computed: {
     name () {
