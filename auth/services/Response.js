@@ -1,7 +1,7 @@
 class Response{
     constructor () {
       this.status = true
-      this.message = {}
+      this.message = ""
       this.data = {}
     }
   
