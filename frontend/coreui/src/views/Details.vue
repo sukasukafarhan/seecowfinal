@@ -23,7 +23,8 @@
           </b-form> 
         </b-col>
       </b-row>
-      <line-chart :labels="labelsData" :dataheart="dataChartHeart" :datatemperature="dataChartTemp" :dataheartlimit="dataChartHeartLimit" :datatemperaturelimit="dataChartTemperatureLimit" :temperatureupperlimit="dataChartTemperatureUpperLimit" :heartupperlimit="dataChartHeartUpperLimit" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
+      <bounce-spinner v-if="isLoading"></bounce-spinner>
+      <line-chart v-if="isProcess" :labels="labelsData" :dataheart="dataChartHeart" :datatemperature="dataChartTemp" :dataheartlimit="dataChartHeartLimit" :datatemperaturelimit="dataChartTemperatureLimit" :temperatureupperlimit="dataChartTemperatureUpperLimit" :heartupperlimit="dataChartHeartUpperLimit" :options="{responsive: true, maintainAspectRatio: false}"></line-chart>
       <div slot="footer">
         <b-row class="text-center">
           <b-col class="mb-sm-6 mb-0">
@@ -87,11 +88,14 @@ import { Callout } from '@coreui/vue'
 import io from 'socket.io-client'
 import PostsService from "@/services/PostsService"
 import Constants from "@/services/Constants"
+import 'vue-spinners/dist/vue-spinners.css'
+import { BounceSpinner } from 'vue-spinners/dist/vue-spinners.common'
 
 export default {
   name: 'Details',
   components: {
     Callout,
+    BounceSpinner,
     // myComponent,
     LineChart,
     CardLine1ChartExample,
@@ -104,6 +108,8 @@ export default {
   },
   data() {
     return {
+      isLoading:false,
+      isProcess:true,
       page:1,
       tableItemsLength:0,
       dataChartHeart: [],
@@ -246,6 +252,8 @@ export default {
       this.soket();
     },
     async processDataInTime(){
+      this.isLoading = true
+      this.isProcess=false
       this.socket.removeListener('/topic/cows/detail/'+this.$route.params.id)
       this.dataChartHeart= []
       this.dataChartTemp=[]
@@ -275,6 +283,8 @@ export default {
         this.dateFormatter(sapiData.perangkat.data[i].tanggal);
         this.labelsData.push(this.dateOnFormat);
       }
+      this.isProcess=true
+      this.isLoading=false
     },
     getBadge (status) {
       if(status==0){

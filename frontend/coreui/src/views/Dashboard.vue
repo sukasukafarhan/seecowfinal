@@ -1,5 +1,8 @@
 <template>
-  <div class="animated fadeIn">
+<div>
+    <bounce-spinner v-if="isLoading"></bounce-spinner>
+  <div class="animated fadeIn" v-if="isLoading==false">
+  
     <b-row>
       <b-alert show variant="success" v-if="successAlert.length > 0">
               <h4 class="alert-heading">Congratulation !</h4>
@@ -431,6 +434,7 @@
       </b-col>
     </b-row> -->
   </div>
+</div>
 </template>
 
 <script>
@@ -445,12 +449,16 @@ import { Callout } from '@coreui/vue'
 import io from 'socket.io-client'
 import PostsService from "@/services/PostsService"
 import Constants from "@/services/Constants"
+import 'vue-spinners/dist/vue-spinners.css'
+import { BounceSpinner } from 'vue-spinners/dist/vue-spinners.common'
+
 
 export default {
   name: 'dashboard',
   components: {
     Callout,
     // myComponent,
+    BounceSpinner,
     CardLine1ChartExample,
     CardLine2ChartExample,
     CardLine3ChartExample,
@@ -461,6 +469,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
       DeviceActive:0,
       cowName:"",
       socket : io(Constants.SOCKET_SERVER),
@@ -512,7 +521,8 @@ export default {
     }
   },
   created(){
-      this.checkSession(); 
+      this.checkSession();
+     
   },
   methods: {
     showModal () {
@@ -619,6 +629,7 @@ export default {
       // console.log(window.localStorage.getItem("token"));
       const response = await this.fetchDataSapi();
       let sapiData = response.data;
+      this.isLoading=false
       if(sapiData.length > 0){
           this.existingData = true
           var active =0,inActive =0,avgSuhu=0,avgHeart=0;

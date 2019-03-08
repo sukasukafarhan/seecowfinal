@@ -1,5 +1,7 @@
 <template>
-  <div class="app flex-row align-items-center">
+<div>
+    <bounce-spinner v-if="isLoading"></bounce-spinner>
+  <div class="app flex-row align-items-center" v-if="isProcess">
     <div class="container">
       <b-row class="justify-content-center">
         <!-- <h4>{{anu}}</h4> -->
@@ -53,15 +55,24 @@
       </b-row>
     </div>
   </div>
+</div>
 </template>
 <script>
 import PostsService from '@/services/PostsService'
 import io from 'socket.io-client'
 import Constants from "@/services/Constants"
+import 'vue-spinners/dist/vue-spinners.css'
+import { BounceSpinner } from 'vue-spinners/dist/vue-spinners.common'
 export default {
   name: 'Login',
+  components: {
+    // myComponent,
+    BounceSpinner
+  },
   data: function(){
     return{
+       isLoading:false,
+       isProcess:true,
        username:"",
        password:"",
        anu:"",
@@ -93,6 +104,8 @@ export default {
     },
     checkForm:function(e){
       if(this.username && this.password ){
+        this.isLoading=true
+        this.isProcess=false
         this.postData();
       }
       this.errors = []
@@ -118,6 +131,8 @@ export default {
       }else{
          this.errors = []
          this.errors.push('Wrong username or password !');
+         this.isProcess=true
+         this.isLoading=false
       }
       
     },
@@ -126,6 +141,7 @@ export default {
        window.localStorage.setItem("token",token)
        window.localStorage.setItem("peternak_id",response.data.data._id)
        window.localStorage.setItem("role",role)
+       this.isLoading=false
        if(role == Constants.ROLE_ADMIN){
           this.$router.push({ name: 'Admin' })
        }else{
