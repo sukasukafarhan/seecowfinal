@@ -11,11 +11,13 @@ var ConnectRaspi = require('../services/ConnectRaspi');
 var Constants = require('../services/Constants');
 var admin = require("firebase-admin");
 var serviceAccount = require("../seecowapp-firebase-adminsdk-3hlhu-22888ee3ed.json");
+/**
+ * initial FCM app
+ */
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://seecowapp.firebaseio.com"
 });
-
 const sapiRepositories = {
   getSapiOnSpecificTime: async(id,start,end)=>{
     let result = await Sapi.aggregate(
@@ -109,12 +111,13 @@ const sapiRepositories = {
       /**
        * Push notif to FCM
        */
-     
+      let sapiInform = await Sapi.findById(id)
+           
       var registrationToken = "dApGNjvtYws:APA91bF-kHVAHVXQ6EZLMtPU1LgesKtIOuWBOlXhvzjf1uo-NF5U6IVsfFK03FtHshUaN0_41ohu9oJwHjBSCa207zmcxeBRvTpBNBkljj1OpgOWHNrDh9Bb6yoCOY26a-PvgKysAQas";
       var payload = {
         notification: {
-          title: "This is a Notification",
-          body: "This is the body of the notification message."
+          title: sapiInform.namaSapi + "is abnormal !!",
+          body: "Please open yours Seecow App and let's check your cows.."
         }
       };
       
