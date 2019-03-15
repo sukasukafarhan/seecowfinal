@@ -9,6 +9,8 @@ var ObjectId = require('mongoose').Types.ObjectId;
 var peternakRepositories = require('../repositories/peternak.repositories');
 var ConnectRaspi = require('../services/ConnectRaspi');
 var Constants = require('../services/Constants');
+var admin = require("firebase-admin");
+var serviceAccount = require("../seecowapp-firebase-adminsdk-3hlhu-22888ee3ed.json");
 
 const sapiRepositories = {
   getSapiOnSpecificTime: async(id,start,end)=>{
@@ -99,6 +101,33 @@ const sapiRepositories = {
        * Abnormal
        */
       tmpKondisi = Constants.ABNORMAL_CONDITION
+      
+      /**
+       * Push notif to FCM
+       */
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        databaseURL: "https://seecowapp.firebaseio.com"
+      });
+      var registrationToken = "dApGNjvtYws:APA91bF-kHVAHVXQ6EZLMtPU1LgesKtIOuWBOlXhvzjf1uo-NF5U6IVsfFK03FtHshUaN0_41ohu9oJwHjBSCa207zmcxeBRvTpBNBkljj1OpgOWHNrDh9Bb6yoCOY26a-PvgKysAQas";
+      var payload = {
+        notification: {
+          title: "This is a Notification",
+          body: "This is the body of the notification message."
+        }
+      };
+      
+       var options = {
+        priority: "high",
+        timeToLive: 60 * 60 *24
+      };
+      admin.messaging().sendToDevice(registrationToken, payload, options)
+        .then(function(response) {
+          console.log("Successfully sent message:", response);
+        })
+        .catch(function(error) {
+          console.log("Error sending message:", error);
+        });
     }
     let sapiOnUpdate =  await 
     Sapi.update({
