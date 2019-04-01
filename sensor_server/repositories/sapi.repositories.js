@@ -116,7 +116,7 @@ const sapiRepositories = {
       var registrationToken = "dApGNjvtYws:APA91bF-kHVAHVXQ6EZLMtPU1LgesKtIOuWBOlXhvzjf1uo-NF5U6IVsfFK03FtHshUaN0_41ohu9oJwHjBSCa207zmcxeBRvTpBNBkljj1OpgOWHNrDh9Bb6yoCOY26a-PvgKysAQas";
       var payload = {
         notification: {
-          title: sapiInform.namaSapi + "is abnormal !!",
+          title: sapiInform.namaSapi + " is abnormal !!",
           body: "Please open yours Seecow App and let's check your cows.."
         }
       };

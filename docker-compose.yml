@@ -3,6 +3,7 @@
 # use sudo for each docker command
 # use  $docker-compose up -d --no-deps --build <service_name> to rebuild services after edit or modified
 # use sudo  docker-compose up -d --no-deps sensor-controller-service to re-creating container when u modified
+
 version: '2'
 services:
   authentication-service:
@@ -21,23 +22,20 @@ services:
     links:
       - mongo
   
+  intelligent-server-service:
+    container_name: intelligent-server-container
+    build: ./intelligent_server/
+    ports:
+      - 3002:3000
+    links:
+      - mongo
+
   frontend-service:
     container_name: frontend-container
     build: ./frontend/coreui/
     ports:
       - 8080:8080
   
-  # frontend-controller-service:
-  #   container_name: frontend-controller-container
-  #   build: ./frontend/server/
-  #   ports:
-  #     - 3003:3000
-  admin-mongo:
-    container_name: admin-mongo
-    build: ./adminMongo/
-    ports:
-      - 1234:1234
-
   mongo:  
     image: mvertes/alpine-mongo
     container_name: mongo-container
@@ -45,9 +43,7 @@ services:
       - ./mongo-db/mongo-data:/data/db
     ports:
       - "27017:27017"
-
-
-  # this service for portainer on production
+      
   portainer:  
       image: portainer/portainer
       container_name: portainer-container

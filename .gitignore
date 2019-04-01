@@ -25,3 +25,5 @@
 /frontend/coreui/*.njsproj
 /frontend/coreui/*.sln
 /frontend/coreui/*.sw*
+
+/intelligent_server/node_modules/
