@@ -37,11 +37,11 @@ def index():
 def static_proxy(path):
     """ static folder serve """
     file_name = path.split('/')[-1]
-    dir_name = os.path.join('dist', '/'.join(path.split('/')[:-1]))
+    dir_name = os.path.join('controllers', '/'.join(path.split('/')[:-1]))
     return send_from_directory(dir_name, file_name)
 
 
 if __name__ == '__main__':
     LOG.info('running environment: %s', os.environ.get('ENV'))
     app.config['DEBUG'] = os.environ.get('ENV') == 'development' # Debug mode if development env
-    app.run(host='0.0.0.0', port=int(4000)) # Run the app
+    app.run(host='0.0.0.0', port=int(PORT)) # Run the app

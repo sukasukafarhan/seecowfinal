@@ -8,8 +8,8 @@ ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
     __name__, filename=os.path.join(ROOT_PATH, 'output.log'))
 
-@app.route('/user', methods=['GET'])
-def get_all_users():
+@app.route('/users', methods=['GET'])
+def users():
   star = mongo.db.users
   output = []
   for s in star.find():

@@ -30,26 +30,18 @@ services:
     links:
       - mongo
 
-  # expert-system-service:
-  #   container_name: expert-system-container
-  #   build: ./expert_system/modules/
-  #   ports:
-  #     - 4000:4000
-  #   links:
-  #     - mongo
-  #   environment:
-  #     - ENV=development
-  #     - PORT=4000
-  #     - DB=mongodb://mongo:27017/seecow_db
-  
-  decision-system-service:
-    container_name: decision-system-container
-    build: ./decision_tree/
+  expert-system-service:
+    container_name: expert-system-container
+    build: ./expert_system/modules/
     ports:
       - 4000:4000
     links:
       - mongo
-    
+    environment:
+      - ENV=development
+      - PORT=4000
+      - DB=mongodb://mongo:27017/seecow_db
+     
   frontend-service:
     container_name: frontend-container
     build: ./frontend/coreui/

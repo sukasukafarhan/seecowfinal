@@ -23,9 +23,9 @@ class JSONEncoder(json.JSONEncoder):
 app = Flask(__name__)
 
 # add mongo url to flask config, so that flask_pymongo can use it to make connection
-# app.config['MONGO_URI'] = os.environ.get('DB')
-app.config['MONGO_DBNAME'] = 'seecow_db'
-app.config['MONGO_URI'] = 'mongodb://mongo:27017/seecow_db'
+app.config['MONGO_URI'] = os.environ.get('DB')
+# app.config['MONGO_DBNAME'] = 'seecow_db'
+# app.config['MONGO_URI'] = 'mongodb://mongo:27017/seecow_db'
 mongo = PyMongo(app)
 
 # use the modified encoder class to handle ObjectId & datetime object while jsonifying the response.
