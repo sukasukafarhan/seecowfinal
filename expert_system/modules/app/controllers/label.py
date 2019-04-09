@@ -1,21 +1,32 @@
-''' controller and routes for users '''
+''' controller and routes for penyakit '''
 import os
 from flask import request, jsonify
 from app import app, mongo
 import logger
+from app.schemas import validate_label
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
     __name__, filename=os.path.join(ROOT_PATH, 'output.log'))
 
-@app.route('/users', methods=['GET'])
-def users():
-  star = mongo.db.users
+@app.route('/all_label', methods=['GET'])
+def get_all_diseases():
+  star = mongo.db.diseases
   output = []
   for s in star.find():
     output.append({'username' : s['username'], 'password' : s['password']})
   return jsonify({'result' : output})
 
+
+@app.route('/add_label', methods=['POST'])
+def add_diseases():
+  data = validate_label(request.get_json())
+  if data['ok']:
+    data = data['data']
+    mongo.db.labels.insert_one(data)
+    return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
+  else:
+    return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
 # @app.route('/user', methods=['GET', 'POST', 'DELETE', 'PATCH'])
 # def user():
 #     if request.method == 'GET':
