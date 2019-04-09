@@ -14,7 +14,7 @@ label_schema = {
                 "type":"string"
             },
             "minItems": 1,
-            "uniqueItems": true
+            "uniqueItems": True
         },
         "labelIdentity": {
             "type": "number"
