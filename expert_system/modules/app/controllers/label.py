@@ -5,6 +5,7 @@ from app import app, mongo
 import logger
 from app.schemas.label import validate_label
 from app.services.response import response
+import json
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
@@ -35,7 +36,9 @@ def get_all_diseases():
 def add_diseases():
   try:
     responses = response()
-    data = validate_label(request.get_json())
+    data_post = json.loads(request.data)
+    # data = validate_label(request.get_json())
+    data = validate_label(data_post)
     if data['ok']:
       data = data['data']
       mongo.db.labels.insert_one(data)
