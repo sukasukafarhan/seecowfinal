@@ -5,10 +5,15 @@ from app import app, mongo
 import logger
 from app.schemas.label import validate_label
 from app.services.response import response
+from werkzeug.utils import secure_filename
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
     __name__, filename=os.path.join(ROOT_PATH, 'output.log'))
+    
+def allowed_file(filename):
+  return '.' in filename and \ 
+    filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/all_label', methods=['GET'])
 def get_all_diseases():
@@ -53,14 +58,15 @@ def add_diseases():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
-  print request.files
-# checking if the file is present or not.
   if 'file' not in request.files:
-    return "No file found"
- 
+    return "no file"
+  
   file = request.files['file']
-  file.save("test.jpg")
-  return "file successfully saved"
+  if file and allowed_file(file.filename):
+    filename = secure_filename(file.filename)
+    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+  
+  return "success"
 
 # @app.route('/user', methods=['GET', 'POST', 'DELETE', 'PATCH'])
 # def user():

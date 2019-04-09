@@ -20,10 +20,14 @@ class JSONEncoder(json.JSONEncoder):
 
 
 # create the flask object
+UPLOAD_FOLDER = './static/'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask(__name__)
 
 # add mongo url to flask config, so that flask_pymongo can use it to make connection
 app.config['MONGO_URI'] = os.environ.get('DB')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # app.config['MONGO_DBNAME'] = 'seecow_db'
 # app.config['MONGO_URI'] = 'mongodb://mongo:27017/seecow_db'
 mongo = PyMongo(app)
