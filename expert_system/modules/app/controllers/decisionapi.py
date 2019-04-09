@@ -17,7 +17,7 @@ LOG = logger.get_root_logger(
 def allowed_file(filename):
   return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/learning/upload/training_data', methods=['POST'])
+@app.route('/intelligent/upload_training_data', methods=['POST'])
 def upload_file():
   if 'file' not in request.files:
     return "no file"
