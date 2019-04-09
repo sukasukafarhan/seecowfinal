@@ -7,7 +7,7 @@ from app.schemas.label import validate_label
 from app.services.response import response
 from werkzeug.utils import secure_filename
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['csv'])
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
