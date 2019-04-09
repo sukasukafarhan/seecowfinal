@@ -21,7 +21,6 @@ class JSONEncoder(json.JSONEncoder):
 
 # create the flask object
 UPLOAD_FOLDER = './static/'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 
