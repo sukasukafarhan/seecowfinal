@@ -24,7 +24,9 @@ def get_all_diseases():
   responses = response()
   responses.setData(output)
   responses.setMessage("Success")
-  return jsonify({responses.getResponse()})
+  print(responses.getResponse())
+  print(type(responses.getResponse()))
+  return jsonify(responses.getResponse())
 
 
 @app.route('/add_label', methods=['POST'])
