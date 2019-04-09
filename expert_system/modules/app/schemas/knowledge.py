@@ -2,7 +2,7 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from jsonschema.exceptions import SchemaError
 
-label_schema = {
+knowledge_schema = {
     "type": "object",
     "properties": {
         "namaLabel": {

@@ -5,22 +5,14 @@ from jsonschema.exceptions import SchemaError
 attribute_schema = {
     "type": "object",
     "properties": {
-        "namaLabel": {
+        "namaAttribute": {
             "type": "string",
         },
-        "attribute": {
-            "type": "array",
-            "items": {
-                "type":"string"
-            },
-            "minItems": 1,
-            "uniqueItems": True
-        },
-        "labelIdentity": {
+        "attributeIdentity": {
             "type": "number"
         }
     },
-    "required": ["namaLabel", "attribute","labelIdentity"],
+    "required": ["namaAttribute","attributeIdentity"],
     "additionalProperties": False
 }
 

@@ -51,6 +51,16 @@ def add_diseases():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
+@app.route('/upload', methods=['POST'])
+def upload_file():
+  print request.files
+# checking if the file is present or not.
+  if 'file' not in request.files:
+    return "No file found"
+ 
+  file = request.files['file']
+  file.save("test.jpg")
+  return "file successfully saved"
 
 # @app.route('/user', methods=['GET', 'POST', 'DELETE', 'PATCH'])
 # def user():
