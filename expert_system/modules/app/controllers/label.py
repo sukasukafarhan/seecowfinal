@@ -3,7 +3,7 @@ import os
 from flask import request, jsonify
 from app import app, mongo
 import logger
-from app.schemas import validate_label
+from app.schemas.label import validate_label
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
