@@ -33,4 +33,4 @@ def upload_file():
 'Produksi susu menurun','Kulit di bawah mata kuning','Abortus atau keguguran terjadi selama1-3 minggu','Urin berwarna merah gelap hampir hitam','Kejang kejang',
 'Terdapat luka di sapi','Menggaruk atau menggesek tubuhnya','Ada kerak atau kopeng pada permukaan kulit','Bulu rontok','label']
     pima = pd.read_csv("././static/data_dari_koleksi_2.csv", header=None, names=col_names)
-    return pima['label']
+    return str(pima['label'])
