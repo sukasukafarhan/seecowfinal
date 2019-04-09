@@ -21,10 +21,10 @@ def get_all_diseases():
         'attribute' : s['attribute'],
         'labelIdentity': s['labelIdentity']
       })
-  response = response()
-  response.setData(output)
-  response.setMessage("Success")
-  return jsonify({response.getResponse()})
+  responses = response()
+  responses.setData(output)
+  responses.setMessage("Success")
+  return jsonify({responses.getResponse()})
 
 
 @app.route('/add_label', methods=['POST'])
