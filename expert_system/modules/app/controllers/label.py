@@ -12,8 +12,7 @@ LOG = logger.get_root_logger(
     __name__, filename=os.path.join(ROOT_PATH, 'output.log'))
     
 def allowed_file(filename):
-  return '.' in filename and \ 
-    filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+  return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/all_label', methods=['GET'])
 def get_all_diseases():
