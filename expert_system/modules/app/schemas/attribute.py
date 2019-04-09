@@ -2,17 +2,25 @@ from jsonschema import validate
 from jsonschema.exceptions import ValidationError
 from jsonschema.exceptions import SchemaError
 
-label_schema = {
+attribute_schema = {
     "type": "object",
     "properties": {
         "namaLabel": {
             "type": "string",
         },
+        "attribute": {
+            "type": "array",
+            "items": {
+                "type":"string"
+            },
+            "minItems": 1,
+            "uniqueItems": True
+        },
         "labelIdentity": {
             "type": "number"
         }
     },
-    "required": ["namaLabel","labelIdentity"],
+    "required": ["namaLabel", "attribute","labelIdentity"],
     "additionalProperties": False
 }
 

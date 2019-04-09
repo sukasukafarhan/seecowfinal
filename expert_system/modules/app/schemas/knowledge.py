@@ -8,11 +8,19 @@ label_schema = {
         "namaLabel": {
             "type": "string",
         },
+        "attribute": {
+            "type": "array",
+            "items": {
+                "type":"string"
+            },
+            "minItems": 1,
+            "uniqueItems": True
+        },
         "labelIdentity": {
             "type": "number"
         }
     },
-    "required": ["namaLabel","labelIdentity"],
+    "required": ["namaLabel", "attribute","labelIdentity"],
     "additionalProperties": False
 }
 

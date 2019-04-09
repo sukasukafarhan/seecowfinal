@@ -1,4 +1,4 @@
-''' controller and routes for penyakit '''
+''' controller and routes for label '''
 import os
 from flask import request, jsonify
 from app import app, mongo
@@ -20,7 +20,6 @@ def get_all_diseases():
       output.append(
         {
           'namaLabel' : s['namaLabel'], 
-          'attribute' : s['attribute'],
           'labelIdentity': s['labelIdentity']
         })
     responses.setData(output)
@@ -51,6 +50,7 @@ def add_diseases():
     responses.setStatus(False)
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
+
 
 # @app.route('/user', methods=['GET', 'POST', 'DELETE', 'PATCH'])
 # def user():
