@@ -37,8 +37,12 @@ def add_diseases():
   try:
     responses = response()
     data_post = json.loads(request.data)
+    data_load = {
+      "namaLabel" : data_post['namaLabel'],
+      "labelIdentity" : data_post['labelIdentity']
+    }
     # data = validate_label(request.get_json())
-    data = validate_label(data_post)
+    data = validate_label(data_load)
     if data['ok']:
       data = data['data']
       mongo.db.labels.insert_one(data)
