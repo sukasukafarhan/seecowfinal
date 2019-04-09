@@ -14,10 +14,11 @@ class response:
         self.__data = data
 
     def getResponse(self):
-        respon = response()
-        respon.setStatus(self.__status)
-        respon.setMessage(self.__message)
-        respon.setData(self.__data)
+        respon = {
+            'status' : self.__status,
+            'message' : self.__message,
+            'data' : self.__data
+        }
         return respon
     
 

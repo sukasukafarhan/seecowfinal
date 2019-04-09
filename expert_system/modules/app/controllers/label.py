@@ -23,9 +23,6 @@ def get_all_diseases():
       })
   responses = response()
   responses.setData(output)
-  responses.setMessage("Success")
-  print(responses.getResponse())
-  print(type(responses.getResponse()))
   return jsonify(responses.getResponse())
 
 
