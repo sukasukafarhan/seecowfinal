@@ -20,7 +20,7 @@ class JSONEncoder(json.JSONEncoder):
 
 
 # create the flask object
-UPLOAD_FOLDER = './static/'
+UPLOAD_FOLDER = 'static/'
 
 app = Flask(__name__)
 
