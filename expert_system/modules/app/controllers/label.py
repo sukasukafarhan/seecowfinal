@@ -4,6 +4,7 @@ from flask import request, jsonify
 from app import app, mongo
 import logger
 from app.schemas.label import validate_label
+from app.services.response import response
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
@@ -11,11 +12,19 @@ LOG = logger.get_root_logger(
 
 @app.route('/all_label', methods=['GET'])
 def get_all_diseases():
-  star = mongo.db.diseases
+  label = mongo.db.labels
   output = []
-  for s in star.find():
-    output.append({'username' : s['username'], 'password' : s['password']})
-  return jsonify({'result' : output})
+  for s in label.find():
+    output.append(
+      {
+        'namaLabel' : s['namaLabel'], 
+        'attribute' : s['attribute'],
+        'labelIdentity': s['labelIdentity']
+      })
+  response = response()
+  response.setData(output)
+  response.setMessage("Success")
+  return jsonify({response.getResponse()})
 
 
 @app.route('/add_label', methods=['POST'])
