@@ -25,24 +25,33 @@ def get_all_diseases():
         })
     responses.setData(output)
     return jsonify(responses.getResponse())
-
   except :
     responses = response()
     responses.setStatus(False)
-    responses.setMessage(str(e))
+    responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
+
 
 @app.route('/add_label', methods=['POST'])
 def add_diseases():
-  data = validate_label(request.get_json())
-  if data['ok']:
-    data = data['data']
-    mongo.db.labels.insert_one(data)
+  try:
     responses = response()
-    responses.setData
-    return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
-  else:
-    return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
+    data = validate_label(request.get_json())
+    if data['ok']:
+      data = data['data']
+      mongo.db.labels.insert_one(data)
+      responses.setMessage("Success add label on database")
+      return jsonify(responses.getResponse())
+    else:
+      responses.setStatus(False)
+      responses.setMessage("Something wrong :(")
+      return jsonify(responses.getResponse())
+  except:
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
 # @app.route('/user', methods=['GET', 'POST', 'DELETE', 'PATCH'])
 # def user():
 #     if request.method == 'GET':
