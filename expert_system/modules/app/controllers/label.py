@@ -25,8 +25,8 @@ def get_all_diseases():
         })
     responses.setData(output)
     return jsonify(responses.getResponse())
-    
-  except Exception, e:
+
+  except :
     responses = response()
     responses.setStatus(False)
     responses.setMessage(str(e))
