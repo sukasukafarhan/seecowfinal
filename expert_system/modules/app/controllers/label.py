@@ -12,19 +12,25 @@ LOG = logger.get_root_logger(
 
 @app.route('/all_label', methods=['GET'])
 def get_all_diseases():
-  label = mongo.db.labels
-  output = []
-  for s in label.find():
-    output.append(
-      {
-        'namaLabel' : s['namaLabel'], 
-        'attribute' : s['attribute'],
-        'labelIdentity': s['labelIdentity']
-      })
-  responses = response()
-  responses.setData(output)
-  return jsonify(responses.getResponse())
-
+  try:
+    responses = response()
+    label = mongo.db.labels
+    output = []
+    for s in label.find():
+      output.append(
+        {
+          'namaLabel' : s['namaLabel'], 
+          'attribute' : s['attribute'],
+          'labelIdentity': s['labelIdentity']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+    
+  except Exception, e:
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage(str(e))
+    return jsonify(responses.getResponse())
 
 @app.route('/add_label', methods=['POST'])
 def add_diseases():
@@ -32,6 +38,8 @@ def add_diseases():
   if data['ok']:
     data = data['data']
     mongo.db.labels.insert_one(data)
+    responses = response()
+    responses.setData
     return jsonify({'ok': True, 'message': 'User created successfully!'}), 200
   else:
     return jsonify({'ok': False, 'message': 'Bad request parameters: {}'.format(data['message'])}), 400
