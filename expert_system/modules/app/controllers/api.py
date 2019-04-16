@@ -7,6 +7,15 @@ from app.schemas.label import validate_label
 from app.services.response import response
 from werkzeug.utils import secure_filename
 import pandas as pd
+import numpy as np
+from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifier
+from sklearn.model_selection import train_test_split # Import train_test_split function
+from sklearn import metrics #Import scikit-learn metrics module for accuracy calculation
+from sklearn.tree import export_graphviz
+from sklearn.externals.six import StringIO   
+from sklearn.tree import _tree 
+import pydotplus
+import pickle
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
