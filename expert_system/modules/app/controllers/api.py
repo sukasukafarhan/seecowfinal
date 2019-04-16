@@ -91,6 +91,7 @@ def get_features(colls_name):
   # GET ATTRIBUTE / FEATURES
   feature_cols = colls_name[0:len(colls_name)-1]
   iteration = 0
+  mongo.db.attributes.drop()
   for i in range(len(feature_cols)):
     data = {
       "namaAttribute" : feature_cols[i],
