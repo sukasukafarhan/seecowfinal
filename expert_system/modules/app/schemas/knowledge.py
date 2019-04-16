@@ -25,9 +25,9 @@ knowledge_schema = {
 }
 
 
-def validate_label(data):
+def validate_knowledge(data):
     try:
-        validate(data, label_schema)
+        validate(data, knowledge_schema)
     except ValidationError as e:
         return {'ok': False, 'message': e}
     except SchemaError as e:
