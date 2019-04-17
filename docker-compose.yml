@@ -41,6 +41,7 @@ services:
       - ENV=development
       - PORT=4000
       - DB=mongodb://mongo:27017/seecow_db
+      - SECRET=nodeauthsecret
      
   frontend-service:
     container_name: frontend-container

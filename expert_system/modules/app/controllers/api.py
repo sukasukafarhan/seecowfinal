@@ -1,7 +1,7 @@
 ''' controller and routes for label '''
 import os
 from flask import request, jsonify
-from app import app, mongo
+from app import app, mongo,flask_bcrypt, jwt
 import logger
 from app.schemas.label import validate_label
 from app.services.response import response
@@ -16,6 +16,7 @@ from sklearn.externals.six import StringIO
 from sklearn.tree import _tree 
 import pydotplus
 import pickle
+from flask_jwt_extended import (create_access_token, create_refresh_token,jwt_required, jwt_refresh_token_required, get_jwt_identity)
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
@@ -25,6 +26,7 @@ LOG = logger.get_root_logger(
     
 # =======SECTION LABEL=======
 @app.route('/label/all_label', methods=['GET'])
+@jwt_required
 def get_all_diseases():
   try:
     responses = response()
@@ -160,6 +162,23 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
+# def save_result(model_testing,result):
+#   attributes = []
+#   for i in model_testing:
+#     attributes.append({
+#       "namaAttributes" : i
+#       "nilai" : model_testing[i]
+#     })
+#   d = {
+#     "tanggal" 
+#   }
+@jwt.unauthorized_loader
+def unauthorized_response(callback):
+  return jsonify({
+    'ok': False,
+    'message': 'Missing Authorization Header'
+    }), 401
+
 @app.route('/intelligent/testing_data', methods=['POST'])
 def testing_data():
   try:
@@ -184,18 +203,3 @@ def testing_data():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-#   if 'file' not in request.files:
-#     return "no file"
-
-#   file = request.files['file']
-#   if file and allowed_file(file.filename):
-#     filename = secure_filename(file.filename)
-#     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-#     col_names = ['Ambing dan puting bengkak', 'Susus berubah warna', 'Sapi kesakitan bila ambing dipegang', 'Ambing keras dan panas bila dipegang',
-# 'Sisi perut sebelah kiri membesar','Lambung bila dipukul berbunyi seperti drum','Tidak nafsu makan','Gelisah','Air ludah banyak berbuih dan ngiler',
-# 'Adanya lepuh lepuh pada gusi,lidah,sekitar kuku dan di ambing susu','Suhu tubuh tinggi','Bengkak di daerah leher,dada,sisi lambung,pinggang dan alat kelamin luar',
-# 'Pendarahan pada dubur,mulut,hidung, dan urin bercampur darah','Menanduk benda di sekitarnya','Keguguran pada umur kebuntingan 5-8 bulan','Keluar cairan keruh saat keguguran',
-# 'Produksi susu menurun','Kulit di bawah mata kuning','Abortus atau keguguran terjadi selama1-3 minggu','Urin berwarna merah gelap hampir hitam','Kejang kejang',
-# 'Terdapat luka di sapi','Menggaruk atau menggesek tubuhnya','Ada kerak atau kopeng pada permukaan kulit','Bulu rontok','label']
-#     pima = pd.read_csv("././static/data_dari_koleksi_2.csv", header=None, names=col_names)
-#     return str(pima['label'])
