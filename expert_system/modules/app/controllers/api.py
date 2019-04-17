@@ -17,6 +17,7 @@ from sklearn.tree import _tree
 import pydotplus
 import pickle
 from datetime import datetime
+from bson.objectid import ObjectId
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
@@ -161,21 +162,6 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-def save_result(model_testing,result,sapi_id):
-  attributes = []
-  for i in model_testing:
-    attributes.append({
-      "namaAttributes" : i,
-      "nilai" : model_testing[i]
-    })
-  d = {
-    "tanggal" : datetime.now(),
-    "sapiId" : sapi_id,
-    "indexDiagnose" : result,
-    "gejala" : attributes 
-  }
-  mongo.db.diagnoses.insert_one(d)
-
 @app.route('/intelligent/testing_data', methods=['POST'])
 def testing_data():
   try:
@@ -198,9 +184,23 @@ def testing_data():
     result = pickle_model.predict(Z_test)
     responses = response()
     responses.setStatus(True)
-    responses.setData(labels[result[0]])
+    # responses.setData(labels[result[0]])
     # Save
-    save_result(model_for_saving,result[0],sapi_id)
+    attributes2 = []
+    for i in model_for_saving:
+      attributes2.append({
+        "namaAttributes" : i,
+        "nilai" : model_for_saving[i]
+      })
+    res = labels[result[0]]
+    diagnose_insert = {
+      "sapiId" : ObjectId(sapi_id),
+      "diagnose" : res,
+      "gejala" : attributes2, 
+      "tanggal" : datetime.now()
+    }
+    mongo.db.diagnoses.insert_one(diagnose_insert)
+    responses.setData(diagnose_insert)
     return jsonify(responses.getResponse())
 
   except:
