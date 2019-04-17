@@ -85,7 +85,7 @@ def get_features():
   try:
     attributes = mongo.db.attributes
     output = []
-    for s in label.find():
+    for s in attributes.find():
       output.append(s['namaAttribute'])
     return output
   except :
