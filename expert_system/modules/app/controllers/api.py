@@ -107,12 +107,12 @@ def save_labels(data):
   iteration=0
   mongo.db.labels.drop()
   for i in range(len(labels_unique)):
-    data = {
+    d = {
       "namaLabel" : labels_unique[i],
       "labelIdentity" : iteration
     }
     iteration+=1
-    mongo.db.labels.insert_one(data)
+    mongo.db.labels.insert_one(d)
   data['Label'] = pd.factorize(data.Label)[0]
   return data
 
