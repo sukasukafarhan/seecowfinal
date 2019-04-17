@@ -23,7 +23,7 @@ ROOT_PATH = os.environ.get('ROOT_PATH')
 LOG = logger.get_root_logger(
     __name__, filename=os.path.join(ROOT_PATH, 'output.log'))
     
-# SECTION LABEL
+# =======SECTION LABEL=======
 @app.route('/label/all_label', methods=['GET'])
 def get_all_diseases():
   try:
@@ -45,25 +45,25 @@ def get_all_diseases():
     return jsonify(responses.getResponse())
 
 
-@app.route('/label/add_label', methods=['POST'])
-def add_diseases():
-  try:
-    responses = response()
-    data = validate_label(request.get_json())
-    if data['ok']:
-      data = data['data']
-      mongo.db.labels.insert_one(data)
-      responses.setMessage("Success add label on database")
-      return jsonify(responses.getResponse())
-    else:
-      responses.setStatus(False)
-      responses.setMessage("Something wrong :(")
-      return jsonify(responses.getResponse())
-  except:
-    responses = response()
-    responses.setStatus(False)
-    responses.setMessage("Something wrong :(")
-    return jsonify(responses.getResponse())
+# @app.route('/label/add_label', methods=['POST'])
+# def add_diseases():
+#   try:
+#     responses = response()
+#     data = validate_label(request.get_json())
+#     if data['ok']:
+#       data = data['data']
+#       mongo.db.labels.insert_one(data)
+#       responses.setMessage("Success add label on database")
+#       return jsonify(responses.getResponse())
+#     else:
+#       responses.setStatus(False)
+#       responses.setMessage("Something wrong :(")
+#       return jsonify(responses.getResponse())
+#   except:
+#     responses = response()
+#     responses.setStatus(False)
+#     responses.setMessage("Something wrong :(")
+#     return jsonify(responses.getResponse())
 
 def getLabel():
   try:
@@ -75,7 +75,7 @@ def getLabel():
   except :
     return False
 
-# SECTION DECISION TREE
+# =======SECTION DECISION TREE=======
 def allowed_file(filename):
   return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
@@ -102,6 +102,20 @@ def get_features(colls_name):
 
   return feature_cols
 
+def save_labels(data):
+  labels_unique = data.Label.unique()
+  iteration=0
+  mongo.db.labels.drop()
+  for i in range(len(labels_unique)):
+    data = {
+      "namaLabel" : labels_unique[i],
+      "labelIdentity" : iteration
+    }
+    iteration+=1
+    mongo.db.labels.insert_one(data)
+  data['Label'] = pd.factorize(data.Label)[0]
+  return data
+
 def pre_processing(data,colls_name):
   # PREPROCESSING DATA
   # - drop header by index
@@ -111,7 +125,8 @@ def pre_processing(data,colls_name):
   data_array = data_after_drop_label.values
   data_training = pd.DataFrame(data=data_array)
   data_training.columns = colls_name
-  return data_training
+  data_ready = save_labels(data_training)
+  return data_ready
 
 def training(data_training,feature_cols):
   X = data_training[feature_cols]
@@ -156,6 +171,12 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
+@app.route('/intelligent/testing_data', methods=['POST'])
+def testing_data():
+  try:
+    
+  
+  except:
 
 #   if 'file' not in request.files:
 #     return "no file"
