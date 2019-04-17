@@ -32,7 +32,7 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = datetime.timedelta(days=1)
 # app.config['MONGO_DBNAME'] = 'seecow_db'
 # app.config['MONGO_URI'] = 'mongodb://mongo:27017/seecow_db'
 mongo = PyMongo(app)
-
+jwt = JWTManager(app)
 # use the modified encoder class to handle ObjectId & datetime object while jsonifying the response.
 app.json_encoder = JSONEncoder
 
