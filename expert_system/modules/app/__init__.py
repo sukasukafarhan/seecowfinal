@@ -7,7 +7,6 @@ from bson.objectid import ObjectId
 from flask import Flask
 from flask_pymongo import PyMongo
 from flask_jwt_extended import JWTManager
-from flask_bcrypt import Bcrypt
 
 class JSONEncoder(json.JSONEncoder):
     ''' extend json-encoder class'''
