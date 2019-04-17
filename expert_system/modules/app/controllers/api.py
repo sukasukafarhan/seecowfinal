@@ -44,27 +44,6 @@ def get_all_diseases():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-
-# @app.route('/label/add_label', methods=['POST'])
-# def add_diseases():
-#   try:
-#     responses = response()
-#     data = validate_label(request.get_json())
-#     if data['ok']:
-#       data = data['data']
-#       mongo.db.labels.insert_one(data)
-#       responses.setMessage("Success add label on database")
-#       return jsonify(responses.getResponse())
-#     else:
-#       responses.setStatus(False)
-#       responses.setMessage("Something wrong :(")
-#       return jsonify(responses.getResponse())
-#   except:
-#     responses = response()
-#     responses.setStatus(False)
-#     responses.setMessage("Something wrong :(")
-#     return jsonify(responses.getResponse())
-
 def getLabel():
   try:
     label = mongo.db.labels
@@ -171,12 +150,19 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-# @app.route('/intelligent/testing_data', methods=['POST'])
-# def testing_data():
-#   try:
-    
-  
-#   except:
+@app.route('/intelligent/testing_data', methods=['POST'])
+def testing_data():
+  try:
+    labels = getLabel()
+    model_testing = {}
+    for i in range(len(labels)):
+      model_testing.update({labels[i]:[request.form[labels[i]]]})
+    return model_testing  
+  except:
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
 
 #   if 'file' not in request.files:
 #     return "no file"
