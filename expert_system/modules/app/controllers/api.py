@@ -171,12 +171,12 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-@app.route('/intelligent/testing_data', methods=['POST'])
-def testing_data():
-  try:
+# @app.route('/intelligent/testing_data', methods=['POST'])
+# def testing_data():
+#   try:
     
   
-  except:
+#   except:
 
 #   if 'file' not in request.files:
 #     return "no file"
