@@ -1,7 +1,7 @@
 ''' controller and routes for label '''
 import os
 from flask import request, jsonify
-from app import app, mongo, jwt
+from app import app, mongo
 import logger
 from app.schemas.label import validate_label
 from app.services.response import response
@@ -16,7 +16,6 @@ from sklearn.externals.six import StringIO
 from sklearn.tree import _tree 
 import pydotplus
 import pickle
-from flask_jwt_extended import (create_access_token, create_refresh_token,jwt_required, jwt_refresh_token_required, get_jwt_identity)
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
@@ -26,7 +25,6 @@ LOG = logger.get_root_logger(
     
 # =======SECTION LABEL=======
 @app.route('/label/all_label', methods=['GET'])
-@jwt_required
 def get_all_diseases():
   try:
     responses = response()
@@ -162,22 +160,19 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-# def save_result(model_testing,result):
-#   attributes = []
-#   for i in model_testing:
-#     attributes.append({
-#       "namaAttributes" : i
-#       "nilai" : model_testing[i]
-#     })
-#   d = {
-#     "tanggal" 
-#   }
-@jwt.unauthorized_loader
-def unauthorized_response(callback):
-  return jsonify({
-    'ok': False,
-    'message': 'Missing Authorization Header'
-    }), 401
+@app.route('/intelligent/coba_data', methods=['POST'])
+def save_result(model_testing,result):
+   query = request.args
+   return query['t']
+  # attributes = []
+  # for i in model_testing:
+  #   attributes.append({
+  #     "namaAttributes" : i
+  #     "nilai" : model_testing[i]
+  #   })
+  # d = {
+  #   "tanggal" 
+  # }
 
 @app.route('/intelligent/testing_data', methods=['POST'])
 def testing_data():
