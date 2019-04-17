@@ -22,13 +22,6 @@ services:
     links:
       - mongo
   
-  intelligent-server-service:
-    container_name: intelligent-server-container
-    build: ./intelligent_server/
-    ports:
-      - 3002:3000
-    links:
-      - mongo
 
   expert-system-service:
     container_name: expert-system-container
