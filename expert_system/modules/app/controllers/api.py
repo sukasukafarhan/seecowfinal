@@ -155,9 +155,14 @@ def testing_data():
   try:
     labels = getLabel()
     model_testing = {}
+    d = request.get_json()
     for i in range(len(labels)):
-      model_testing.update({labels[i]:[request.form[labels[i]]]})
-    return model_testing  
+      model_testing.update({labels[i]:[d.get(labels[i])]})
+    responses = response()
+    responses.setStatus(True)
+    responses.setData(model_testing)
+    return jsonify(responses.getResponse())
+
   except:
     responses = response()
     responses.setStatus(False)
