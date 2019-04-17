@@ -44,7 +44,7 @@ def get_all_diseases():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-def getLabel():
+def get_label():
   try:
     label = mongo.db.labels
     output = []
@@ -66,7 +66,7 @@ def get_header(data):
 
   return colls_name
 
-def get_features(colls_name):
+def save_features(colls_name):
   # GET ATTRIBUTE / FEATURES
   feature_cols = colls_name[0:len(colls_name)-1]
   iteration = 0
@@ -80,6 +80,16 @@ def get_features(colls_name):
     mongo.db.attributes.insert_one(data)
 
   return feature_cols
+
+def get_features():
+  try:
+    attributes = mongo.db.attributes
+    output = []
+    for s in label.find():
+      output.append(s['namaAttribute'])
+    return output
+  except :
+    return False 
 
 def save_labels(data):
   labels_unique = data.Label.unique()
@@ -132,7 +142,7 @@ def upload_file():
      # GET HEADER
      colls_name = get_header(data)
      # GET ATTRIBUTE
-     feature_cols = get_features(colls_name)
+     feature_cols = save_features(colls_name)
      # PRE PROCESSING
      data_training = pre_processing(data,colls_name)
      # TRAINING
@@ -153,11 +163,11 @@ def upload_file():
 @app.route('/intelligent/testing_data', methods=['POST'])
 def testing_data():
   try:
-    labels = getLabel()
+    attributes = get_features()
     model_testing = {}
     d = request.get_json()
-    for i in range(len(labels)):
-      model_testing.update({labels[i]:[d.get(labels[i])]})
+    for i in range(len(attributes)):
+      model_testing.update({attributes[i]:[d.get(attributes[i])]})
     responses = response()
     responses.setStatus(True)
     responses.setData(model_testing)
