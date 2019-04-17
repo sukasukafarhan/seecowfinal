@@ -164,13 +164,18 @@ def upload_file():
 def testing_data():
   try:
     attributes = get_features()
+    labels = get_label()
     model_testing = {}
     d = request.get_json()
     for i in range(len(attributes)):
       model_testing.update({attributes[i]:[d.get(attributes[i])]})
+    Z_test = pd.DataFrame(data=model_testing)
+    with open("pickle_model.pkl", 'rb') as file:
+      pickle_model = pickle.load(file)
+    result = pickle_model.predict(Z_test)
     responses = response()
     responses.setStatus(True)
-    responses.setData(model_testing)
+    responses.setData(labels[result[0]])
     return jsonify(responses.getResponse())
 
   except:
