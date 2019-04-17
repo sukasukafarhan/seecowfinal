@@ -1,7 +1,7 @@
 ''' controller and routes for label '''
 import os
 from flask import request, jsonify
-from app import app, mongo,flask_bcrypt, jwt
+from app import app, mongo, jwt
 import logger
 from app.schemas.label import validate_label
 from app.services.response import response
