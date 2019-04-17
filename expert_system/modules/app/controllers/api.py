@@ -16,6 +16,7 @@ from sklearn.externals.six import StringIO
 from sklearn.tree import _tree 
 import pydotplus
 import pickle
+from datetime import datetime
 
 ALLOWED_EXTENSIONS = set(['csv'])
 
@@ -160,36 +161,46 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-@app.route('/intelligent/coba_data', methods=['POST'])
-def save_result(model_testing,result):
-   query = request.args
-   return query['t']
-  # attributes = []
-  # for i in model_testing:
-  #   attributes.append({
-  #     "namaAttributes" : i
-  #     "nilai" : model_testing[i]
-  #   })
-  # d = {
-  #   "tanggal" 
-  # }
+def save_result(model_testing,result,sapi_id):
+  attributes = []
+  for i in model_testing:
+    attributes.append({
+      "namaAttributes" : i,
+      "nilai" : model_testing[i]
+    })
+  d = {
+    "tanggal" : datetime.now(),
+    "sapiId" : sapi_id,
+    "indexDiagnose" : result,
+    "gejala" : attributes 
+  }
+  mongo.db.diagnoses.insert_one(d)
 
 @app.route('/intelligent/testing_data', methods=['POST'])
 def testing_data():
   try:
+    model_testing = {}
+    model_for_saving = {}
     attributes = get_features()
     labels = get_label()
-    model_testing = {}
     d = request.get_json()
+    headers = request.args
+    sapi_id = headers['sapi']
+
     for i in range(len(attributes)):
       model_testing.update({attributes[i]:[d.get(attributes[i])]})
+      model_for_saving.update({attributes[i]:d.get(attributes[i])})
+    
     Z_test = pd.DataFrame(data=model_testing)
     with open("pickle_model.pkl", 'rb') as file:
       pickle_model = pickle.load(file)
+    
     result = pickle_model.predict(Z_test)
     responses = response()
     responses.setStatus(True)
     responses.setData(labels[result[0]])
+    # Save
+    save_result(model_for_saving,result[0],sapi_id)
     return jsonify(responses.getResponse())
 
   except:
