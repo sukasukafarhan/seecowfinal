@@ -392,6 +392,8 @@
 </template>
 
 <script>
+import Constants from "@/services/Constants"
+import PostsService from "@/services/PostsService"
 export default {
   name: 'expert',
   data () {
@@ -454,10 +456,21 @@ export default {
           // redirect to 404 page
            this.$router.push({ name: 'Page404' })  
         }else{
-          this.firstLoad()
+            this.firstLoad();
         }
         
       }
+    },
+    async fetchDataAttribute(){
+      const response = await PostsService.getAllAttributes();
+      return response.data;
+    },
+    async firstLoad(){
+      // console.log(window.localStorage.getItem("token"));
+      const response = await this.fetchDataAttribute();
+      let attributeData = response.data;
+      console.log(attributeData)
+     
     },
     getStatus(tmp){
       
@@ -532,18 +545,7 @@ export default {
       }
       
     }
-  },
-  mounted () {
-    // this.timer = setInterval(() => {
-    //   this.bars.forEach(bar => {
-    //     bar.value = 25 + (Math.random() * 75)
-    //   })
-    // }, 2000)
-  },
-  // beforeDestroy () {
-  //   clearInterval(this.timer)
-  //   this.timer = null
-  // }
+  }
 }
 </script>
 

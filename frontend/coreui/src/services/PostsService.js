@@ -80,5 +80,9 @@ export default {
         Authorization:token
       }
     })
+  },
+  getAllAttributes(){
+    return axios.get(Api.intelligentUrl()+'all_attributes')
   }
+
 }
