@@ -196,6 +196,9 @@
             <div slot="key-action" slot-scope="data">
               <b-button variant="primary" size="sm" @click="toDetail(data.item._id)">Show Details</b-button>
             </div>
+            <div slot="key-expert" slot-scope="data">
+              <b-button variant="success" size="sm" @click="toExpert(data.item._id)">Identification</b-button>
+            </div>
           </b-table> 
             
           </b-row> 
@@ -225,7 +228,6 @@
       <b-btn class="mt-3" variant="outline-warning" block @click="createCow">Register</b-btn>
     </b-modal>
 
-  
     <!-- <b-row>
       <b-col md="12">
         <b-card header="Traffic &amp; Sales">
@@ -515,7 +517,11 @@ export default {
         },
         {
           key: 'key-action',
-          label: 'Actions'
+          label: 'Details'
+        },
+        {
+          key: 'key-expert',
+          label: 'Diagnose'
         }
       ]
     }
@@ -702,9 +708,12 @@ export default {
       this.dateOnFormat = time;
       return 'secondary';
     },
+    toExpert(id){
+      this.$router.push({ name: 'expert', params: {id : id} })
+    },
     toDetail (id){
-       this.$router.push({ name: 'Details', params: {id : id} })
-      console.log(id);
+      this.$router.push({ name: 'Details', params: {id : id} })
+      
     }
   } 
 }

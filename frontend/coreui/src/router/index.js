@@ -87,6 +87,11 @@ export default new Router({
           component: Details
         },
         {
+          path: '/:id/identifications',
+          name : 'expert',
+          component: Diagnose
+        },
+        {
           path: '/admin/admin',
           name : 'Admin',
           component: Admin

@@ -13,8 +13,12 @@ const sapiUrl = function(){
       return 'http://206.189.36.70:3001/api/sapi/'
     //return 'http://localhost:3001/api/sapi/'
 }
+const intelligentUrl = function(){
+    return 'http://206.189.36.70:4000/api/intelligent/'
+}
 module.exports = {
     deviceUrl,
     userUrl,
-    sapiUrl
+    sapiUrl,
+    intelligentUrl
 }

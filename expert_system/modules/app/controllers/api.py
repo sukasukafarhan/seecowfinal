@@ -26,7 +26,7 @@ LOG = logger.get_root_logger(
     __name__, filename=os.path.join(ROOT_PATH, 'output.log'))
     
 # =======SECTION LABEL=======
-@app.route('/label/all_label', methods=['GET'])
+@app.route('/api/intelligent/all_label', methods=['GET'])
 def get_all_diseases():
   try:
     responses = response()
@@ -133,7 +133,7 @@ def save_model(model):
     pickle.dump(model, file)
 
 
-@app.route('/intelligent/upload_training_data', methods=['POST'])
+@app.route('/api/intelligent/upload_training_data', methods=['POST'])
 def upload_file():
   try:
    file = request.files['file']
@@ -162,7 +162,7 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-@app.route('/intelligent/testing_data', methods=['POST'])
+@app.route('/api/intelligent/testing_data', methods=['POST'])
 def testing_data():
   try:
     model_testing = {}
@@ -209,3 +209,22 @@ def testing_data():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
+@app.route('/api/intelligent/all_attributes', methods=['GET'])
+def get_all_attributes():
+  try:
+    responses = response()
+    attribut = mongo.db.attributes
+    output = []
+    for s in attribut.find():
+      output.append(
+        {
+          'namaAttribute' : s['namaAttribute'], 
+          'attributeIdentitiy': s['attributeIdentitiy']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())

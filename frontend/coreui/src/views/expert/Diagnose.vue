@@ -453,6 +453,8 @@ export default {
         if(window.localStorage.getItem("role") != Constants.ROLE_FARMERS){
           // redirect to 404 page
            this.$router.push({ name: 'Page404' })  
+        }else{
+          this.firstLoad()
         }
         
       }
