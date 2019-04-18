@@ -4,7 +4,7 @@
       <b-row>
         <b-col lg="12" md="12">
           <!-- show-progress -->
-          <b-progress :value="counter" variant="warning" :max="max" animated></b-progress>
+          <b-progress :value="progress_counter" variant="warning" :max="progress_max" animated></b-progress>
            
          </b-col>
       </b-row>
@@ -26,185 +26,38 @@
         </div>
         <div>
           <h6 class="text-muted" style="text-align:center">Please fill yes or no in the symptom survey below to find out what is happening to your cow</h6>
+          <!-- <ul id="example-1">
+            <li v-for="item in dataAttribute" :key="item._id">
+              {{ item.namaAttribute }}
+            </li>
+          </ul> -->
           <b-tabs pills v-model="tabIndex">
-            <b-tab >
-              <h3>Does cow not appetite ?</h3>
+            <b-tab v-for="(item, index) in dataAttribute" :key="item.attributeIdentitiy" >
+              <h3> {{ item.namaAttribute }}</h3>
               <br>
-              <b-form-group :label-cols="0" :horizontal="true">
+              <b-form-group :label-cols="1" :horizontal="true">
                 <b-form-radio-group
                   stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans1_1" name="ans1" class="custom-control-input" value="1" v-model="ans1">
-                    <label class="custom-control-label" for="ans1_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans1_2" name="ans1" class="custom-control-input" value="0" v-model="ans1">
-                    <label class="custom-control-label" for="ans1_2">No</label>
-                  </div>
+                  
+                     <label>
+                      
+                      <input type="radio" 
+                            v-bind:value="1" 
+                            v-bind:name="index" 
+                            v-model="userResponses[index]"> Yes
+                    </label>
+                    <br>
+                    <label>
+                      <input type="radio" 
+                            v-bind:value="0" 
+                            v-bind:name="index" 
+                            v-model="userResponses[index]"> No
+                    </label>
+                  
                 </b-form-radio-group>
               </b-form-group>
             </b-tab>
-            <b-tab>
-               <h3>Does milk production decrease ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans2_1" name="ans2" class="custom-control-input" value="1" v-model="ans2">
-                    <label class="custom-control-label" for="ans2_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans2_2" name="ans2" class="custom-control-input" value="0" v-model="ans2">
-                    <label class="custom-control-label" for="ans2_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-            <b-tab >
-               <h3>Does milk change ? e.g colour</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans3_1" name="ans3" class="custom-control-input" value="1" v-model="ans3">
-                    <label class="custom-control-label" for="ans3_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans3_2" name="ans3" class="custom-control-input" value="0" v-model="ans3">
-                    <label class="custom-control-label" for="ans3_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-            <b-tab>
-               <h3>Does mammary glands swollen ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans4_1" name="ans4" class="custom-control-input" value="1" v-model="ans4">
-                    <label class="custom-control-label" for="ans4_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans4_2" name="ans4" class="custom-control-input" value="0" v-model="ans4">
-                    <label class="custom-control-label" for="ans4_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-            <b-tab>
-               <h3>Does the cow limp ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans5_1" name="ans5" class="custom-control-input" value="1" v-model="ans5">
-                    <label class="custom-control-label" for="ans5_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans5_2" name="ans5" class="custom-control-input" value="0" v-model="ans5">
-                    <label class="custom-control-label" for="ans5_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-            <b-tab>
-               <h3>Does the nail gap appear red ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans6_1" name="ans6" class="custom-control-input" value="1" v-model="ans6">
-                    <label class="custom-control-label" for="ans6_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans6_2" name="ans6" class="custom-control-input" value="0" v-model="ans6">
-                    <label class="custom-control-label" for="ans6_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-            <b-tab>
-               <h3>Does the gap nail give off a white liquid ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans7_1" name="ans7" class="custom-control-input" value="1" v-model="ans7">
-                    <label class="custom-control-label" for="ans7_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans7_2" name="ans7" class="custom-control-input" value="0" v-model="ans7">
-                    <label class="custom-control-label" for="ans7_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-             <b-tab>
-               <h3>Does the cow stop rumination ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans8_1" name="ans8" class="custom-control-input" value="1" v-model="ans8">
-                    <label class="custom-control-label" for="ans8_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans8_2" name="ans8" class="custom-control-input" value="0" v-model="ans8">
-                    <label class="custom-control-label" for="ans8_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-            <b-tab>
-               <h3>Does the left side of the stomach look big ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans9_1" name="ans9" class="custom-control-input" value="1" v-model="ans9">
-                    <label class="custom-control-label" for="ans9_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans9_2" name="ans9" class="custom-control-input" value="0" v-model="ans9">
-                    <label class="custom-control-label" for="ans9_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
-              <b-tab>
-               <h3>When the stomach is hit, it sounds like a drum ?</h3>
-              <br>
-              <b-form-group :label-cols="0" :horizontal="true">
-                <b-form-radio-group
-                 
-                  stacked>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans10_1" name="ans10" class="custom-control-input" value="1" v-model="ans10">
-                    <label class="custom-control-label" for="ans10_1">Yes</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input type="radio" id="ans10_2" name="ans10" class="custom-control-input" value="0" v-model="ans10">
-                    <label class="custom-control-label" for="ans10_2">No</label>
-                  </div>
-                </b-form-radio-group>
-              </b-form-group>
-            </b-tab>
+           
           </b-tabs>
           <hr>
           <h5 class="text-muted" style="text-align:center" v-if="ansArray.length > 0">System Advice</h5>
@@ -376,8 +229,19 @@
               </b-collapse>
             </b-card>
           </div>
-          <b-btn class="mt-4" variant="warning" @click="prev">Previous</b-btn> 
-          <b-btn class="mt-4" id="asd"  variant="warning" @click="clicked">Next Step</b-btn>
+          <table style="float:right">
+            <tr>
+              <td>
+                  <b-btn v-if="tabIndex > 0" class="mt-4" variant="warning" @click="prev">Previous</b-btn>      
+              </td>
+              <td>
+                  <b-btn v-if="tabIndex < progress_max-1" class="mt-4" id="asd"  variant="warning" @click="clicked">Next Step</b-btn>
+                  <b-btn v-if="progress_max+1 < tabIndex+3" class="mt-4" id="asd2"  variant="danger" @click="doDiagnose">Diagnose</b-btn>
+              
+              </td>
+              </tr>
+          </table>
+           
           
           
         </div>
@@ -398,7 +262,14 @@ export default {
   name: 'expert',
   data () {
     return {
-      questionStatus: "",
+      tabIndex: 0,
+      progress_counter: 0,
+      progress_max: 0,
+      dataAttribute:[],
+      userResponses: [],
+
+
+
       ansArray:[],
       tableItems: [],
       tableFields: [
@@ -419,9 +290,7 @@ export default {
       sameFootrootRules:0,
       sameKembungRules:0,
       text:"dsadasdsdsd",
-      tabIndex: 0,
-      counter: 1,
-      max: 10,
+      
       max2: 50,
       value: 33.333333333,
       value3: 75,
@@ -469,8 +338,10 @@ export default {
       // console.log(window.localStorage.getItem("token"));
       const response = await this.fetchDataAttribute();
       let attributeData = response.data;
-      console.log(attributeData)
-     
+      this.dataAttribute = attributeData
+      this.progress_max = this.dataAttribute.length
+      this.userResponses = Array(this.dataAttribute.length).fill(0)
+      
     },
     getStatus(tmp){
       
@@ -484,66 +355,33 @@ export default {
       return kondisiPointer == 0 ? 'danger' : 'success'
     },
     clicked () {
-     // console.log("coun"+this.counter+"tab"+this.tabIndex)
-      if( this.counter == 10 && this.tabIndex == 9 ){
-        // this.tabIndex=10;
-        // this.counter=10;
-         this.ansArray.push(this.ans1);
-         this.ansArray.push(this.ans2);
-         this.ansArray.push(this.ans3);
-         this.ansArray.push(this.ans4);
-         this.ansArray.push(this.ans5);
-         this.ansArray.push(this.ans6);
-         this.ansArray.push(this.ans7);
-         this.ansArray.push(this.ans8);
-         this.ansArray.push(this.ans9);
-         this.ansArray.push(this.ans10);
-         for(var i=0;i<this.ansArray.length;i++){
-           if(this.ansArray[i] == this.mastitisRules[i]){
-             this.sameMastitisRules++;
-           }
-           if(this.ansArray[i] == this.footrootRules[i]){
-             this.sameFootrootRules++;
-           }
-           if(this.ansArray[i] == this.kembungRules[i]){
-             this.sameKembungRules++;
-           }
-         }
-         this.sameMastitisRules = (this.sameMastitisRules/10)*100;
-         this.sameFootrootRules = (this.sameFootrootRules/10)*100;
-         this.sameKembungRules = (this.sameKembungRules/10)*100;
-         const items = [
-            { question: 'Cow not appetite', answer: this.ansArray[1] },
-            { question: 'Milk production decrease', answer: this.ansArray[2] },
-            { question: 'Milk change,e.g colour', answer: this.ansArray[3] },
-            { question: 'Mammary glands swollen', answer: this.ansArray[4] },
-            { question: 'The cow limp', answer: this.ansArray[5] },
-            { question: 'The nail gap appear red', answer: this.ansArray[6] },
-            { question: 'The gap nail give off a white liquid', answer: this.ansArray[7] },
-            { question: 'The cow stop rumination', answer: this.ansArray[8] },
-            { question: 'The left side of the stomach look big', answer: this.ansArray[9] },
-            { question: 'When the stomach is hit, it sounds like a drum', answer: this.ansArray[10] }
-          ]
-         this.tableItems = items;
-        //  console.log("mastitis : "+this.sameMastitisRules);
-        //  console.log("footroot : "+this.sameFootrootRules);
-        //  console.log("kembung : "+this.sameKembungRules);
+      // console.log(this.tabIndex)
+      if(this.progress_counter == this.progress_max){
+        // console.log("max===")
+        this.progress_counter = this.progress_max
       }else{
         this.tabIndex++;
-        this.counter++;
+        this.progress_counter++; 
       }
-      
-      
     },
     prev () {
-      if(this.tabIndex == 0 && this.counter == 1 ){
-        this.tabIndex=0;
-        this.counter=1;
+      if(this.progress_counter == 0){
+        this.tabIndex = 0;
+        this.progress_counter = 0;
       }else{
         this.tabIndex--;
-        this.counter--;
+        this.progress_counter--;
       }
       
+    },
+    doDiagnose(){
+      if(this.progress_counter == this.progress_max){
+        // console.log("max===")
+        this.progress_counter = this.progress_max
+      }else{
+        this.progress_counter++
+      }
+      console.log(this.userResponses)
     }
   }
 }
