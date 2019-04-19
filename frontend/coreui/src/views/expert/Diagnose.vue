@@ -4,7 +4,7 @@
       <b-row>
         <b-col lg="12" md="12">
           <!-- show-progress -->
-          <b-progress :value="progress_counter" variant="warning" :max="progress_max" animated></b-progress>
+          <!-- <b-progress :value="progress_counter" variant="warning" :max="progress_max" animated></b-progress> -->
            
          </b-col>
       </b-row>
@@ -60,11 +60,27 @@
            
           </b-tabs>
           <hr>
-          <h5 class="text-muted" style="text-align:center" v-if="ansArray.length > 0">System Advice</h5>
+          <table style="float:right">
+            <tr>
+              <td>
+                  <b-btn v-if="tabIndex > 0" class="mt-4" variant="warning" @click="prev">Previous</b-btn>      
+              </td>
+              <td>
+                  <b-btn v-if="tabIndex < progress_max-1" class="mt-4" id="asd"  variant="warning" @click="clicked">Next Step</b-btn>
+                  <b-btn v-if="progress_max+1 < tabIndex+3" class="mt-4" id="asd2"  variant="danger" @click="doDiagnose">Diagnose</b-btn>
+              
+              </td>
+              </tr>
+          </table>
+        </div>
+      </b-card>
+      <b-card header="System Advice" class="card-accent-danger">
+         <b-progress v-if="ansArray.length == 0" :value="progress_counter" variant="warning" :max="progress_max" animated></b-progress>
+        <!-- <h5 class="text-muted" style="text-align:center" v-if="ansArray.length > 0">System Advice</h5> -->
           <div role="tablist" v-if="ansArray.length > 0">
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn block href="#" v-b-toggle.accordion1 variant="info">Mastitis : {{sameMastitisRules}}%</b-btn>
+                <b-btn block href="#" v-b-toggle.accordion1 variant="danger">{{ansArray[0]}}</b-btn>
               </b-card-header>
               <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
                 <b-card-body>
@@ -76,12 +92,12 @@
                           </template>
                            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
                           <div slot="key-question" slot-scope="data">
-                            {{data.item.question}}
+                            {{data.item.namaAttributes}}
                            
                           </div>
                           <div slot="key-answer" slot-scope="data">
                             
-                            <b-badge :variant="getStatus(data.item.answer)">{{questionStatus}}</b-badge>
+                            <b-badge :variant="getStatus(data.item.nilai)">{{data.item.nilai == 0 ? "No" : "Yes"  }}</b-badge>
                           </div>
                           </b-table>
                       </b-tab>
@@ -120,131 +136,8 @@
                 </b-card-body>
               </b-collapse>
             </b-card>
-            <b-card no-body class="mb-1">
-              <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn block href="#" v-b-toggle.accordion2 variant="info">FootRoot : {{sameFootrootRules}}%</b-btn>
-              </b-card-header>
-              <b-collapse id="accordion2" accordion="my-accordion" role="tabpanel">
-                <b-card-body>
-                  <b-card no-body>
-                    <b-tabs>
-                      <b-tab active>
-                          <template slot="title">
-                            <strong>Symptoms summary</strong>
-                          </template>
-                          <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
-                          <div slot="key-question" slot-scope="data">
-                            {{data.item.question}}
-                           
-                          </div>
-                          <div slot="key-answer" slot-scope="data">
-                            
-                            <b-badge :variant="getStatus(data.item.answer)">{{questionStatus}}</b-badge>
-                          </div>
-                          </b-table>
-                      </b-tab>
-                      <b-tab>
-                          <template slot="title">
-                            <strong>Prevention advice</strong>
-                          </template>
-                          <ul>
-                            <li>
-                              Keep the cage floor clean and dry
-                            </li>
-                            <li>
-                              Cages are disinfected once or twice a da
-                            </li>
-                            
-                          </ul>
-                      </b-tab>
-                       <b-tab>
-                          <template slot="title">
-                            <strong>Treatment advice</strong>
-                          </template>
-                         <ul>
-                            <li>
-                              Place the sufferer in a dry cage
-                            </li>
-                            <li>
-                              Clean infected feet, so they are free of dirt
-                            </li>
-                            <li>
-                              The wound is then covered with sanitary napkins and cotton that have been given medicine, such as ichtyol ointment, sulfate solution, 5% copper
-                            </li>
-                            
-                          </ul>
-                      </b-tab>
-                    </b-tabs>
-                  </b-card>
-                </b-card-body>
-              </b-collapse>
-            </b-card>
-            <b-card no-body class="mb-1">
-              <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn block href="#" v-b-toggle.accordion3 variant="info">Bloat : {{sameKembungRules}}%</b-btn>
-              </b-card-header>
-              <b-collapse id="accordion3" accordion="my-accordion" role="tabpanel">
-                <b-card-body>
-                 <b-card no-body>
-                    <b-tabs>
-                      <b-tab active>
-                          <template slot="title">
-                            <strong>Symptoms summary</strong>
-                          </template>
-                         <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
-                          <div slot="key-question" slot-scope="data">
-                            {{data.item.question}}
-                           
-                          </div>
-                          <div slot="key-answer" slot-scope="data">
-                            
-                            <b-badge :variant="getStatus(data.item.answer)">{{questionStatus}}</b-badge>
-                          </div>
-                          </b-table>
-                      </b-tab>
-                      <b-tab>
-                          <template slot="title">
-                            <strong>Prevention advice</strong>
-                          </template>
-                        <ul>
-                          <li>
-                            Give rations in the form of seeds in stages
-                          </li>
-                          
-                        </ul>
-                      </b-tab>
-                       <b-tab>
-                          <template slot="title">
-                            <strong>Treatment advice</strong>
-                          </template>
-                        <ul>
-                          <li>
-                            Giving drug bloat magnesium oxide solution, which is 500 ml of coconut oil and vegetable oil liquid which is given intrarumina
-                          </li>
-                        </ul>
-                      </b-tab>
-                    </b-tabs>
-                  </b-card>
-                </b-card-body>
-              </b-collapse>
-            </b-card>
+            
           </div>
-          <table style="float:right">
-            <tr>
-              <td>
-                  <b-btn v-if="tabIndex > 0" class="mt-4" variant="warning" @click="prev">Previous</b-btn>      
-              </td>
-              <td>
-                  <b-btn v-if="tabIndex < progress_max-1" class="mt-4" id="asd"  variant="warning" @click="clicked">Next Step</b-btn>
-                  <b-btn v-if="progress_max+1 < tabIndex+3" class="mt-4" id="asd2"  variant="danger" @click="doDiagnose">Diagnose</b-btn>
-              
-              </td>
-              </tr>
-          </table>
-           
-          
-          
-        </div>
       </b-card>
          </b-col>
          <b-col lg="2" md="2">
@@ -267,9 +160,6 @@ export default {
       progress_max: 0,
       dataAttribute:[],
       userResponses: [],
-
-
-
       ansArray:[],
       tableItems: [],
       tableFields: [
@@ -283,17 +173,6 @@ export default {
           label:'Condition'
         }
       ],
-      mastitisRules:["1","1","1","1","0","0","0","0","0","0"],
-      footrootRules:["1","0","0","0","1","1","1","0","0","0"],
-      kembungRules:["1","0","0","0","0","0","0","1","1","1"],
-      sameMastitisRules:0,
-      sameFootrootRules:0,
-      sameKembungRules:0,
-      text:"dsadasdsdsd",
-      
-      max2: 50,
-      value: 33.333333333,
-      value3: 75,
       bars: [
         {variant: 'success', value: 75},
         {variant: 'info', value: 75},
@@ -341,18 +220,15 @@ export default {
       this.dataAttribute = attributeData
       this.progress_max = this.dataAttribute.length
       this.userResponses = Array(this.dataAttribute.length).fill(0)
+      // console.log(this.dataAttribute[0].namaAttribute)
       
     },
+    async ToServer(params,id_sapi){
+      const response = await PostsService.testingData(params,id_sapi);
+      return response.data;
+    },
     getStatus(tmp){
-      
-      var kondisiPointer = 0;
-      if(Number(tmp) == 0 ){
-        this.questionStatus="No";
-      }else{
-        kondisiPointer = 1;
-        this.questionStatus="Yes";
-      }
-      return kondisiPointer == 0 ? 'danger' : 'success'
+      return tmp == 0 ? 'danger' : 'success'
     },
     clicked () {
       // console.log(this.tabIndex)
@@ -365,6 +241,7 @@ export default {
       }
     },
     prev () {
+      this.ansArray=[]
       if(this.progress_counter == 0){
         this.tabIndex = 0;
         this.progress_counter = 0;
@@ -374,14 +251,23 @@ export default {
       }
       
     },
-    doDiagnose(){
+    async doDiagnose(){
       if(this.progress_counter == this.progress_max){
         // console.log("max===")
         this.progress_counter = this.progress_max
       }else{
         this.progress_counter++
       }
-      console.log(this.userResponses)
+      
+      var objData = [{}] // empty array
+      for(var i=0;i<this.dataAttribute.length;i++){
+        objData[0][this.dataAttribute[i].namaAttribute] = this.userResponses[i]
+      }
+      const response = await this.ToServer(objData[0],this.$route.params.id)
+      let dataFinal = response.data
+      this.ansArray.push(dataFinal.diagnose)
+      this.tableItems = dataFinal.gejala
+      // console.log(objData[0])
     }
   }
 }

@@ -22,12 +22,27 @@ export default{
     },
     {
       title: true,
-      name: 'Components',
+      name: 'Intelligent System',
       class: '',
       wrapper: {
         element: '',
         attributes: {}
       }
+    },
+    {
+      name: 'Training Data',
+      url: '/admin/training',
+      icon: 'icon-settings'
+    },
+    {
+      name: 'Label / Class',
+      url: '/admin/label',
+      icon: 'icon-target'
+    },
+    {
+      name: 'Attributes',
+      url: '/admin/attributes',
+      icon: 'icon-link'
     },
     {
       name: 'Base',
@@ -276,18 +291,23 @@ export default{
     },
     {
       title: true,
-      name: 'Expert System',
+      name: 'Intelligent System',
       class: '',
       wrapper: {
         element: '',
         attributes: {}
       }
     },
+    // {
+    //   name: 'Diagnose',
+    //   url: '/expert-system/diagnose',
+    //   icon: 'icon-puzzle'
+    // },
     {
-      name: 'Diagnose',
-      url: '/expert-system/diagnose',
-      icon: 'icon-puzzle'
-    }
+      name: 'History',
+      url: '/expert-system/history',
+      icon: 'icon-book-open'
+    },
   ]
 }
 

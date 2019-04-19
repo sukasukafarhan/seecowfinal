@@ -42,11 +42,14 @@
         </b-row>
       </div>
     </b-card>
-            <b-row> 
-            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light" :current-page="page" :per-page="10">
+    <b-card>
+            <!-- <b-row>  -->
+              
+            <!-- <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light" :current-page="currentPage" :per-page="perPage"> -->
+           <b-table :hover="hover" :striped="striped" :bordered="bordered" :small="small" :fixed="fixed" responsive="sm" :items="tableItems" :fields="tableFields" :current-page="currentPage" :per-page="perPage">
            
             <div slot="key-kondisi" slot-scope="data">
-              <b-badge :variant="getKondisi(data.item.kondisi)">{{CurrentConditions}}</b-badge>
+              <b-badge :variant="getKondisi(data.item.kondisi)">{{data.item.kondisi == 0 ? "Abnormal":"Normal"}}</b-badge>
             </div>
             
             <div slot="key-suhu" slot-scope="data">
@@ -60,14 +63,18 @@
               <div class="small text-muted">BPM</div>
             </div>
              <div slot="key-tanggal" slot-scope="data">
-              <b-badge :variant="dateFormatter(data.item.tanggal)">{{dateOnFormat}}</b-badge>
+              <b-badge :variant="dateFormatter(data.item.tanggal)">{{data.item.tanggal | formatDate}}</b-badge>
               
             </div>
             </b-table>
             <nav>
-              <b-pagination size="sm" :total-rows="tableItemsLength" :per-page="10" :limit="5" prev-text="prev" next-text="next" v-model="page"/>
+                <b-pagination :total-rows="getRowCount(tableItems)" :per-page="perPage" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
             </nav>
-            </b-row>
+            <!-- <nav>
+              <b-pagination size="sm" :total-rows="tableItemsLength" :per-page="10" :limit="5" prev-text="prev" next-text="next" v-model="page"/>
+            </nav> -->
+            <!-- </b-row> -->
+             </b-card>
         </b-card>
       </b-col>
     </b-row>
@@ -90,9 +97,40 @@ import PostsService from "@/services/PostsService"
 import Constants from "@/services/Constants"
 import 'vue-spinners/dist/vue-spinners.css'
 import { BounceSpinner } from 'vue-spinners/dist/vue-spinners.common'
+import moment from 'moment'
 
 export default {
   name: 'Details',
+  filters:{
+    formatDate : function(value){
+      if (value) {
+        return moment(String(value)).format('DD-MMM-YYYY HH:mm:ss')
+      }
+    }
+  },
+  props: {
+   
+    hover: {
+      type: Boolean,
+      default: false
+    },
+    striped: {
+      type: Boolean,
+      default: false
+    },
+    bordered: {
+      type: Boolean,
+      default: false
+    },
+    small: {
+      type: Boolean,
+      default: false
+    },
+    fixed: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: {
     Callout,
     BounceSpinner,
@@ -110,6 +148,9 @@ export default {
     return {
       isLoading:false,
       isProcess:true,
+      currentPage: 1,
+      perPage: 5,
+      totalRows: 0,
       page:1,
       tableItemsLength:0,
       dataChartHeart: [],
@@ -154,6 +195,9 @@ export default {
       this.checkSession(); 
   },
   methods: {
+     getRowCount (items) {
+      return items.length
+    },
     filterData: function(){
       this.processDataInTime()
     },

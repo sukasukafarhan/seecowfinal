@@ -4,6 +4,7 @@
  * develop for final project :)
  */
 import axios from 'axios'
+import { type } from 'os';
 var Api = require("../services/Api")
 export default {
   fetchPosts () {
@@ -83,6 +84,20 @@ export default {
   },
   getAllAttributes(){
     return axios.get(Api.intelligentUrl()+'all_attributes')
+  },
+  getAllLabel(){
+    return axios.get(Api.intelligentUrl()+'all_label')
+  },
+  uploadDataTraining(params){
+    return axios.post(Api.intelligentUrl()+'upload_training_data',params,{
+      headers:{
+        'Content-Type': 'multipart/form-data'
+      }
+    })
+
+  },
+  testingData(params,id_sapi){
+    return axios.post(Api.intelligentUrl()+'testing_data?sapi='+id_sapi,params)
   }
 
 }

@@ -1,5 +1,7 @@
 <template>
-  <div class="animated fadeIn">
+<div>
+   <bounce-spinner v-if="isLoading"></bounce-spinner>
+  <div class="animated fadeIn" v-if="isLoading==false">
       <b-card-group class="mb-4">
         <b-card>
           <div class="h1 text-muted text-right mb-4">
@@ -72,6 +74,7 @@
       </b-col>
     </b-row>
   </div>
+</div>
 </template>
 
 <script>
@@ -85,11 +88,14 @@ import CalloutChartExample from "../dashboard/CalloutChartExample";
 import { Callout } from "@coreui/vue";
 import PostsService from "@/services/PostsService";
 import Constants from "@/services/Constants";
+import 'vue-spinners/dist/vue-spinners.css';
+import { BounceSpinner } from 'vue-spinners/dist/vue-spinners.common';
 
 export default {
   name: "Admin",
   components: {
     Callout,
+    BounceSpinner,
     CardLine1ChartExample,
     CardLine2ChartExample,
     CardLine3ChartExample,
@@ -100,6 +106,7 @@ export default {
   },
   data: function() {
     return {
+      isLoading: true,
       peternakRegistered: 0,
       sapiRegistered: 0,
       deviceOnline: 0,
@@ -162,6 +169,7 @@ export default {
       let responseDataSapi = await this.fetchDataSapi();
       let peternakData = response.data;
       let sapiData = responseDataSapi.data;
+      this.isLoading=false
       this.peternakRegistered = peternakData.length;
       this.sapiRegistered = sapiData.length;
       for (var i = 0; i < sapiData.length; i++) {

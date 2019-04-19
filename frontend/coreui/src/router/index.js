@@ -9,6 +9,9 @@ const Dashboard = () => import('@/views/Dashboard')
 const Details = () => import('@/views/Details')
 const Admin = () => import('@/views/admin/Admin')
 const RequestedCows = () => import('@/views/admin/RequestedCows')
+const Label = () => import('@/views/admin/Label')
+const Attributes = () => import('@/views/admin/Attributes')
+const Training = () => import('@/views/admin/Training')
 
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
@@ -102,6 +105,21 @@ export default new Router({
           component: RequestedCows
         },
         {
+          path: '/admin/label',
+          name : 'Label',
+          component: Label
+        },
+        {
+          path: '/admin/attributes',
+          name : 'Attributes',
+          component: Attributes
+        },
+        {
+          path: '/admin/training',
+          name : 'Training',
+          component: Training
+        },
+        {
           path: 'expert-system',
           redirect: '/expert-system/diagnose',
           name: 'Expert System',
@@ -109,11 +127,6 @@ export default new Router({
             render (c) { return c('router-view') }
           },
           children: [
-            // {
-            //   path: 'colors',
-            //   name: 'Colors',
-            //   component: Colors
-            // },
             {
               path: 'diagnose',
               name: 'Diagnose',
