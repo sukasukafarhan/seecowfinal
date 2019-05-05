@@ -27,6 +27,22 @@ module.exports = {
       res.json(response)
     }
   },
+  user_signup: async(req,res)=>{
+    let response = new Response()
+    try{
+      let result = await userRepositories.userSignup(req.body.username,req.body.password,req.body.role)
+      if(result){
+        response.setData(result)
+      }else{
+        response.setStatus(false)
+        response.setMessage("Gagal")
+      }
+    }catch (e){
+      response.setStatus(false)
+      response.setMessage(e)
+    }
+    res.json(response)
+  },
   signin: async(req,res)=>{
     let response = new Response()
     try{

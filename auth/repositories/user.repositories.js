@@ -28,6 +28,17 @@ const userRepositories = {
             }
         }
     },
+    userSignup: async(username,password,role)=>{
+        let newUser = new User({
+            username: username,
+            password: password,
+            role: role
+        });
+        let saveUser = await newUser.save()
+        if(saveUser){
+            return saveUser
+        }
+    },
     signin: async(username,password)=>{
         let user = await User.findOne({
             username: username
