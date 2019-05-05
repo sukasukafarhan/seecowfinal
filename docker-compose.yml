@@ -31,7 +31,7 @@ services:
     links:
       - mongo
     environment:
-      - ENV=development
+      - ENV=development 
       - PORT=4000
       - DB=mongodb://mongo:27017/seecow_db
       - SECRET=nodeauthsecret
