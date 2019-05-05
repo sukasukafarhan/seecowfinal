@@ -36,11 +36,11 @@ services:
       - DB=mongodb://mongo:27017/seecow_db
       - SECRET=nodeauthsecret
      
-  frontend-service:
-    container_name: frontend-container
-    build: ./frontend/coreui/
-    ports:
-      - 8080:8080
+  # frontend-service:
+  #   container_name: frontend-container
+  #   build: ./frontend/coreui/
+  #   ports:
+  #     - 8080:8080
   
   mongo:  
     image: mvertes/alpine-mongo
