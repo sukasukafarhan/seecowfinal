@@ -230,3 +230,32 @@ def get_all_attributes():
     responses.setStatus(False)
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/all_diagnoses', methods=['GET'])
+def get_all_diagnoses():
+  try:
+    responses = response()
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$group': {
+              '_id': '$diagnose', 
+              'total': {
+                  '$sum': 1
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'diagnose' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())

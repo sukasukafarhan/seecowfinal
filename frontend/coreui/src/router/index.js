@@ -13,9 +13,11 @@ const Label = () => import('@/views/admin/Label')
 const Attributes = () => import('@/views/admin/Attributes')
 const Training = () => import('@/views/admin/Training')
 
+
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
 const Diagnose = () => import('@/views/expert/Diagnose')
+const History = () => import('@/views/expert/History')
 
 const Charts = () => import('@/views/Charts')
 const Widgets = () => import('@/views/Widgets')
@@ -118,6 +120,11 @@ export default new Router({
           path: '/admin/training',
           name : 'Training',
           component: Training
+        },
+        {
+          path: '/expert-system/history',
+          name : 'History',
+          component: History
         },
         {
           path: 'expert-system',
