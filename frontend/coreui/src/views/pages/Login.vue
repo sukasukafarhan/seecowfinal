@@ -124,10 +124,16 @@ export default {
                         });
      
       if(response.data.status){
-          // window.localStorage.setItem("token",response.data.token)
-          // this.$router.push({ name: 'Dashboard' })
-          // console.log(response.data)
-          this.getMe(response.data.data.token,response.data.data.role)
+          let role = response.data.data.role
+          if(role == Constants.ROLE_ADMIN){
+            window.localStorage.setItem("token",response.data.data.token)
+            window.localStorage.setItem("role",role)
+            this.isLoading=false
+            this.$router.push({ name: 'Admin' })
+          }else{
+            // get peternak information
+              this.getMe(response.data.data.token,response.data.data.role)
+          }
       }else{
          this.errors = []
          this.errors.push('Wrong username or password !');
@@ -138,15 +144,11 @@ export default {
     },
     async getMe(token,role){
       const response = await PostsService.me(token);
-       window.localStorage.setItem("token",token)
-       window.localStorage.setItem("peternak_id",response.data.data._id)
-       window.localStorage.setItem("role",role)
-       this.isLoading=false
-       if(role == Constants.ROLE_ADMIN){
-          this.$router.push({ name: 'Admin' })
-       }else{
-          this.$router.push({ name: 'Dashboard' })
-       }
+        window.localStorage.setItem("token",token)
+        window.localStorage.setItem("role",role)
+        window.localStorage.setItem("peternak_id",response.data.data._id)
+        this.isLoading=false
+        this.$router.push({ name: 'Dashboard' })
       // console.log(items);
     }
 

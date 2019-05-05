@@ -1,3 +1,5 @@
+# author : faruq
+# first, pliss check folder static on your server, when isn available, make static folder first to save our model
 ''' controller and routes for label '''
 import os
 from flask import request, jsonify
