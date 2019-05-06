@@ -88,6 +88,9 @@ export default {
   getAllLabel(){
     return axios.get(Api.intelligentUrl()+'all_label')
   },
+  getAllDiagnoses(){
+    return axios.get(Api.intelligentUrl()+'all_diagnoses')
+  },
   uploadDataTraining(params){
     return axios.post(Api.intelligentUrl()+'upload_training_data',params,{
       headers:{
