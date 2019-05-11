@@ -259,3 +259,118 @@ def get_all_diagnoses():
     responses.setStatus(False)
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/all_gejala', methods=['GET'])
+def get_all_gejala():
+  try:
+    responses = response()
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$unwind': {
+              'path': '$gejala'
+          }
+      }, {
+          '$group': {
+              '_id': '$gejala.namaAttributes', 
+              'total': {
+                  '$sum': {
+                      '$multiply': [
+                          '$gejala.nilai'
+                      ]
+                  }
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'gejala' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/diagnoses_by_sapi', methods=['POST'])
+def get_diagnoses_by_sapi():
+  try:
+    headers = request.args
+    sapi_id = headers['sapi']
+    responses = response()
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$match': {
+              'sapiId': ObjectId(sapi_id)
+          }
+      }, {
+          '$group': {
+              '_id': '$diagnose', 
+              'total': {
+                  '$sum': 1
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'diagnose' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/gejala_by_sapi', methods=['POST'])
+def get_gejala_by_sapi():
+  try:
+    headers = request.args
+    sapi_id = headers['sapi']
+    responses = response()
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$match': {
+              'sapiId': ObjectId(sapi_id)
+          }
+      }, {
+          '$unwind': {
+              'path': '$gejala'
+          }
+      }, {
+          '$group': {
+              '_id': '$gejala.namaAttributes', 
+              'total': {
+                  '$sum': {
+                      '$multiply': [
+                          '$gejala.nilai'
+                      ]
+                  }
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'gejala' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())

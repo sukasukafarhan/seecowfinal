@@ -165,7 +165,7 @@ export default {
       conditions:"",
       test: [4, 4, 4, 4, 4, 4],
       nameOfCow:"",
-      socket : io('206.189.36.70:3001'),
+      socket : io(Constants.SOCKET_SERVER),
       CurrentConditions:"",
       dateOnFormat:"",
       currentTemp:0,
