@@ -266,13 +266,21 @@ def get_all_diagnoses_in_time():
     responses = response()
     headers = request.args
     start = headers['start']
-    start = headers['end']
+    end = headers['end']
+    start_arr = start.split("-")
+    end_arr = end.split("-")
+    start_year = int(start_arr[0])
+    start_month = int(start_arr[1])
+    start_day = int(start_arr[2])
+    end_year = int(end_arr[0])
+    end_month = int(end_arr[1])
+    end_day = int(end_arr[2])
     diagnoses = mongo.db.diagnoses.aggregate([
       {
           '$match': {
               'tanggal': {
-                  '$gte': datetime(start, tzinfo=timezone.utc), 
-                  '$lte': datetime(end, tzinfo=timezone.utc)
+                  '$gte': datetime(start_year,start_month,start_day,0,0,0), 
+                  '$lte': datetime(end_year,end_month,end_day,0,0,0)
               }
           }
       }, {
@@ -305,6 +313,61 @@ def get_all_gejala():
     responses = response()
     diagnoses = mongo.db.diagnoses.aggregate([
       {
+          '$unwind': {
+              'path': '$gejala'
+          }
+      }, {
+          '$group': {
+              '_id': '$gejala.namaAttributes', 
+              'total': {
+                  '$sum': {
+                      '$multiply': [
+                          '$gejala.nilai'
+                      ]
+                  }
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'gejala' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/all_gejala_in_time', methods=['GET'])
+def get_all_gejala_in_time():
+  try:
+    responses = response()
+    headers = request.args
+    start = headers['start']
+    end = headers['end']
+    start_arr = start.split("-")
+    end_arr = end.split("-")
+    start_year = int(start_arr[0])
+    start_month = int(start_arr[1])
+    start_day = int(start_arr[2])
+    end_year = int(end_arr[0])
+    end_month = int(end_arr[1])
+    end_day = int(end_arr[2])
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$match': {
+              'tanggal': {
+                  '$gte': datetime(start_year,start_month,start_day,0,0,0), 
+                  '$lte': datetime(end_year,end_month,end_day,0,0,0)
+              }
+          }
+      }, {
           '$unwind': {
               'path': '$gejala'
           }
@@ -371,6 +434,60 @@ def get_diagnoses_by_sapi():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
+@app.route('/api/intelligent/diagnoses_by_sapi_in_time', methods=['GET'])
+def get_diagnoses_by_sapi_in_time():
+  try:
+    headers = request.args
+    sapi_id = headers['sapi']
+    start = headers['start']
+    end = headers['end']
+    start_arr = start.split("-")
+    end_arr = end.split("-")
+    start_year = int(start_arr[0])
+    start_month = int(start_arr[1])
+    start_day = int(start_arr[2])
+    end_year = int(end_arr[0])
+    end_month = int(end_arr[1])
+    end_day = int(end_arr[2])
+    responses = response()
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$match': {
+              '$and': [
+                  {
+                      'sapiId': ObjectId(sapi_id)
+                  }, {
+                      'tanggal': {
+                          '$gte': datetime(start_year,start_month,start_day,0,0,0), 
+                          '$lte': datetime(end_year,end_month,end_day,0,0,0)
+                      }
+                  }
+              ]
+          }
+      }, {
+          '$group': {
+              '_id': '$diagnose', 
+              'total': {
+                  '$sum': 1
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'diagnose' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
 @app.route('/api/intelligent/gejala_by_sapi', methods=['POST'])
 def get_gejala_by_sapi():
   try:
@@ -381,6 +498,68 @@ def get_gejala_by_sapi():
       {
           '$match': {
               'sapiId': ObjectId(sapi_id)
+          }
+      }, {
+          '$unwind': {
+              'path': '$gejala'
+          }
+      }, {
+          '$group': {
+              '_id': '$gejala.namaAttributes', 
+              'total': {
+                  '$sum': {
+                      '$multiply': [
+                          '$gejala.nilai'
+                      ]
+                  }
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'gejala' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/gejala_by_sapi_in_time', methods=['GET'])
+def get_gejala_by_sapi_in_time():
+  try:
+    headers = request.args
+    sapi_id = headers['sapi']
+    start = headers['start']
+    end = headers['end']
+    start_arr = start.split("-")
+    end_arr = end.split("-")
+    start_year = int(start_arr[0])
+    start_month = int(start_arr[1])
+    start_day = int(start_arr[2])
+    end_year = int(end_arr[0])
+    end_month = int(end_arr[1])
+    end_day = int(end_arr[2])
+    responses = response()
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$match': {
+              '$and': [
+                  {
+                      'sapiId': ObjectId(sapi_id)
+                  }, {
+                      'tanggal': {
+                          '$gte': datetime(start_year,start_month,start_day,0,0,0), 
+                          '$lte': datetime(end_year,end_month,end_day,0,0,0)
+                      }
+                  }
+              ]
           }
       }, {
           '$unwind': {
