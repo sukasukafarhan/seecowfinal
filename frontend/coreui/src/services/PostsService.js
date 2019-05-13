@@ -103,14 +103,26 @@ export default {
   getAllGejala(){
     return axios.get(Api.intelligentUrl()+'all_gejala')
   },
+  getAllGejalaLimit(){
+    return axios.get(Api.intelligentUrl()+'all_gejala_limit')
+  },
   getAllGejalaInTime(start,end){
     return axios.get(Api.intelligentUrl()+'all_gejala_in_time?start='+start+'&end='+end)
+  },
+  getAllGejalaInTimeLimit(start,end){
+    return axios.get(Api.intelligentUrl()+'all_gejala_in_time_limit?start='+start+'&end='+end)
   },
   getGejalaBySapi(id_sapi){
     return axios.post(Api.intelligentUrl()+'gejala_by_sapi?sapi='+id_sapi)
   },
+  getGejalaBySapiLimit(id_sapi){
+    return axios.post(Api.intelligentUrl()+'gejala_by_sapi_limit?sapi='+id_sapi)
+  },
   getGejalaBySapiInTime(start,end,id_sapi){
     return axios.get(Api.intelligentUrl()+'gejala_by_sapi_in_time?start='+start+'&end='+end+'&sapi='+id_sapi)
+  },
+  getGejalaBySapiInTimeLimit(start,end,id_sapi){
+    return axios.get(Api.intelligentUrl()+'gejala_by_sapi_in_time_limit?start='+start+'&end='+end+'&sapi='+id_sapi)
   },
   uploadDataTraining(params){
     return axios.post(Api.intelligentUrl()+'upload_training_data',params,{

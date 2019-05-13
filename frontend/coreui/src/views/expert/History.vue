@@ -41,10 +41,8 @@
             </div>
           </b-card>
         </b-col>
-
-      </b-row>
-              <b-col md="12">
-          <b-card header="Symptomps" class="card-accent-warning">
+        <b-col md="6">
+          <b-card header="Symptoms of the disease most often occur" class="card-accent-warning">
             <bounce-spinner v-if="isLoadingPie"></bounce-spinner>
             <div class="chart-wrapper">
               <bar-example
@@ -57,6 +55,33 @@
             </div>
           </b-card>
         </b-col>
+      </b-row>
+      <b-row>
+        <b-col md="12">
+          <b-card header="Symptoms List" class="card-accent-warning">
+            <bounce-spinner v-if="isLoadingTable"></bounce-spinner>
+            <b-table
+              v-if="isLoadingTable==false"
+              class="mb-0 table-outline"
+              striped
+              responsive="sm"
+              hover
+              :items="tableGejala"
+              :fields="tableFields"
+              head-variant="light"
+            >
+              <div slot="key-gejala" slot-scope="data">
+                <i class="icon-ghost"></i>
+                <strong>{{data.item.gejala}}</strong>
+              </div>
+              <div slot="key-total" slot-scope="data">
+                <i class="icon-key"></i>
+                <strong>{{data.item.total}}</strong>
+              </div>
+            </b-table>
+          </b-card>
+        </b-col>
+      </b-row>
     </div>
   </div>
 </template>
@@ -112,11 +137,23 @@ export default {
       // ===loading state===
       isLoadingBar: true,
       isLoadingPie: true,
+      isLoadingTable: true,
       // ===loading state===
       cowSelected: "",
       startDate: "",
       endDate: "",
-      tableItemsSapi: []
+      tableItemsSapi: [],
+      tableGejala: [],
+      tableFields: [
+        {
+          key: "key-gejala",
+          label: "Symptoms"
+        },
+        {
+          key: "key-total",
+          label: "Total Incident"
+        }
+      ]
     };
   },
   created() {
@@ -126,13 +163,23 @@ export default {
     async filterWith() {
       this.dataPie = [];
       this.labelPie = [];
+      this.dataBar = [];
+      this.labelBar = [];
       this.isLoadingPie = true;
+      this.isLoadingBar = true;
+      this.isLoadingTable = true;
       if (this.startDate == "" && this.endDate == "") {
         // fetch all data by sapi
         if (this.cowSelected == "") {
           this.firstLoad();
         } else {
           var responseDataDiagnoses = await this.fetchDataDiagnoseBySapi(
+            this.cowSelected
+          );
+          var responseDataGejala = await this.fetchDataGejalaBySapiLimit(
+            this.cowSelected
+          );
+          var responseDataGejalaTable = await this.fetchDataGejalaBySapi(
             this.cowSelected
           );
         }
@@ -142,12 +189,29 @@ export default {
           this.endDate,
           this.cowSelected
         );
+        var responseDataGejala = await this.fetchDataGejalaBySapiInTimeLimit(
+          this.startDate,
+          this.endDate,
+          this.cowSelected
+        );
+        var responseDataGejalaTable = await this.fetchDataGejalaBySapiInTime(
+          this.startDate,
+          this.endDate,
+          this.cowSelected
+        );
       }
       for (var i = 0; i < responseDataDiagnoses.data.length; i++) {
         this.dataPie.push(responseDataDiagnoses.data[i].total);
         this.labelPie.push(responseDataDiagnoses.data[i].diagnose);
       }
+      for (var i = 0; i < responseDataGejala.data.length; i++) {
+        this.dataBar.push(responseDataGejala.data[i].total);
+        this.labelBar.push(responseDataGejala.data[i].gejala);
+      }
+      this.tableGejala = responseDataGejalaTable.data;
       this.isLoadingPie = false;
+      this.isLoadingBar = false;
+      this.isLoadingTable = false;
     },
     async fetchDataSapi() {
       const response = await PostsService.getSapi(
@@ -161,6 +225,10 @@ export default {
     },
     async fetchAllDataGejala() {
       const response = await PostsService.getAllGejala();
+      return response.data;
+    },
+    async fetchAllDataGejalaLimit() {
+      const response = await PostsService.getAllGejalaLimit();
       return response.data;
     },
     async fetchDataDiagnoseBySapi(idSapi) {
@@ -177,6 +245,26 @@ export default {
     },
     async fetchDataGejalaBySapi(idSapi) {
       const response = await PostsService.getGejalaBySapi(idSapi);
+      return response.data;
+    },
+    async fetchDataGejalaBySapiLimit(idSapi) {
+      const response = await PostsService.getGejalaBySapiLimit(idSapi);
+      return response.data;
+    },
+    async fetchDataGejalaBySapiInTime(start, end, idSapi) {
+      const response = await PostsService.getGejalaBySapiInTime(
+        start,
+        end,
+        idSapi
+      );
+      return response.data;
+    },
+    async fetchDataGejalaBySapiInTimeLimit(start, end, idSapi) {
+      const response = await PostsService.getGejalaBySapiInTimeLimit(
+        start,
+        end,
+        idSapi
+      );
       return response.data;
     },
     checkSession() {
@@ -197,13 +285,15 @@ export default {
     async firstLoad() {
       this.dataPie = [];
       this.labelPie = [];
-      this.dataBar = []
-      this.labelBar = []
-      this.isLoadingBar = true
+      this.dataBar = [];
+      this.labelBar = [];
+      this.isLoadingBar = true;
       this.isLoadingPie = true;
+      this.isLoadingTable = true;
       const response = await this.fetchDataSapi();
       const responseDataDiagnoses = await this.fetchAllDataDiagnose();
-      const responseDataGejala = await this.fetchAllDataGejala()
+      const responseDataGejala = await this.fetchAllDataGejalaLimit();
+      const responseTable = await this.fetchAllDataGejala();
       for (var i = 0; i < responseDataDiagnoses.data.length; i++) {
         this.dataPie.push(responseDataDiagnoses.data[i].total);
         this.labelPie.push(responseDataDiagnoses.data[i].diagnose);
@@ -212,8 +302,10 @@ export default {
         this.dataBar.push(responseDataGejala.data[i].total);
         this.labelBar.push(responseDataGejala.data[i].gejala);
       }
+      this.tableGejala = responseTable.data;
       this.isLoadingPie = false;
-      this.isLoadingBar = false
+      this.isLoadingBar = false;
+      this.isLoadingTable = false;
       let sapiData = response.data;
       this.tableItemsSapi = sapiData;
     }

@@ -27,7 +27,7 @@ export default {
           labels: this.labelsDataBar,
           datasets: [
             {
-              label: "GitHub Commits",
+              label: "Symptoms",
               backgroundColor: this.backgroundDataBar,
               data: this.chartDataBar
             }
