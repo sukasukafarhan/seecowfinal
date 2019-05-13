@@ -260,6 +260,45 @@ def get_all_diagnoses():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
+@app.route('/api/intelligent/all_diagnoses_in_time', methods=['GET'])
+def get_all_diagnoses_in_time():
+  try:
+    responses = response()
+    headers = request.args
+    start = headers['start']
+    start = headers['end']
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$match': {
+              'tanggal': {
+                  '$gte': datetime(start, tzinfo=timezone.utc), 
+                  '$lte': datetime(end, tzinfo=timezone.utc)
+              }
+          }
+      }, {
+          '$group': {
+              '_id': '$diagnose', 
+              'total': {
+                  '$sum': 1
+              }
+          }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'diagnose' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
 @app.route('/api/intelligent/all_gejala', methods=['GET'])
 def get_all_gejala():
   try:
