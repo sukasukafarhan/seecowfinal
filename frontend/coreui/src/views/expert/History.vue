@@ -2,42 +2,31 @@
   <div>
     <div class="animated fadeIn">
       <b-row>
-        <b-col md="6">
-          <b-card header="Choose cow for know their historic" class="card-accent-warning">
-            <bounce-spinner v-if="isLoading"></bounce-spinner>
-            <b-table
-              v-if="isLoading==false"
-              class="mb-0 table-outline"
-              striped
-              responsive="sm"
-              hover
-              :items="tableItemsSapi"
-              :fields="tableFieldsSapi"
-              head-variant="light"
-              :current-page="currentPage"
-              :per-page="perPage"
-            >
-              <div slot="key-nama-sapi" slot-scope="data">
-                <img src="img/cow/cow (2).png" width="50px" alt="cows logo">
-                <strong>{{data.item.namaSapi}}</strong>
-              </div>
-              <div slot="key-action-sapi" slot-scope="data">
-                <b-button variant="primary" size="sm" @click="toDetail(data.item._id)">Choose</b-button>
-              </div>
-            </b-table>
-            <hr>
-            <nav>
-              <b-pagination
-                :total-rows="getRowCount(tableItems)"
-                :per-page="perPage"
-                v-model="currentPage"
-                prev-text="Prev"
-                next-text="Next"
-                hide-goto-end-buttons
-              />
-            </nav>
+        <b-col md="12">
+          <b-card class="bg-secondary text-center">
+            <b-form inline>
+              <label class="mr-sm-2" for="basicSelect">Select Cow:</label>
+              <b-form-select v-model="cowSelected" id="basicSelect" :plain="true">
+                <option
+                  v-for="cow in tableItemsSapi"
+                  v-bind:value="cow._id"
+                  v-bind:key="cow._id"
+                >{{cow.namaSapi}}</option>
+              </b-form-select>
+              <label class="mx-sm-2" for="inlineInput1">Start:</label>
+              <b-input id="inlineInput1" type="date" v-model="startDate"></b-input>
+              <label class="mx-sm-2" for="inlineInput2">End:</label>
+              <b-input id="inlineInput2" type="date" v-model="endDate"></b-input>
+              <label class="mr-sm-2"></label>
+              <b-button type="button" variant="primary" @click="filterWith">
+                <i class="icon-magnifier"></i>
+                Filter Data
+              </b-button>
+            </b-form>
           </b-card>
         </b-col>
+      </b-row>
+      <b-row>
         <b-col md="6">
           <b-card header="Our cows diseases" class="card-accent-warning">
             <bounce-spinner v-if="isLoadingPie"></bounce-spinner>
@@ -50,36 +39,24 @@
                 :backgroundPie="backgroundPie"
               />
             </div>
-            <!-- <bounce-spinner v-if="isLoadingAttr"></bounce-spinner>
-          <b-table
-            v-if="isLoadingAttr==false"
-            class="mb-0 table-outline"
-            striped
-            responsive="sm"
-            hover
-            :items="tableItemsAttr"
-            :fields="tableFieldsAttr"
-            head-variant="light"
-            :current-page="currentPageAttr"
-            :per-page="perPageAttr"
-          >
-            <div slot="key-nama-attr" slot-scope="data">
-              <i class="icon-ghost"></i>
-              <strong> {{data.item.namaAttribute}}</strong>
-            </div>
-            <div slot="key-identity-attr" slot-scope="data">
-              <i class="icon-key"></i>
-              <strong> {{data.item.attributeIdentitiy}}</strong>
-            </div>
-            
-          </b-table>
-          <hr>
-          <nav>
-            <b-pagination :total-rows="getRowCount(tableItemsAttr)" :per-page="perPageAttr" v-model="currentPageAttr" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
-            </nav>-->
           </b-card>
         </b-col>
+
       </b-row>
+              <b-col md="12">
+          <b-card header="Symptomps" class="card-accent-warning">
+            <bounce-spinner v-if="isLoadingPie"></bounce-spinner>
+            <div class="chart-wrapper">
+              <bar-example
+                v-if="isLoadingBar==false"
+                chartId="chart-bar-01"
+                :dataBar="dataBar"
+                :labelBar="labelBar"
+                :backgroundBar="backgroundBar"
+              />
+            </div>
+          </b-card>
+        </b-col>
     </div>
   </div>
 </template>
@@ -98,6 +75,7 @@ import Constants from "@/services/Constants";
 import "vue-spinners/dist/vue-spinners.css";
 import { BounceSpinner } from "vue-spinners/dist/vue-spinners.common";
 import PieExample from "../charts/PieExample";
+import BarExample from "../charts/BarExample";
 
 export default {
   name: "History",
@@ -111,7 +89,8 @@ export default {
     MainChartExample,
     SocialBoxChartExample,
     CalloutChartExample,
-    PieExample
+    PieExample,
+    BarExample
   },
   data: function() {
     return {
@@ -125,78 +104,50 @@ export default {
       labelPie: [],
       dataPie: [],
       // ==== pie chart ===
+      //  ===== bar chart ===
+      backgroundBar: ["#41B883", "#f4aa42", "#00D8FF", "#DD1B16"],
+      labelBar: [],
+      dataBar: [],
+      // ==== bar chart ===
       // ===loading state===
-      isLoading: true,
+      isLoadingBar: true,
       isLoadingPie: true,
       // ===loading state===
-      file: "",
-      currentPage: 1,
-      currentPageAttr: 1,
-      perPage: 5,
-      perPageAttr: 5,
-      totalRows: 0,
-      totalRowsAttr: 0,
-      tableItems: [],
-      successAlert: [],
-      tableFields: [
-        {
-          key: "key-nama",
-          label: "Name of label"
-        },
-        {
-          key: "key-identity",
-          label: "Identity of label"
-        }
-      ],
-      tableItemsAttr: [],
-      tableFieldsAttr: [
-        {
-          key: "key-nama-attr",
-          label: "Name of attribute"
-        },
-        {
-          key: "key-identity-attr",
-          label: "Identity of attribute"
-        }
-      ],
-      tableItemsSapi: [],
-      tableFieldsSapi: [
-        {
-          key: "key-nama-sapi",
-          label: "Cow name"
-        },
-        {
-          key: "key-action-sapi",
-          label: "Choose"
-        }
-      ]
+      cowSelected: "",
+      startDate: "",
+      endDate: "",
+      tableItemsSapi: []
     };
   },
   created() {
     this.checkSession();
   },
   methods: {
-    countDownChanged(dismissCountDown) {
-      this.dismissCountDown = dismissCountDown;
-    },
-    showAlert() {
-      this.dismissCountDown = this.dismissSecs;
-    },
-    handleFileUpload() {
-      this.file = this.$refs.file.files[0];
-    },
-    async submitFile() {
-      let formData = new FormData();
-      formData.append("file", this.file);
-      let response = await PostsService.uploadDataTraining(formData);
-      this.successAlert = [];
-      if (response.data.status) {
-        this.successAlert.push(response.data.message);
-        this.showAlert();
-        this.isLoading = true;
-        this.firstLoad();
-        // setTimeout("location.reload(true);",2000);
+    async filterWith() {
+      this.dataPie = [];
+      this.labelPie = [];
+      this.isLoadingPie = true;
+      if (this.startDate == "" && this.endDate == "") {
+        // fetch all data by sapi
+        if (this.cowSelected == "") {
+          this.firstLoad();
+        } else {
+          var responseDataDiagnoses = await this.fetchDataDiagnoseBySapi(
+            this.cowSelected
+          );
+        }
+      } else {
+        var responseDataDiagnoses = await this.fetchDataDiagnoseBySapiInTime(
+          this.startDate,
+          this.endDate,
+          this.cowSelected
+        );
       }
+      for (var i = 0; i < responseDataDiagnoses.data.length; i++) {
+        this.dataPie.push(responseDataDiagnoses.data[i].total);
+        this.labelPie.push(responseDataDiagnoses.data[i].diagnose);
+      }
+      this.isLoadingPie = false;
     },
     async fetchDataSapi() {
       const response = await PostsService.getSapi(
@@ -208,16 +159,25 @@ export default {
       const response = await PostsService.getAllDiagnoses();
       return response.data;
     },
-    async fetchDataLabel() {
-      let response = await PostsService.getAllLabel();
+    async fetchAllDataGejala() {
+      const response = await PostsService.getAllGejala();
       return response.data;
     },
-    async fetchDataAttributes() {
-      let response = await PostsService.getAllAttributes();
+    async fetchDataDiagnoseBySapi(idSapi) {
+      const response = await PostsService.getDiagnoseBySapi(idSapi);
       return response.data;
     },
-    getRowCount(items) {
-      return items.length;
+    async fetchDataDiagnoseBySapiInTime(start, end, idSapi) {
+      const response = await PostsService.getDiagnoseBySapiInTime(
+        start,
+        end,
+        idSapi
+      );
+      return response.data;
+    },
+    async fetchDataGejalaBySapi(idSapi) {
+      const response = await PostsService.getGejalaBySapi(idSapi);
+      return response.data;
     },
     checkSession() {
       /**
@@ -235,23 +195,27 @@ export default {
       }
     },
     async firstLoad() {
+      this.dataPie = [];
+      this.labelPie = [];
+      this.dataBar = []
+      this.labelBar = []
+      this.isLoadingBar = true
+      this.isLoadingPie = true;
       const response = await this.fetchDataSapi();
-      let responseData = await this.fetchDataLabel();
-      let responseDataAttr = await this.fetchDataAttributes();
       const responseDataDiagnoses = await this.fetchAllDataDiagnose();
-      for(var i=0;i<responseDataDiagnoses.data.length;i++){
-        this.dataPie.push(responseDataDiagnoses.data[i].total)
-        this.labelPie.push(responseDataDiagnoses.data[i].diagnose)
+      const responseDataGejala = await this.fetchAllDataGejala()
+      for (var i = 0; i < responseDataDiagnoses.data.length; i++) {
+        this.dataPie.push(responseDataDiagnoses.data[i].total);
+        this.labelPie.push(responseDataDiagnoses.data[i].diagnose);
+      }
+      for (var i = 0; i < responseDataGejala.data.length; i++) {
+        this.dataBar.push(responseDataGejala.data[i].total);
+        this.labelBar.push(responseDataGejala.data[i].gejala);
       }
       this.isLoadingPie = false;
+      this.isLoadingBar = false
       let sapiData = response.data;
       this.tableItemsSapi = sapiData;
-      let labelData = responseData.data;
-      this.tableItems = labelData;
-      this.isLoading = false;
-      let attrData = responseDataAttr.data;
-      this.tableItemsAttr = attrData;
-      
     }
   }
 };

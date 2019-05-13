@@ -344,6 +344,49 @@ def get_all_gejala():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
+@app.route('/api/intelligent/all_gejala_limit', methods=['GET'])
+def get_all_gejala_limit():
+  try:
+    responses = response()
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$unwind': {
+              'path': '$gejala'
+          }
+      }, {
+          '$group': {
+              '_id': '$gejala.namaAttributes', 
+              'total': {
+                  '$sum': {
+                      '$multiply': [
+                          '$gejala.nilai'
+                      ]
+                  }
+              }
+          }
+      }, {
+          '$sort': {
+              'total': -1
+          }
+      }, {
+          '$limit': 5
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'gejala' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
 @app.route('/api/intelligent/all_gejala_in_time', methods=['GET'])
 def get_all_gejala_in_time():
   try:
@@ -382,6 +425,67 @@ def get_all_gejala_in_time():
                   }
               }
           }
+      }
+    ])
+    output = []
+    for s in diagnoses:
+      output.append(
+        {
+          'gejala' : s['_id'], 
+          'total': s['total']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/all_gejala_in_time_limit', methods=['GET'])
+def get_all_gejala_in_time_limit():
+  try:
+    responses = response()
+    headers = request.args
+    start = headers['start']
+    end = headers['end']
+    start_arr = start.split("-")
+    end_arr = end.split("-")
+    start_year = int(start_arr[0])
+    start_month = int(start_arr[1])
+    start_day = int(start_arr[2])
+    end_year = int(end_arr[0])
+    end_month = int(end_arr[1])
+    end_day = int(end_arr[2])
+    diagnoses = mongo.db.diagnoses.aggregate([
+      {
+          '$match': {
+              'tanggal': {
+                  '$gte': datetime(start_year,start_month,start_day,0,0,0), 
+                  '$lte': datetime(end_year,end_month,end_day,0,0,0)
+              }
+          }
+      }, {
+          '$unwind': {
+              'path': '$gejala'
+          }
+      }, {
+          '$group': {
+              '_id': '$gejala.namaAttributes', 
+              'total': {
+                  '$sum': {
+                      '$multiply': [
+                          '$gejala.nilai'
+                      ]
+                  }
+              }
+          }
+      }, {
+          '$sort': {
+              'total': -1
+          }
+      }, {
+          '$limit': 5
       }
     ])
     output = []

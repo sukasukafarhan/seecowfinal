@@ -91,6 +91,27 @@ export default {
   getAllDiagnoses(){
     return axios.get(Api.intelligentUrl()+'all_diagnoses')
   },
+  getAllDiagnosesInTime(start,end){
+    return axios.get(Api.intelligentUrl()+'all_diagnoses_in_time?start='+start+'&end='+end)
+  },
+  getDiagnoseBySapi(id_sapi){
+    return axios.post(Api.intelligentUrl()+'diagnoses_by_sapi?sapi='+id_sapi)
+  },
+  getDiagnoseBySapiInTime(start,end,id_sapi){
+    return axios.get(Api.intelligentUrl()+'diagnoses_by_sapi_in_time?start='+start+'&end='+end+'&sapi='+id_sapi)
+  },
+  getAllGejala(){
+    return axios.get(Api.intelligentUrl()+'all_gejala')
+  },
+  getAllGejalaInTime(start,end){
+    return axios.get(Api.intelligentUrl()+'all_gejala_in_time?start='+start+'&end='+end)
+  },
+  getGejalaBySapi(id_sapi){
+    return axios.post(Api.intelligentUrl()+'gejala_by_sapi?sapi='+id_sapi)
+  },
+  getGejalaBySapiInTime(start,end,id_sapi){
+    return axios.get(Api.intelligentUrl()+'gejala_by_sapi_in_time?start='+start+'&end='+end+'&sapi='+id_sapi)
+  },
   uploadDataTraining(params){
     return axios.post(Api.intelligentUrl()+'upload_training_data',params,{
       headers:{
