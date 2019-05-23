@@ -134,6 +134,14 @@ def save_model(model):
   with open(pkl_filename, 'wb') as file:
     pickle.dump(model, file)
 
+def create_tree(data_train,feature_cols,model):
+  labels_get = list(map(str,data_train['Label'].unique()))
+  dot_data = StringIO()
+  export_graphviz(model, out_file=dot_data,  
+                  filled=True, rounded=True,
+                  special_characters=True,feature_names = feature_cols,class_names=labels_get)
+  graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
+  graph.write_png("././static/sapi_tree_data.png")
 
 @app.route('/api/intelligent/upload_training_data', methods=['POST'])
 def upload_file():
@@ -153,6 +161,7 @@ def upload_file():
      model = training(data_training,feature_cols)
      # SAVE MODEL
      save_model(model)
+     create_tree(data_training,feature_cols,model)
      responses = response()
      responses.setStatus(True)
      responses.setMessage("Succesfully save model")
