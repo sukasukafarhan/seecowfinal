@@ -141,12 +141,14 @@ export default {
     this.checkSession();
   },
   methods: {
-    addSolution(){
+    async addSolution(){
         var objData = [{}]
         objData[0]["labelIdentity"] = this.labelSelected
         objData[0]["treatment"] = this.treatment
         objData[0]["prevention"] = this.prevention
+        let upload = await this.addToServer(objData[0])
         this.$refs.myModalRef.hide()
+        this.firstLoad()
         // console.log(objData[0])
         // console.log(this.labelSelected)
         // console.log(this.treatment)
@@ -165,6 +167,10 @@ export default {
     },
     async fetchDataSolutions() {
       let response = await PostsService.getAllSolutions();
+      return response.data;
+    },
+    async addToServer(params){
+      const response = await PostsService.addSolution(params);
       return response.data;
     },
     checkSession() {

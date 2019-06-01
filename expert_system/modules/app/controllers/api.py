@@ -58,6 +58,22 @@ def get_label():
   except :
     return False
 
+def get_solutions(identity):
+  try:
+    solution = mongo.db.solutions
+    output = []
+    for s in solution.find({'labelIdentity':identity}):
+      output.append(
+        {
+          'labelIdentity' : s['labelIdentity'], 
+          'treatment': s['treatment'],
+          'prevention': s['prevention']
+        })
+    return output
+  except :
+    return False
+
+
 # =======SECTION DECISION TREE=======
 def allowed_file(filename):
   return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -197,21 +213,22 @@ def testing_data():
     responses.setStatus(True)
     # responses.setData(labels[result[0]])
     # Save
-    attributes2 = []
-    for i in model_for_saving:
-      attributes2.append({
-        "namaAttributes" : i,
-        "nilai" : model_for_saving[i]
-      })
-    res = labels[result[0]]
-    diagnose_insert = {
-      "sapiId" : ObjectId(sapi_id),
-      "diagnose" : res,
-      "gejala" : attributes2, 
-      "tanggal" : datetime.now()
-    }
-    mongo.db.diagnoses.insert_one(diagnose_insert)
-    responses.setData(diagnose_insert)
+    # attributes2 = []
+    # for i in model_for_saving:
+    #   attributes2.append({
+    #     "namaAttributes" : i,
+    #     "nilai" : model_for_saving[i]
+    #   })
+    # res = labels[result[0]]
+    # diagnose_insert = {
+    #   "sapiId" : ObjectId(sapi_id),
+    #   "diagnose" : res,
+    #   "gejala" : attributes2, 
+    #   "tanggal" : datetime.now()
+    # }
+    # mongo.db.diagnoses.insert_one(diagnose_insert)
+    solu = get_solutions(result[0])
+    responses.setData(solu)
     return jsonify(responses.getResponse())
 
   except:
