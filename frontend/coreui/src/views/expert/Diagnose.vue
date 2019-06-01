@@ -96,8 +96,7 @@
                            
                           </div>
                           <div slot="key-answer" slot-scope="data">
-                            
-                            <b-badge :variant="getStatus(data.item.nilai)">{{data.item.nilai == 0 ? "No" : "Yes"  }}</b-badge>
+                            <b-badge :variant="getStatus(data.item.nilai)">{{data.item.nilai == 0 ? "No":"Yes"  }}</b-badge>
                           </div>
                           </b-table>
                       </b-tab>
@@ -105,31 +104,13 @@
                           <template slot="title">
                             <strong>Prevention advice</strong>
                           </template>
-                          <ul>
-                            <li>
-                              Keep the cage clean
-                            </li>
-                            <li>
-                              Clean the mammary glands regularly
-                            </li>
-                            <li>
-                              Use antiseptics (iodine and chlorine fluids.) for dyeing nipples before and after milking
-                            </li>
-                          </ul>
+                          <strong>{{ansArray[2]}}</strong>
                       </b-tab>
                        <b-tab>
                           <template slot="title">
                             <strong>Treatment advice</strong>
                           </template>
-                          <ul>
-                            <li>
-                              Administration of cloxacillin antibiotics when dry cages
-                            </li>
-                            <li>
-                              Give Suanovil (spiramycin) antibiotics directly to the nipple
-                            </li>
-                            
-                          </ul>
+                          <strong>{{ansArray[1]}}</strong>
                       </b-tab>
                     </b-tabs>
                   </b-card>
@@ -252,6 +233,7 @@ export default {
       
     },
     async doDiagnose(){
+      this.ansArray=[]
       if(this.progress_counter == this.progress_max){
         // console.log("max===")
         this.progress_counter = this.progress_max
@@ -266,6 +248,8 @@ export default {
       const response = await this.ToServer(objData[0],this.$route.params.id)
       let dataFinal = response.data
       this.ansArray.push(dataFinal.diagnose)
+      this.ansArray.push(dataFinal.treatment)
+      this.ansArray.push(dataFinal.prevention)
       this.tableItems = dataFinal.gejala
       // console.log(objData[0])
     }
