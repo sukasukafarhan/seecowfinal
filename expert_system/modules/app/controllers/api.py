@@ -63,7 +63,7 @@ def get_solutions(params):
     solution = mongo.db.solutions.aggregate([
         {
             '$match': {
-                'labelIdentity': 0
+                'labelIdentity': params
             }
         }
     ])
@@ -232,7 +232,7 @@ def testing_data():
     #   "tanggal" : datetime.now()
     # }
     # mongo.db.diagnoses.insert_one(diagnose_insert)
-    solu = get_solutions(result[0])
+    solu = get_solutions(int(result[0]))
     responses.setData(solu)
     return jsonify(responses.getResponse())
 
