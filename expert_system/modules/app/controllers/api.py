@@ -827,7 +827,7 @@ def get_gejala_by_sapi_in_time_limit():
 def add_solution():
   try:
     d = request.get_json()
-    
+    mongo.db.solutions.insert_one(d)
     responses = response()
     responses.setStatus(True)
     responses.setData(d)
