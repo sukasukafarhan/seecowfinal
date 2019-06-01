@@ -161,7 +161,7 @@ def upload_file():
      model = training(data_training,feature_cols)
      # SAVE MODEL
      save_model(model)
-     create_tree(data_training,feature_cols,model)
+    #  create_tree(data_training,feature_cols,model)
      responses = response()
      responses.setStatus(True)
      responses.setMessage("Succesfully save model")
@@ -818,6 +818,22 @@ def get_gejala_by_sapi_in_time_limit():
     responses.setData(output)
     return jsonify(responses.getResponse())
   except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/add_solution', methods=['POST'])
+def add_solution():
+  try:
+    d = request.get_json()
+    
+    responses = response()
+    responses.setStatus(True)
+    responses.setData(d)
+    return jsonify(responses.getResponse())
+
+  except:
     responses = response()
     responses.setStatus(False)
     responses.setMessage("Something wrong :(")

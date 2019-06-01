@@ -4,4 +4,5 @@ WORKDIR /usr/src/app
 EXPOSE 4000
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
+# VOLUME ["/static"]
 ENTRYPOINT ["python","index.py"]
