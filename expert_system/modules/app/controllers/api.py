@@ -218,22 +218,24 @@ def testing_data():
     responses.setStatus(True)
     # responses.setData(labels[result[0]])
     # Save
-    # attributes2 = []
-    # for i in model_for_saving:
-    #   attributes2.append({
-    #     "namaAttributes" : i,
-    #     "nilai" : model_for_saving[i]
-    #   })
-    # res = labels[result[0]]
-    # diagnose_insert = {
-    #   "sapiId" : ObjectId(sapi_id),
-    #   "diagnose" : res,
-    #   "gejala" : attributes2, 
-    #   "tanggal" : datetime.now()
-    # }
-    # mongo.db.diagnoses.insert_one(diagnose_insert)
+    attributes2 = []
+    for i in model_for_saving:
+      attributes2.append({
+        "namaAttributes" : i,
+        "nilai" : model_for_saving[i]
+      })
+    res = labels[result[0]]
     solu = get_solutions(int(result[0]))
-    responses.setData(solu)
+    diagnose_insert = {
+      "sapiId" : ObjectId(sapi_id),
+      "diagnose" : res,
+      "gejala" : attributes2, 
+      "tanggal" : datetime.now(),
+      "treatment" : solu[0]["treatment"],
+      "prevention" : solu[0]["prevention"]
+    }
+    mongo.db.diagnoses.insert_one(diagnose_insert)
+    responses.setData(diagnose_insert)
     return jsonify(responses.getResponse())
 
   except:
