@@ -184,11 +184,12 @@ export default {
         formData.append('file', this.file);
         let response = await PostsService.uploadDataTraining(formData);
         this.successAlert = []
+        console.log(response.data)
+        this.isLoading=true
+        this.isLoadingAttr=true
         if(response.data.status){
             this.successAlert.push(response.data.message);
             this.showAlert()
-            this.isLoading=true
-            this.isLoadingAttr=true
             this.firstLoad()
             // setTimeout("location.reload(true);",2000);
         }

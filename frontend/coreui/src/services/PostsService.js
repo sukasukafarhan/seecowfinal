@@ -134,6 +134,12 @@ export default {
   },
   testingData(params,id_sapi){
     return axios.post(Api.intelligentUrl()+'testing_data?sapi='+id_sapi,params)
+  },
+  getAllSolutions(){
+    return axios.get(Api.intelligentUrl()+'all_solutions')
+  },
+  addSolution(params){
+    return axios.post(Api.intelligentUrl()+'add_solution',params)
   }
 
 }

@@ -45,6 +45,11 @@ export default{
       icon: 'icon-link'
     },
     {
+      name: 'Solutions',
+      url: '/admin/solutions',
+      icon: 'icon-puzzle'
+    },
+    {
       name: 'Base',
       url: '/base',
       icon: 'icon-puzzle',

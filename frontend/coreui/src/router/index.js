@@ -12,7 +12,7 @@ const RequestedCows = () => import('@/views/admin/RequestedCows')
 const Label = () => import('@/views/admin/Label')
 const Attributes = () => import('@/views/admin/Attributes')
 const Training = () => import('@/views/admin/Training')
-
+const Solutions = () => import('@/views/admin/Solutions')
 
 const Colors = () => import('@/views/theme/Colors')
 const Typography = () => import('@/views/theme/Typography')
@@ -120,6 +120,11 @@ export default new Router({
           path: '/admin/training',
           name : 'Training',
           component: Training
+        },
+        {
+          path: '/admin/solutions',
+          name : 'Solutions',
+          component: Solutions
         },
         {
           path: '/expert-system/history',

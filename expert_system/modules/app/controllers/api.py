@@ -838,3 +838,24 @@ def add_solution():
     responses.setStatus(False)
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
+
+@app.route('/api/intelligent/all_solutions', methods=['GET'])
+def get_all_solutions():
+  try:
+    responses = response()
+    attribut = mongo.db.solutions
+    output = []
+    for s in attribut.find():
+      output.append(
+        {
+          'labelIdentity' : s['labelIdentity'], 
+          'treatment': s['treatment'],
+          'prevention': s['prevention']
+        })
+    responses.setData(output)
+    return jsonify(responses.getResponse())
+  except :
+    responses = response()
+    responses.setStatus(False)
+    responses.setMessage("Something wrong :(")
+    return jsonify(responses.getResponse())
