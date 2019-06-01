@@ -60,15 +60,20 @@ def get_label():
 
 def get_solutions(identity):
   try:
-    solution = mongo.db.solutions
-    output = []
-    for s in solution.find({'labelIdentity':identity}):
-      output.append(
+    solution = mongo.db.solutions.aggregate([
         {
-          'labelIdentity' : s['labelIdentity'], 
-          'treatment': s['treatment'],
-          'prevention': s['prevention']
-        })
+            '$match': {
+                'labelIdentity': identity
+            }
+        }
+    ])
+    output = []
+    for s in solution:
+      output.append({
+        'labelIdentity' : s['labelIdentity'],
+        'treatment' : s['treatment'],
+        'prevention' : s['prevention']
+      })
     return output
   except :
     return False
