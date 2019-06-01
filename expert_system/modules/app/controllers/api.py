@@ -232,8 +232,8 @@ def testing_data():
     #   "tanggal" : datetime.now()
     # }
     # mongo.db.diagnoses.insert_one(diagnose_insert)
-    solu = get_solutions(result[0])
-    responses.setData(solu)
+    # solu = get_solutions(result[0])
+    responses.setData(result[0])
     return jsonify(responses.getResponse())
 
   except:
