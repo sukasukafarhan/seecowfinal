@@ -26,8 +26,8 @@ services:
   expert-system-service:
     container_name: expert-system-container
     build: ./expert_system/modules/
-    volumes:
-      - ./expert_system/modules/static:/static
+    # volumes:
+    #   - ./expert_system/modules/static:/static
     ports:
       - 4000:4000
     links:
