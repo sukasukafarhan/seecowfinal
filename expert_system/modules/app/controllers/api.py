@@ -58,12 +58,12 @@ def get_label():
   except :
     return False
 
-def get_solutions(identity):
+def get_solutions(params):
   try:
     solution = mongo.db.solutions.aggregate([
         {
             '$match': {
-                'labelIdentity': identity
+                'labelIdentity': 0
             }
         }
     ])
@@ -232,8 +232,8 @@ def testing_data():
     #   "tanggal" : datetime.now()
     # }
     # mongo.db.diagnoses.insert_one(diagnose_insert)
-    # solu = get_solutions(result[0])
-    responses.setData(result[0])
+    solu = get_solutions(result[0])
+    responses.setData(solu)
     return jsonify(responses.getResponse())
 
   except:
