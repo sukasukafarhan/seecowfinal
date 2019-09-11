@@ -88,10 +88,8 @@
                   <i v-bind:id="data.item._id" class="icon-eye"></i>
               </b-link>
               <b-popover v-bind:target="data.item._id" title="Cow ID">
-                <!-- <strong>{{data.item._id}}</strong> -->
                 <h5><b-badge variant="secondary">{{data.item.perangkat.idOnRaspi}}</b-badge></h5>
               </b-popover>
-              <!-- <div class="small text-muted">{{data.item._id}}</div> -->
             </template>
             <template v-slot:cell(key-kondisi)="data">
               <b-badge :variant="getKondisi(data.item.perangkat.data[data.item.perangkat.data.length-1].kondisi)">{{data.item.perangkat.data[data.item.perangkat.data.length-1].kondisi == 0 ? "Abnormal":"Normal"}}</b-badge>
