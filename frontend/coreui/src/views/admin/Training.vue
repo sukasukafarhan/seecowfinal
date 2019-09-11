@@ -46,14 +46,14 @@
             :current-page="currentPage"
             :per-page="perPage"
           >
-            <div slot="key-nama" slot-scope="data">
+            <template v-slot:cell(key-nama)="data">
               <i class="icon-ghost"></i>
               <strong> {{data.item.namaLabel}}</strong>
-            </div>
-            <div slot="key-identity" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-identity)="data">
               <i class="icon-key"></i>
               <strong> {{data.item.labelIdentity}}</strong>
-            </div>
+            </template>
             
           </b-table>
           <hr>
@@ -77,14 +77,14 @@
             :current-page="currentPageAttr"
             :per-page="perPageAttr"
           >
-            <div slot="key-nama-attr" slot-scope="data">
+            <template v-slot:cell(key-nama-attr)="data">
               <i class="icon-ghost"></i>
               <strong> {{data.item.namaAttribute}}</strong>
-            </div>
-            <div slot="key-identity-attr" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-identity-attr)="data">
               <i class="icon-key"></i>
               <strong> {{data.item.attributeIdentitiy}}</strong>
-            </div>
+            </template>
             
           </b-table>
           <hr>

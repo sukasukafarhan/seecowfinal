@@ -14,14 +14,14 @@
             :fields="tableFields"
             head-variant="light"
           >
-            <div slot="key-nama" slot-scope="data">
+            <template v-slot:cell(key-nama)="data">
               <i class="icon-ghost"></i>
               <strong> {{data.item.namaLabel}}</strong>
-            </div>
-            <div slot="key-identity" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-identity)="data">
               <i class="icon-key"></i>
               <strong> {{data.item.labelIdentity}}</strong>
-            </div>
+            </template>
             
           </b-table>
         </b-card>
