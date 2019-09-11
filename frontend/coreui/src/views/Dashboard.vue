@@ -81,7 +81,7 @@
           </b-row>
           <b-row>
             <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light"  v-if="existingData == true">
-            <div slot="namaSapi" slot-scope="data">
+            <template  v-slot:cell(namaSapi)="data">
               <img src="img/cow/cow (2).png" width="50px" alt="cows logo">
               <strong>{{data.value}}</strong>
               <b-link class="card-header-action btn-minimize" v-b-toggle.collapse1>
@@ -92,33 +92,32 @@
                 <h5><b-badge variant="secondary">{{data.item.perangkat.idOnRaspi}}</b-badge></h5>
               </b-popover>
               <!-- <div class="small text-muted">{{data.item._id}}</div> -->
-            </div>
-            <div slot="key-kondisi" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-kondisi)="data">
               <b-badge :variant="getKondisi(data.item.perangkat.data[data.item.perangkat.data.length-1].kondisi)">{{data.item.perangkat.data[data.item.perangkat.data.length-1].kondisi == 0 ? "Abnormal":"Normal"}}</b-badge>
-            </div>
-            <div slot="key-tanggal" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-tanggal)="data">
               <b-badge :variant="dateFormatter(data.item.perangkat.data[data.item.perangkat.data.length-1].tanggal)">{{data.item.perangkat.data[data.item.perangkat.data.length-1].tanggal | formatDate}}</b-badge>
-              
-            </div>
-            <div slot="key-suhu" slot-scope="data">
-              
+            </template>
+            <template v-slot:cell(key-suhu)="data">
               <strong>{{data.item.perangkat.data[data.item.perangkat.data.length-1].suhu.toFixed(2)}}</strong>
               <div class="small text-muted">Celcius</div>
-            </div>
-            <div slot="key-jantung" slot-scope="data">
+            </template>
+            
+            <template v-slot:cell(key-jantung)="data">
               
               <strong>{{data.item.perangkat.data[data.item.perangkat.data.length-1].jantung.toFixed(2)}}</strong>
               <div class="small text-muted">BPM</div>
-            </div>
-            <div slot="key-status" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-status)="data">
               <b-badge :variant="getBadge(data.item.perangkat.status)">{{ data.item.perangkat.status == 0 ? "Nonactive": data.item.perangkat.status == 1 ? "Active":"Pending" }}</b-badge>
-            </div>
-            <div slot="key-action" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-action)="data">
               <b-button variant="primary" size="sm" @click="toDetail(data.item._id)">Show Details</b-button>
-            </div>
-            <div slot="key-expert" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-expert)="data">
               <b-button variant="success" size="sm" @click="toExpert(data.item._id)">Identification</b-button>
-            </div>
+            </template>
           </b-table> 
             
           </b-row> 

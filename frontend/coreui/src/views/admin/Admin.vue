@@ -56,19 +56,20 @@
             :fields="tableFields"
             head-variant="light"
           >
-            <div slot="key-nama" slot-scope="data">
+
+            <template v-slot:cell(key-nama)="data">
               <img src="img/avatars/breder.jpg" width="50px" alt="farmers logo">
               <strong> {{data.item.peternak_docs[0].nama}}</strong>
-            </div>
-            <div slot="key-alamat" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-alamat)="data">
               <i class="icon-direction"></i>
               <strong> {{data.item.peternak_docs[0].alamat}}</strong>
-            </div>
-            <div slot="key-telphone" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-telphone)="data">
              
              <h5><b-badge variant="warning">{{data.item.peternak_docs[0].noTelp}}</b-badge></h5>
             
-            </div>
+            </template>
           </b-table>
         </b-card>
       </b-col>

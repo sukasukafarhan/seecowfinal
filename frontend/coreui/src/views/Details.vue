@@ -101,25 +101,26 @@
               :current-page="currentPage"
               :per-page="perPage"
             >
-              <div slot="key-kondisi" slot-scope="data">
+            <template v-slot:cell(key-kondisi)="data">
+              
                 <b-badge
                   :variant="getKondisi(data.item.kondisi)"
                 >{{data.item.kondisi == 0 ? "Abnormal":"Normal"}}</b-badge>
-              </div>
+            </template>
 
-              <div slot="key-suhu" slot-scope="data">
+              <template v-slot:cell(key-suhu)="data">
                 <strong>{{data.item.suhu.toFixed(2)}}</strong>
                 <div class="small text-muted">Celcius</div>
-              </div>
-              <div slot="key-jantung" slot-scope="data">
+              </template>
+              <template v-slot:cell(key-jantung)="data">
                 <strong>{{data.item.jantung.toFixed(2)}}</strong>
                 <div class="small text-muted">BPM</div>
-              </div>
-              <div slot="key-tanggal" slot-scope="data">
+              </template>
+              <template v-slot:cell(key-tanggal)="data">
                 <b-badge
                   :variant="dateFormatter(data.item.tanggal)"
                 >{{data.item.tanggal | formatDate}}</b-badge>
-              </div>
+              </template>
             </b-table>
             <nav>
               <b-pagination

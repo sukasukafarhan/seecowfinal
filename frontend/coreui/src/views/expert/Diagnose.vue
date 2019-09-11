@@ -91,13 +91,13 @@
                             <strong>Symptoms summary</strong>
                           </template>
                            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
-                          <div slot="key-question" slot-scope="data">
+                          <template v-slot:cell(key-question)="data">
                             {{data.item.namaAttributes}}
                            
-                          </div>
-                          <div slot="key-answer" slot-scope="data">
+                          </template>
+                          <template v-slot:cell(key-answer)="data">
                             <b-badge :variant="getStatus(data.item.nilai)">{{data.item.nilai == 0 ? "No":"Yes"  }}</b-badge>
-                          </div>
+                          </template>
                           </b-table>
                       </b-tab>
                       <b-tab>

@@ -62,16 +62,16 @@
               :fields="tableFields"
               head-variant="light"
             >
-              <div slot="key-identity" slot-scope="data">
+              <template v-slot:cell(key-identity)="data">
                 <i class="icon-ghost"></i>
                 <strong>{{data.item.labelIdentity}}</strong>
-              </div>
-              <div slot="key-treatment" slot-scope="data">
+              </template>
+              <template v-slot:cell(key-treatment)="data">
                 <strong>{{data.item.treatment}}</strong>
-              </div>
-              <div slot="key-prevention" slot-scope="data">
+              </template>
+              <template v-slot:cell(key-prevention)="data">
                 <strong>{{data.item.prevention}}</strong>
-              </div>
+              </template>
             </b-table>
           </b-card>
         </b-col>

@@ -76,14 +76,14 @@
             :fields="tableFields"
             head-variant="light"
           >
-            <div slot="key-nama" slot-scope="data">
+           <template v-slot:cell(key-nama)="data">
               <img src="img/avatars/breder.jpg" width="50px" alt="farmers logo">
               <strong>{{data.item.peternak_docs[0].nama}}</strong>
-            </div>
-            <div slot="key-nama-sapi" slot-scope="data">
+           </template>
+            <template v-slot:cell(key-nama-sapi)="data">
               <strong>{{data.item.namaSapi}}</strong>
-            </div>
-            <div slot="key-id-raspi" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-id-raspi)="data">
               <b-link class="card-header-action btn-minimize" v-b-toggle.collapse1>
                 <h4><b-badge variant="primary" v-bind:id="data.item._id" >Open ID <i class="icon-eye"></i></b-badge></h4>
               </b-link>
@@ -93,19 +93,19 @@
                   <b-badge variant="secondary">{{data.item.perangkat.idOnRaspi}}</b-badge>
                 </h5>
               </b-popover>
-            </div>
-            <div slot="key-tanggal" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-tanggal)="data">
                <h5> <b-badge :variant="dateFormatter(data.item.perangkat.data[0].tanggal)">{{dateOnFormat}}</b-badge></h5> 
-            </div>
-            <div slot="key-alamat" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-alamat)="data">
               <i class="icon-direction"></i>
               <strong> {{data.item.peternak_docs[0].alamat}}</strong>
-            </div>
-            <div slot="key-telphone" slot-scope="data">
+            </template>
+            <template v-slot:cell(key-telphone)="data">
               <h5>
                 <b-badge variant="warning">{{data.item.peternak_docs[0].noTelp}}</b-badge>
               </h5>
-            </div>
+            </template>
           </b-table>
         </b-card>
       </b-col>

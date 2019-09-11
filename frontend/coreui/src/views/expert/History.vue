@@ -70,14 +70,15 @@
               :fields="tableFields"
               head-variant="light"
             >
-              <div slot="key-gejala" slot-scope="data">
+            
+              <template v-slot:cell(key-gejala)="data">
                 <i class="icon-ghost"></i>
                 <strong>{{data.item.gejala}}</strong>
-              </div>
-              <div slot="key-total" slot-scope="data">
+              </template>
+              <template v-slot:cell(key-total)="data">
                 <i class="icon-key"></i>
                 <strong>{{data.item.total}}</strong>
-              </div>
+              </template>
             </b-table>
           </b-card>
         </b-col>
