@@ -1,5 +1,6 @@
 # author : faruq
-# first, pliss check folder static on your server, when isn available, make static folder first to save our model
+# first, pliss check folder static on your server, when i
+
 ''' controller and routes for label '''
 import os
 from flask import request, jsonify
@@ -180,7 +181,7 @@ def upload_file():
      data_training = pre_processing(data,colls_name)
      # TRAINING
      model = training(data_training,feature_cols)
-     # SAVE MODEL
+     # SAVE MODEL`
      save_model(model)
     #  create_tree(data_training,feature_cols,model)
      responses = response()

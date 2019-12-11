@@ -52,14 +52,14 @@ services:
     ports:
       - "27017:27017"
       
-  portainer:  
-      image: portainer/portainer
-      container_name: portainer-container
-      ports:
-        - 9000:9000
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
-        - /portainer_data:/data portainer/portainer
+  # portainer:  
+  #     image: portainer/portainer
+  #     container_name: portainer-container
+  #     ports:
+  #       - 9000:9000
+  #     volumes:
+  #       - /var/run/docker.sock:/var/run/docker.sock
+  #       - /portainer_data:/data portainer/portainer
 
 volumes:
   db-data-kong-postgres:   

@@ -60,7 +60,7 @@
             ></line-chart>
             <div slot="footer">
               <b-row class="text-center">
-                <b-col class="mb-sm-6 mb-0">
+                <b-col class="mb-sm-4 mb-0">
                   <div class="text-muted">Temperature</div>
                   <strong>{{currentTemp}}</strong>
                   <b-progress
@@ -71,7 +71,7 @@
                   ></b-progress>
                 </b-col>
 
-                <b-col class="mb-sm-6 mb-0">
+                <b-col class="mb-sm-4 mb-0">
                   <div class="text-muted">Heart Rate</div>
                   <strong>{{currentHeart}}</strong>
                   <b-progress
@@ -79,6 +79,18 @@
                     class="progress-xs mt-2"
                     :precision="1"
                     variant="danger"
+                    v-bind:value="100"
+                  ></b-progress>
+                </b-col>
+
+                <b-col class="mb-sm-4 mb-0">
+                  <div class="text-muted">Position</div>
+                  <strong>Duduk</strong>
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2"
+                    :precision="1"
+                    variant="success"
                     v-bind:value="100"
                   ></b-progress>
                 </b-col>

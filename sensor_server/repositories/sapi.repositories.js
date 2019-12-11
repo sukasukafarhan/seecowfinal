@@ -7,8 +7,9 @@ var Sapi = require("../models/sapi.model");
 const socketApp = require('../socket/socket-app');
 var ObjectId = require('mongoose').Types.ObjectId;
 var peternakRepositories = require('../repositories/peternak.repositories');
-var ConnectRaspi = require('../services/ConnectRaspi');
+// var ConnectRaspi = require('../services/ConnectRaspi');
 var Constants = require('../services/Constants');
+// const shortID = require('shortid');
 var admin = require("firebase-admin");
 var serviceAccount = require("../seecowapp-firebase-adminsdk-3hlhu-22888ee3ed.json");
 /**
@@ -94,7 +95,34 @@ const sapiRepositories = {
     return result
   },
   
-  streamUpdateData : async(suhu, jantung, status,id) => {
+  // updateData: async (id, temperature, heartrate, oxygen, conductance, resistance, conductancevoltage, ecg, emg) => {
+  //   let dataUpdate = await Dokter.update({
+  //     _id: id
+  //   },
+  //     {
+  //       $push: {
+  //         "dokter.$[].pasien.$[].data": {
+  //           tanggal: new Date(),
+  //           temperature: Number(temperature),
+  //           heartrate: Number(heartrate),
+  //           oxygen: Number(oxygen),
+  //           conductance: Number(conductance),
+  //           resistance: Number(resistance),
+  //           conductancevoltage: Number(conductancevoltage),
+  //           ecg: Number(ecg),
+  //           emg: Number(emg)
+  //         }
+  //       }
+  //     })
+
+  //   if (dataUpdate) {
+  //     let dataAfterUpdt = await Dokter.findById(id)
+  //     socketApp.notifyPasienData(id, dataAfterUpdt)
+  //     return dataAfterUpdt
+  //   }
+
+  // },
+  streamUpdateData : async(suhu,jantung,status,id) => {
     var today = new Date();
     /**
      * condition dairy cows healty status
@@ -111,20 +139,20 @@ const sapiRepositories = {
       /**
        * Push notif to FCM
        */
-      let sapiInform = await Sapi.findById(id)
+      // let sapiInform = await Sapi.findById(id)
            
-      var registrationToken = "faDB3GV29Us:APA91bEMhIMgYlVEiH13iUuaOuvpAyZuU49kRAXMs8wk3ACRsfCIS1m8u19o5R_kkxd4fi2FGaXzyQimoKjRaV_VCkS5U5pqKf7aX86-_h7T0oqySqj9y7IPx1LYeZM_ZzDI8QT_Snih";
-      var payload = {
-        notification: {
-          title: sapiInform.namaSapi + " is abnormal !!",
-          body: "Please open yours Seecow App and let's check your cows.."
-        }
-      };
+      // var registrationToken = "faDB3GV29Us:APA91bEMhIMgYlVEiH13iUuaOuvpAyZuU49kRAXMs8wk3ACRsfCIS1m8u19o5R_kkxd4fi2FGaXzyQimoKjRaV_VCkS5U5pqKf7aX86-_h7T0oqySqj9y7IPx1LYeZM_ZzDI8QT_Snih";
+      // var payload = {
+      //   notification: {
+      //     title: sapiInform.namaSapi + " is abnormal !!",
+      //     body: "Please open yours Seecow App and let's check your cows.."
+      //   }
+      // };
       
-       var options = {
-        priority: "high",
-        timeToLive: 60 * 60 *24
-      };
+      //  var options = {
+      //   priority: "high",
+      //   timeToLive: 60 * 60 *24
+      // };
       // admin.messaging().sendToDevice(registrationToken, payload, options)
       //   .then(function(response) {
       //     console.log("Successfully sent message:", response);
@@ -215,6 +243,7 @@ const sapiRepositories = {
         }
 
         let sub_perangkat = {
+          idOnRaspi: new ObjectId(id),
           status: initial_status,
           data: [sub_data]
         }
@@ -225,23 +254,23 @@ const sapiRepositories = {
 
         });
         let saveSapi = await newSapi.save()
-        if(saveSapi){
-          let createOnRaspi = await ConnectRaspi.createInitial(saveSapi._id)
-          if(createOnRaspi){
-            let updateSapi = await 
-            Sapi.update({
-              _id: saveSapi._id
-            },{
-              $set: {
-                "perangkat.idOnRaspi": createOnRaspi.data.perangkat._id
-              }
-            }
-          )
-          if(updateSapi){
-            return createOnRaspi.data
-          }
-          }
-        }
+        // if(saveSapi){
+        //   let createOnRaspi = await ConnectRaspi.createInitial(saveSapi._id)
+        //   if(createOnRaspi){
+        //     let updateSapi = await 
+        //     Sapi.update({
+        //       _id: saveSapi._id
+        //     },{
+        //       $set: {
+        //         "perangkat.idOnRaspi": createOnRaspi.data.perangkat._id
+        //       }
+        //     }
+        //   )
+        //   if(updateSapi){
+        //     return createOnRaspi.data
+        //   }
+        //   }
+        // }
      
     }
   },
