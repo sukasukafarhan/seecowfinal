@@ -122,14 +122,21 @@ const sapiRepositories = {
   //   }
 
   // },
-  streamUpdateData : async(suhu,jantung,status,id) => {
+  streamUpdateData : async(suhu,jantung,x,y,z,status,id) => {
     var today = new Date();
     /**
      * condition dairy cows healty status
      */
     var tmpSuhu = Number(suhu)
     var tmpJantung = Number(jantung)
+    var tmpx = Number(x)
+    var tmpy = Number(y)
+    var tmpz = Number(z)
     var tmpKondisi = Constants.NORMAL_CONDITION
+    var tmpPosisi = Constants.BERDIRI_CONDITION
+    if (tmpz < 0){
+      tmpPosisi = Constants.DUDUK_CONDITION
+    }
     if (tmpJantung < Constants.HEARTRATE_LOWER_LIMIT || tmpJantung > Constants.HEARTRATE_UPPER_LIMIT || tmpSuhu < Constants.TEMPERATURE_LOWER_LIMIT || tmpSuhu > Constants.TEMPERATURE_UPPER_LIMIT) {
       /**
        * Abnormal
@@ -174,7 +181,11 @@ const sapiRepositories = {
           tanggal: today,
           suhu: suhu,
           jantung: jantung,
-          kondisi: tmpKondisi
+          kondisi: tmpKondisi,
+          x : x,
+          y:y,
+          z:z,
+          position:tmpPosisi
           }
         }
       }
@@ -235,15 +246,23 @@ const sapiRepositories = {
         var initial_jantung = 49;
         var initial_status = Constants.DEVICE_PENDING;
         var initial_kondisi = Constants.NORMAL_CONDITION;
+        var initial_x = 0;
+        var initial_y = 0;
+        var initial_z = 0;
+        var initial_posisi = Constants.BERDIRI_CONDITION;
         let sub_data = {
           tanggal: today,
           suhu: initial_suhu,
           jantung: initial_jantung,
-          kondisi: initial_kondisi
+          kondisi: initial_kondisi,
+          x: initial_x,
+          y: initial_y,
+          z: initial_z,
+          position: initial_posisi
         }
 
         let sub_perangkat = {
-          idOnRaspi: new ObjectId(id),
+          idOnRaspi: new ObjectId(),
           status: initial_status,
           data: [sub_data]
         }

@@ -85,7 +85,7 @@
 
                 <b-col class="mb-sm-4 mb-0">
                   <div class="text-muted">Position</div>
-                  <strong>Duduk</strong>
+                  <strong>{{currentPositions}}</strong>
                   <b-progress
                     height="{}"
                     class="progress-xs mt-2"
@@ -127,6 +127,18 @@
               <template v-slot:cell(key-jantung)="data">
                 <strong>{{data.item.jantung.toFixed(2)}}</strong>
                 <div class="small text-muted">BPM</div>
+              </template>
+              <template v-slot:cell(key-x)="data">
+                <strong>{{data.item.x.toFixed(2)}}</strong>
+              </template>
+              <template v-slot:cell(key-y)="data">
+                <strong>{{data.item.y.toFixed(2)}}</strong>
+              </template>
+              <template v-slot:cell(key-z)="data">
+                <strong>{{data.item.z.toFixed(2)}}</strong>
+              </template>
+              <template v-slot:cell(key-posisi)="data">
+                <strong>{{currentPositions}}</strong>
               </template>
               <template v-slot:cell(key-tanggal)="data">
                 <b-badge
@@ -242,6 +254,7 @@ export default {
       dateOnFormat: "",
       currentTemp: 0,
       currentHeart: 0,
+      currentPositions: "",
       tableItems: [],
       tableFields: [
         {
@@ -250,6 +263,10 @@ export default {
         },
         { key: "key-suhu", label: "Temperature" },
         { key: "key-jantung", label: "Heart Rate" },
+        { key: "x", label: "X " },
+        { key: "y", label: "Y" },
+        { key: "z", label: "Z" },
+        { key: "key-posisi", label: "Posisi" },
         { key: "key-tanggal", label: "Time" }
       ],
       startDate: "",
@@ -319,6 +336,18 @@ export default {
           this.currentHeart = sapiData.perangkat.data[
             sapiData.perangkat.data.length - 1
           ].jantung.toFixed(2);
+          this.currentX = sapiData.perangkat.data[
+            sapiData.perangkat.data.length - 1
+          ].x.toFixed(2);
+          this.currentY = sapiData.perangkat.data[
+            sapiData.perangkat.data.length - 1
+          ].y.toFixed(2);
+          this.currentZ = sapiData.perangkat.data[
+            sapiData.perangkat.data.length - 1
+          ].z.toFixed(2);
+          this.getPositions(
+            sapiData.perangkat.data[sapiData.perangkat.data.length - 1].position
+          );
           this.getBadge(sapiData.perangkat.status);
           this.getKondisi(
             sapiData.perangkat.data[sapiData.perangkat.data.length - 1].kondisi
@@ -376,6 +405,9 @@ export default {
       this.getKondisi(
         sapiData.perangkat.data[sapiData.perangkat.data.length - 1].kondisi
       );
+      this.getPositions(
+        sapiData.perangkat.data[sapiData.perangkat.data.length - 1].position
+      );
       this.currentTemp = sapiData.perangkat.data[
         sapiData.perangkat.data.length - 1
       ].suhu.toFixed(2);
@@ -406,12 +438,24 @@ export default {
       this.getKondisi(
         sapiData.perangkat.data[sapiData.perangkat.data.length - 1].kondisi
       );
+      this.getPositions(
+        sapiData.perangkat.data[sapiData.perangkat.data.length - 1].position
+      );
       this.currentTemp = sapiData.perangkat.data[
         sapiData.perangkat.data.length - 1
       ].suhu.toFixed(2);
       this.currentHeart = sapiData.perangkat.data[
         sapiData.perangkat.data.length - 1
       ].jantung.toFixed(2);
+      this.currentX = sapiData.perangkat.data[
+        sapiData.perangkat.data.length - 1
+      ].x.toFixed(2);
+      this.currentY = sapiData.perangkat.data[
+        sapiData.perangkat.data.length - 1
+      ].y.toFixed(2);
+      this.currentZ = sapiData.perangkat.data[
+        sapiData.perangkat.data.length - 1
+      ].z.toFixed(2);
       for (var i = 0; i < sapiData.perangkat.data.length; i++) {
         this.dataChartHeart.push(sapiData.perangkat.data[i].suhu.toFixed(2));
         this.dataChartTemp.push(sapiData.perangkat.data[i].jantung.toFixed(2));
@@ -446,6 +490,16 @@ export default {
         this.conditions = "success";
       }
       return kondisiPointer == 0 ? "danger" : "success";
+    },
+    getPositions(tmp) {
+      var posisiPointer = 0;
+      if (Number(tmp) < 0) {
+        this.currentPositions = "Duduk";
+      } else {
+        posisiPointer = 1;
+        this.currentPositions = "Berdiri";
+      }
+      return posisiPointer == 0 ? "danger" : "success";
     },
     dateFormatter(date) {
       var created_date = new Date(date);

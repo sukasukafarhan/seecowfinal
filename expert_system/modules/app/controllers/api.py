@@ -172,7 +172,7 @@ def upload_file():
    if file and allowed_file(file.filename):
      filename = secure_filename(file.filename)
      file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-     data = pd.read_csv("././static/data-coba-coba.csv",header=None)
+     data = pd.read_csv("././static/datacobacoba.csv",header=None)
      # GET HEADER
      colls_name = get_header(data)
      # GET ATTRIBUTE

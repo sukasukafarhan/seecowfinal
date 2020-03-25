@@ -9,7 +9,11 @@ const PerangkatSchema = new Schema({
     tanggal:{ type: Date, default: Date.now },
     suhu:Number,
     jantung:Number,
-    kondisi:Number
+    kondisi:Number,
+    x: Number,
+    y: Number,
+    z: Number,
+    position: Number
   }]
 });
 var SapiSchema = new Schema({

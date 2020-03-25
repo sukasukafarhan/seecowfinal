@@ -38,21 +38,25 @@
               <b-form-group :label-cols="1" :horizontal="true">
                 <b-form-radio-group
                   stacked>
-                  
-                     <label>
-                      
-                      <input type="radio" 
-                            v-bind:value="1" 
-                            v-bind:name="index" 
-                            v-model="userResponses[index]"> Yes
-                    </label>
-                    <br>
-                    <label>
-                      <input type="radio" 
-                            v-bind:value="0" 
-                            v-bind:name="index" 
-                            v-model="userResponses[index]"> No
-                    </label>
+                     <b-row>
+                        <b-col>
+                          <label>
+                            <input type="radio" 
+                                  v-bind:value="1" 
+                                  v-bind:name="index" 
+                                  v-model="userResponses[index]"> Yes
+                          </label>
+                        </b-col>
+                        <b-col>
+                          <label>
+                            <input type="radio" 
+                                  v-bind:value="0" 
+                                  v-bind:name="index" 
+                                  v-model="userResponses[index]"> No
+                          </label>
+                        </b-col>
+                     </b-row> 
+                    
                   
                 </b-form-radio-group>
               </b-form-group>

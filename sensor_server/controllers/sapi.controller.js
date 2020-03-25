@@ -28,7 +28,7 @@ module.exports = {
     var today = new Date();
     var yesterday = new Date();
     yesterday.setDate(today.getDate()-1);
-      if(token){
+     // if(token){
         let response = new Response()
         try {
           response.setData(await sapiRepositories.getSapiOnSpecificTime(req.body.idSapi,yesterday.toISOString(),today.toISOString()))
@@ -37,9 +37,9 @@ module.exports = {
           response.setMessage(e)
         }
         res.json(response)  
-      }else{
-        res.json(response.unAuthorized());
-      }
+     // }else{
+       // res.json(response.unAuthorized());
+      //}
   },
   getDataInTime : async(req,res)=>{
     let token = Token.authorizationToken(req.headers);
@@ -111,9 +111,11 @@ module.exports = {
   },
   data_update: async(req, res)=>{
     let response = new Response()
+    console.log(req.body)
     try{
-      response.setData(await sapiRepositories.streamUpdateData(req.body.suhu,req.body.jantung,req.body.status,req.params.id))
+      response.setData(await sapiRepositories.streamUpdateData(req.body.suhu,req.body.jantung,req.body.x,req.body.y,req.body.z,req.body.status,req.params.id))
     }catch(e){
+      // console.log("___",e);
       response.setStatus(false)
       response.setMessage(e)
     }
