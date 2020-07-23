@@ -25,57 +25,86 @@
           </div> -->
         </div>
         <div>
-          <h6 class="text-muted" style="text-align:center">Please fill yes or no in the symptom survey below to find out what is happening to your cow</h6>
+          <h6 class="text-muted" style="text-align:center">Please fill the symptom survey below to find out what is happening to your cow</h6>
           <!-- <ul id="example-1">
             <li v-for="item in dataAttribute" :key="item._id">
               {{ item.namaAttribute }}
             </li>
           </ul> -->
           <b-tabs pills v-model="tabIndex">
-            <b-tab v-for="(item, index) in dataAttribute" :key="item.attributeIdentitiy" >
-              <h3> {{ item.namaAttribute }}</h3>
-              <br>
-              <b-form-group :label-cols="1" :horizontal="true">
-                <b-form-radio-group
-                  stacked>
-                     <b-row>
-                        <b-col>
-                          <label>
-                            <input type="radio" 
-                                  v-bind:value="1" 
-                                  v-bind:name="index" 
-                                  v-model="userResponses[index]"> Yes
-                          </label>
-                        </b-col>
-                        <b-col>
-                          <label>
-                            <input type="radio" 
-                                  v-bind:value="0" 
-                                  v-bind:name="index" 
-                                  v-model="userResponses[index]"> No
-                          </label>
-                        </b-col>
-                     </b-row> 
-                    
-                  
-                </b-form-radio-group>
-              </b-form-group>
+            <b-tab title="First">  
+              <b-row v-for="(item, index) in dataAttribute" :key="item.attributeIdentitiy" v-if="item.attributeIdentitiy<20" >
+                <b-col sm="12" md="8" lg="8">
+                  <h3> {{item.attributeIdentitiy+1}}. {{ item.namaAttribute }}</h3>
+                </b-col>
+                <b-col sm="12" md="4" lg="4">
+                  <b-form-group v-on:submit="doDiagnose">
+                    <b-form-select v-model="userResponses[index]"
+                      :plain="true"
+                      :options="[
+                        {
+                          text: 'Tidak ',
+                          value: '0'
+                        }, {
+                          text: 'Mungkin',
+                          value: '0.3'
+                        }, {
+                          text: 'Kemungkinan Besar',
+                          value: '0.5'
+                        }, {
+                          text: 'Hampir Pasti',
+                          value: '0.7'
+                        }, {
+                          text: 'Pasti',
+                          value: '1'
+                        }]">
+                    </b-form-select>
+                  </b-form-group>
+                </b-col> 
+                <hr>          
+              </b-row>
             </b-tab>
-           
+
+            <b-tab title="Second">  
+              <b-row v-for="(item, index) in dataAttribute" :key="item.attributeIdentitiy" v-if="item.attributeIdentitiy>=20" >
+                <b-col sm="12" md="8" lg="8">
+                  <h3> {{item.attributeIdentitiy+1}}. {{ item.namaAttribute }}</h3>
+                </b-col>
+                <b-col sm="12" md="4" lg="4">
+                  <b-form-group v-on:submit="doDiagnose">
+                    <b-form-select v-model="userResponses[index]"
+                      :plain="true"
+                      :options="[
+                        {
+                          text: 'Tidak',
+                          value: '0'
+                        }, {
+                          text: 'Mungkin',
+                          value: '0.3'
+                        }, {
+                          text: 'Kemungkinan Besar',
+                          value: '0.5'
+                        }, {
+                          text: 'Hampir Pasti',
+                          value: '0.7'
+                        }, {
+                          text: 'Pasti',
+                          value: '1'
+                        }]">
+                    </b-form-select>
+                  </b-form-group>
+                </b-col>           
+              </b-row>
+                <table style="float:right">
+                  <tr>
+                    <td>
+                        <b-btn class="mt-4" id="asd2"  variant="danger" @click="doDiagnose">Diagnose</b-btn>
+                    </td>
+                    </tr>
+                </table>
+            </b-tab>
           </b-tabs>
           <hr>
-          <table style="float:right">
-            <tr>
-              <td>
-                  <b-btn v-if="tabIndex > 0" class="mt-4" variant="warning" @click="prev">Previous</b-btn>      
-              </td>
-              <td>
-                  <b-btn v-if="tabIndex < progress_max-1" class="mt-4" id="asd"  variant="warning" @click="clicked">Next Step</b-btn>
-                  <b-btn v-if="progress_max+1 < tabIndex+3" class="mt-4" id="asd2"  variant="danger" @click="doDiagnose">Diagnose</b-btn>
-              
-              </td>
-              </tr>
-          </table>
         </div>
       </b-card>
       <b-card header="System Advice" class="card-accent-danger">
@@ -84,7 +113,7 @@
           <div role="tablist" v-if="ansArray.length > 0">
             <b-card no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn block href="#" v-b-toggle.accordion1 variant="danger">{{ansArray[0]}}</b-btn>
+                <b-btn block href="#" v-b-toggle.accordion1 variant="danger">{{ansArray[0]}} / {{ansArray[3].toFixed(2)*100}} %</b-btn>
               </b-card-header>
               <b-collapse id="accordion1" visible accordion="my-accordion" role="tabpanel">
                 <b-card-body>
@@ -97,14 +126,19 @@
                            <b-table striped outlined stacked="sm" hover :items="tableItems" :fields="tableFields" head-variant="light">
                           <template v-slot:cell(key-question)="data">
                             {{data.item.namaAttributes}}
-                           
+                           <!-- {{data.item.nilai == 0 ? "No":"Yes"  }} -->
                           </template>
                           <template v-slot:cell(key-answer)="data">
-                            <b-badge :variant="getStatus(data.item.nilai)">{{data.item.nilai == 0 ? "No":"Yes"  }}</b-badge>
+                            <b-badge :variant="getStatus(data.item.nilai)">
+                              <p v-if="data.item.nilai == 0.3">Mungkin</p>
+                              <p v-else-if="data.item.nilai == 0.5">Kemungkinan Besar</p>
+                              <p v-else-if="data.item.nilai == 0.7">Hampir Pasti</p>
+                              <p v-else-if="data.item.nilai == 1">Pasti</p>
+                            </b-badge>
                           </template>
                           </b-table>
                       </b-tab>
-                      <b-tab>
+                      <b-tab active>
                           <template slot="title">
                             <strong>Prevention advice</strong>
                           </template>
@@ -245,15 +279,33 @@ export default {
         this.progress_counter++
       }
       
-      var objData = [{}] // empty array
-      for(var i=0;i<this.dataAttribute.length;i++){
-        objData[0][this.dataAttribute[i].namaAttribute] = this.userResponses[i]
+      var objData = [] // empty array
+      // objData[0][this.dataAttribute[0].namaAttribute] = this.userResponses[0]
+      for (var i = 0; i < this.userResponses.length; i++) {
+        if (this.userResponses[i] != '0') {
+          objData.push({
+            gejala: this.dataAttribute[i].namaAttribute,
+            cfuser: this.userResponses[i]
+          })
+        } 
+        // else {
+        //   objData.push({
+        //     gejala: this.dataAttribute[i].namaAttribute,
+        //     cfuser: 0
+        //   })
+        // }
       }
-      const response = await this.ToServer(objData[0],this.$route.params.id)
+      console.log(objData)
+      // var objData = [{}] // empty array
+      // for(var i=0;i<this.dataAttribute.length;i++){
+      //   objData[0][this.dataAttribute[i].namaAttribute] = this.userResponses[i]
+      // }
+      const response = await this.ToServer(objData,this.$route.params.id)
       let dataFinal = response.data
       this.ansArray.push(dataFinal.diagnose)
       this.ansArray.push(dataFinal.treatment)
       this.ansArray.push(dataFinal.prevention)
+      this.ansArray.push(dataFinal.nilai)
       this.tableItems = dataFinal.gejala
       // console.log(objData[0])
     }

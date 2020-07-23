@@ -27,3 +27,6 @@
 /frontend/coreui/*.sw*
 
 /intelligent_server/node_modules/
+/node_modules
+/auth/node_modules
+/sensor_server/node_modules

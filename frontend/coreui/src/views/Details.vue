@@ -60,7 +60,7 @@
             ></line-chart>
             <div slot="footer">
               <b-row class="text-center">
-                <b-col class="mb-sm-4 mb-0">
+                <b-col class="mb-sm-3 mb-0">
                   <div class="text-muted">Temperature</div>
                   <strong>{{currentTemp}}</strong>
                   <b-progress
@@ -71,7 +71,7 @@
                   ></b-progress>
                 </b-col>
 
-                <b-col class="mb-sm-4 mb-0">
+                <b-col class="mb-sm-3 mb-0">
                   <div class="text-muted">Heart Rate</div>
                   <strong>{{currentHeart}}</strong>
                   <b-progress
@@ -83,9 +83,21 @@
                   ></b-progress>
                 </b-col>
 
-                <b-col class="mb-sm-4 mb-0">
+                <b-col class="mb-sm-3 mb-0">
                   <div class="text-muted">Position</div>
                   <strong>{{currentPositions}}</strong>
+                  <b-progress
+                    height="{}"
+                    class="progress-xs mt-2"
+                    :precision="1"
+                    variant="success"
+                    v-bind:value="100"
+                  ></b-progress>
+                </b-col>
+
+                <b-col class="mb-sm-3 mb-0">
+                  <div class="text-muted">Laying Times</div>
+                  <strong>{{currentLayingTimes/3600}} jam</strong>
                   <b-progress
                     height="{}"
                     class="progress-xs mt-2"
@@ -138,7 +150,7 @@
                 <strong>{{data.item.z.toFixed(2)}}</strong>
               </template>
               <template v-slot:cell(key-posisi)="data">
-                <strong>{{currentPositions}}</strong>
+                <strong>{{data.item.position == 0 ? "Duduk":"Berdiri"}}</strong>
               </template>
               <template v-slot:cell(key-tanggal)="data">
                 <b-badge
@@ -255,7 +267,10 @@ export default {
       currentTemp: 0,
       currentHeart: 0,
       currentPositions: "",
+      currentLayingTimes: 0,
+      // currentdate:new Date(),
       tableItems: [],
+      posisi: "",
       tableFields: [
         {
           key: "key-kondisi",
@@ -355,6 +370,14 @@ export default {
           this.dateFormatter(
             sapiData.perangkat.data[sapiData.perangkat.data.length - 1].tanggal
           );
+          
+          // if(currentdate == sapiData.perangkat.data[sapiData.perangkat.data.length - 1].tanggal){
+          //   if(this.currentPositions==0){
+          //     currentLayingTimes+=2;
+          //   }
+          // }
+
+
           // Chart operation
           if (this.dataChartHeart.length > 120) {
             this.dataChartHeart.shift();
@@ -491,10 +514,12 @@ export default {
       }
       return kondisiPointer == 0 ? "danger" : "success";
     },
-    getPositions(tmp) {
+    getPositions(pos) {
       var posisiPointer = 0;
-      if (Number(tmp) < 0) {
+      if (Number(pos) == 0) {
+        posisiPointer = 0;
         this.currentPositions = "Duduk";
+        this.currentLayingTimes+=2;
       } else {
         posisiPointer = 1;
         this.currentPositions = "Berdiri";

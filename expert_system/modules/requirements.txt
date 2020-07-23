@@ -8,3 +8,4 @@ numpy
 sklearn
 pydotplus
 flask_cors
+werkzeug<1.0

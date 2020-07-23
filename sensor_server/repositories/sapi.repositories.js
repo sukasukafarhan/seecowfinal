@@ -12,6 +12,7 @@ var Constants = require('../services/Constants');
 // const shortID = require('shortid');
 var admin = require("firebase-admin");
 var serviceAccount = require("../seecowapp-firebase-adminsdk-3hlhu-22888ee3ed.json");
+var posisi = Constants.BERDIRI_CONDITION
 /**
  * initial FCM app
  */
@@ -123,7 +124,7 @@ const sapiRepositories = {
 
   // },
   streamUpdateData : async(suhu,jantung,x,y,z,status,id) => {
-    var today = new Date();
+    var today = new Date()
     /**
      * condition dairy cows healty status
      */
@@ -133,9 +134,15 @@ const sapiRepositories = {
     var tmpy = Number(y)
     var tmpz = Number(z)
     var tmpKondisi = Constants.NORMAL_CONDITION
-    var tmpPosisi = Constants.BERDIRI_CONDITION
+    var tmpPosisi = posisi
     if (tmpz < 0){
+      posisi = Constants.DUDUK_CONDITION
       tmpPosisi = Constants.DUDUK_CONDITION
+    }else if(tmpz == 0){
+      tmpPosisi = posisi
+    }else {
+      posisi = Constants.BERDIRI_CONDITION
+      tmpPposisi = Constants.BERDIRI_CONDITION
     }
     if (tmpJantung < Constants.HEARTRATE_LOWER_LIMIT || tmpJantung > Constants.HEARTRATE_UPPER_LIMIT || tmpSuhu < Constants.TEMPERATURE_LOWER_LIMIT || tmpSuhu > Constants.TEMPERATURE_UPPER_LIMIT) {
       /**
@@ -146,27 +153,27 @@ const sapiRepositories = {
       /**
        * Push notif to FCM
        */
-      // let sapiInform = await Sapi.findById(id)
+      let sapiInform = await Sapi.findById(id)
            
-      // var registrationToken = "faDB3GV29Us:APA91bEMhIMgYlVEiH13iUuaOuvpAyZuU49kRAXMs8wk3ACRsfCIS1m8u19o5R_kkxd4fi2FGaXzyQimoKjRaV_VCkS5U5pqKf7aX86-_h7T0oqySqj9y7IPx1LYeZM_ZzDI8QT_Snih";
-      // var payload = {
-      //   notification: {
-      //     title: sapiInform.namaSapi + " is abnormal !!",
-      //     body: "Please open yours Seecow App and let's check your cows.."
-      //   }
-      // };
+      var registrationToken = "99026927575:AAAAFw52_9c:APA91bFxGcRnsEMV1MSwW-yQzeu4PoFjXGYlJxBVqS1cpS10dKdqLgTWRyZ57Oxquzca_rRR6dcbe-IUJwGMRZ-C9ceL1q3jytDe1XvIQSoIeg_JNuJpqQKhr2uJHxHvFw9opPgCmPzu";
+      var payload = {
+        notification: {
+          title: sapiInform.namaSapi + " is abnormal !!",
+          body: "Please open yours Seecow App and let's check your cows.."
+        }
+      };
       
-      //  var options = {
-      //   priority: "high",
-      //   timeToLive: 60 * 60 *24
-      // };
-      // admin.messaging().sendToDevice(registrationToken, payload, options)
-      //   .then(function(response) {
-      //     console.log("Successfully sent message:", response);
-      //   })
-      //   .catch(function(error) {
-      //     console.log("Error sending message:", error);
-      //   });
+       var options = {
+        priority: "high",
+        timeToLive: 60 * 60 *24
+      };
+      admin.messaging().sendToDevice(registrationToken, payload, options)
+        .then(function(response) {
+          console.log("Successfully sent message:", response);
+        })
+        .catch(function(error) {
+          console.log("Error sending message:", error);
+        });
     }
     let sapiOnUpdate =  await 
     Sapi.update({

@@ -133,7 +133,7 @@ export default {
 
   },
   testingData(params,id_sapi){
-    return axios.post(Api.intelligentUrl()+'testing_data?sapi='+id_sapi,params)
+    return axios.post(Api.intelligentUrl()+'test_data?sapi='+id_sapi,params)
   },
   getAllSolutions(){
     return axios.get(Api.intelligentUrl()+'all_solutions')

@@ -15,7 +15,7 @@ from sklearn.tree import DecisionTreeClassifier # Import Decision Tree Classifie
 from sklearn.model_selection import train_test_split # Import train_test_split function
 from sklearn import metrics #Import scikit-learn metrics module for accuracy calculation
 from sklearn.tree import export_graphviz
-from sklearn.externals.six import StringIO   
+# from sklearn.externals.six import StringIO   
 from sklearn.tree import _tree 
 import pydotplus
 import pickle
@@ -156,14 +156,14 @@ def save_model(model):
   with open(pkl_filename, 'wb') as file:
     pickle.dump(model, file)
 
-def create_tree(data_train,feature_cols,model):
-  labels_get = list(map(str,data_train['Label'].unique()))
-  dot_data = StringIO()
-  export_graphviz(model, out_file=dot_data,  
-                  filled=True, rounded=True,
-                  special_characters=True,feature_names = feature_cols,class_names=labels_get)
-  graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
-  graph.write_png("././static/sapi_tree_data.png")
+# def create_tree(data_train,feature_cols,model):
+#   labels_get = list(map(str,data_train['Label'].unique()))
+#   dot_data = StringIO()
+#   export_graphviz(model, out_file=dot_data,  
+#                   filled=True, rounded=True,
+#                   special_characters=True,feature_names = feature_cols,class_names=labels_get)
+#   graph = pydotplus.graph_from_dot_data(dot_data.getvalue())  
+#   graph.write_png("././static/sapi_tree_data.png")
 
 @app.route('/api/intelligent/upload_training_data', methods=['POST'])
 def upload_file():
@@ -195,55 +195,181 @@ def upload_file():
     responses.setMessage("Something wrong :(")
     return jsonify(responses.getResponse())
 
-@app.route('/api/intelligent/testing_data', methods=['POST'])
+@app.route('/api/intelligent/test_data', methods=['POST'])
 def testing_data():
-  try:
-    model_testing = {}
-    model_for_saving = {}
-    attributes = get_features()
-    labels = get_label()
-    d = request.get_json()
-    headers = request.args
-    sapi_id = headers['sapi']
-
-    for i in range(len(attributes)):
-      model_testing.update({attributes[i]:[d.get(attributes[i])]})
-      model_for_saving.update({attributes[i]:d.get(attributes[i])})
+  # try:
+  print("start\n")
+  knowledges = mongo.db.pengetahuan
+  print("1\n")
+  col_solusi = mongo.db.solutions
+  print("2\n")
+  solusi = []
+  print("3\n")
+  jawaban_users = request.get_json()
+  jawaban_user = []
+  jawaban_user.extend(jawaban_users)
+  jawaban_user.append({'gejala': 'suhu badan tidak normal','cfuser':'0.4'})
+  jawaban_user.append({'gejala': 'detak jantung tidak normal','cfuser':'0.4'}) 
+  print("4\n")
+  knowledge = []
+  print("5\n")
+  kemungkinanpenyakits = []
+  kemungkinanpenyakit = []
+  print("6\n")
+  hasil_penyakit = []
+  print("7\n")
+  hasil_penyakit_final = []
+  print("8\n")
+  headers = request.args
+  print("9\n")
+  sapi_id = headers['sapi']
+  
+  print("tahap 1 mulai \n")
+  # tahap 1
+  for field in knowledges.find():
+        knowledge.append({'_id' : str(field['_id']), 'idpenyakit' : field['label'], 'gejala' : field['idattribute'], 'cf' : field['cfrules'], 'idsolutions' : field['idsolutions']})
+  
+  for i in range(len(knowledge)):
+        for j in range(len(knowledge[i]['gejala'])):
+            for k in range(len(jawaban_user)):
+                if knowledge[i]['gejala'][j] == jawaban_user[k]['gejala']:
+                    if len(kemungkinanpenyakits) == 0:
+                       kemungkinanpenyakits.append({ 'idpenyakit' : knowledge[i]['idpenyakit'], 'idgejala' : [knowledge[i]['gejala'][j]], 'cfuser' : [jawaban_user[k]['cfuser']], 'cfrule' : [knowledge[i]['cf'][j]], 'idsolutions' : knowledge[i]['idsolutions'], 'cfperkalian' : []  })
+                    else:
+                        for l in range(len(kemungkinanpenyakits)):
+                            if kemungkinanpenyakits[l]['idpenyakit'] == knowledge[i]['idpenyakit']:
+                                kemungkinanpenyakits[l]['idgejala'].append(knowledge[i]['gejala'][j])
+                                kemungkinanpenyakits[l]['cfuser'].append(jawaban_user[k]['cfuser'])
+                                kemungkinanpenyakits[l]['cfrule'].append(knowledge[i]['cf'][j]) 
+                                kemungkinanpenyakits[l]['idsolutions'] = knowledge[i]['idsolutions']
+                            elif kemungkinanpenyakits[l-1]['idpenyakit'] != knowledge[i]['idpenyakit']:
+                                kemungkinanpenyakits.append({ 'idpenyakit' : knowledge[i]['idpenyakit'], 'idgejala' : [knowledge[i]['gejala'][j]], 'cfuser' : [jawaban_user[k]['cfuser']], 'cfrule' : [knowledge[i]['cf'][j]], 'idsolutions' : knowledge[i]['idsolutions'], 'cfperkalian' : []  })
+  for y in range(len(kemungkinanpenyakits)):
+    if len(kemungkinanpenyakit) == 0:
+      kemungkinanpenyakit.append({ 'idpenyakit' : kemungkinanpenyakits[0]['idpenyakit'], 'idgejala' : kemungkinanpenyakits[0]['idgejala'], 'cfuser' : kemungkinanpenyakits[0]['cfuser'], 'cfrule' : kemungkinanpenyakits[0]['cfrule'], 'idsolutions' : kemungkinanpenyakits[0]['idsolutions'], 'cfperkalian' : []  })
+    else:
+      if kemungkinanpenyakits[y-1]['idpenyakit'] != kemungkinanpenyakits[y]['idpenyakit']:
+         kemungkinanpenyakit.append({ 'idpenyakit' : kemungkinanpenyakits[y]['idpenyakit'], 'idgejala' : kemungkinanpenyakits[y]['idgejala'], 'cfuser' : kemungkinanpenyakits[y]['cfuser'], 'cfrule' : kemungkinanpenyakits[y]['cfrule'], 'idsolutions' : kemungkinanpenyakits[y]['idsolutions'], 'cfperkalian' : []  })
+  print("tahap 1 selesai \n")
+  
+  # tahap 2
+  for m in range(len(kemungkinanpenyakit)):
+        for n in range(len(kemungkinanpenyakit[m]['idgejala'])):
+            hasilkali = float(kemungkinanpenyakit[m]['cfuser'][n]) *  float(kemungkinanpenyakit[m]['cfrule'][n])
+            kemungkinanpenyakit[m]['cfperkalian'].append(hasilkali)
+  for z in range(len(kemungkinanpenyakit)):
+      print(kemungkinanpenyakit[z]['idpenyakit'])
+  print("tahap 2 selesai \n")
+  
+  # tahap 3
+  for p in range(len(kemungkinanpenyakit)):
+        cfold = 0.0
+        for q in range(len(kemungkinanpenyakit[p]['idgejala'])):
+            if (len(kemungkinanpenyakit[p]['idgejala'])>=2):
+                if (q <= len(kemungkinanpenyakit[p]['idgejala'])-2):
+                    cfold =  float(kemungkinanpenyakit[p]['cfperkalian'][q] + kemungkinanpenyakit[p]['cfperkalian'][q+1] * (1 - kemungkinanpenyakit[p]['cfperkalian'][q]))
+                    hasil_penyakit.append({'id_penyakit' : kemungkinanpenyakit[p]['idpenyakit'], 'cf' : cfold, 'idsolutions' : kemungkinanpenyakit[p]['idsolutions'] })
+            else :
+                cfold =  float(kemungkinanpenyakit[p]['cfperkalian'][q] )
+                hasil_penyakit.append({'id_penyakit' : kemungkinanpenyakit[p]['idpenyakit'], 'cf' : cfold, 'idsolutions' : kemungkinanpenyakit[p]['idsolutions'] })
+  s=0
+  for r in range(len(hasil_penyakit)):        
+      if (r == 0):
+          hasil_penyakit_final.append({'id_penyakit' : hasil_penyakit[r]['id_penyakit'], 'cf' : hasil_penyakit[r]['cf'], 'idsolution' : hasil_penyakit[r]['idsolutions'] })
+      else:
+          if (hasil_penyakit[r]['cf'] > hasil_penyakit_final[r-(1+s)]['cf']):
+              hasil_penyakit_final[r-(1+s)]['id_penyakit'] = hasil_penyakit[r]['id_penyakit']
+              hasil_penyakit_final[r-(1+s)]['cf'] = hasil_penyakit[r]['cf']
+              hasil_penyakit_final[r-(1+s)]['idsolution'] = hasil_penyakit[r]['idsolutions']
+              s+=1
+          else:
+              s+=1
+  for field in col_solusi.find():
+    solusi.append({'_id' : str(field['_id']), 'labelIdentity' : field['labelIdentity'], 'treatment' : field['treatment'], 'prevention' : field['prevention']})
+  for x in range(len(solusi)):
+    if(solusi[x]['_id'] == hasil_penyakit_final[0]['idsolution']):
+      hasil_treatment = solusi[x]['treatment']
+      hasil_prevention = solusi[x]['prevention']
+  
+  attributes2 = []
+  for i in jawaban_users:
+    attributes2.append({
+      "namaAttributes" : i['gejala'],
+      "nilai" : i['cfuser'],
+      "true" : 1
+    })
+  
+  print("\ntahap 3 selesai \n")
+  responses = response()
+  diagnose_insert = {
+    "sapiId" : ObjectId(sapi_id),
+    "diagnose" : hasil_penyakit_final[0]['id_penyakit'],
+    "gejala" : attributes2, 
+    "nilai" : float(hasil_penyakit_final[0]['cf']),
+    "tanggal" : datetime.now(),
+    "treatment" : hasil_treatment,
+    "prevention" : hasil_prevention
+  }
+  print(diagnose_insert)
+  responses.setStatus(True)
+  mongo.db.diagnoses.insert_one(diagnose_insert)
+  responses.setData(diagnose_insert)
+  return jsonify(responses.getResponse())
+  # except:
+  #   jawaban_user_error = request.get_json()
+  #   print(jawaban_user_error)
+  #   responses = response()
+  #   responses.setStatus(False)
+  #   responses.setMessage("Something wrong :(")
+  #   return jsonify(responses.getResponse())
     
-    Z_test = pd.DataFrame(data=model_testing)
-    with open("pickle_model.pkl", 'rb') as file:
-      pickle_model = pickle.load(file)
-    
-    result = pickle_model.predict(Z_test)
-    responses = response()
-    responses.setStatus(True)
-    # responses.setData(labels[result[0]])
-    # Save
-    attributes2 = []
-    for i in model_for_saving:
-      attributes2.append({
-        "namaAttributes" : i,
-        "nilai" : model_for_saving[i]
-      })
-    res = labels[result[0]]
-    solu = get_solutions(int(result[0]))
-    diagnose_insert = {
-      "sapiId" : ObjectId(sapi_id),
-      "diagnose" : res,
-      "gejala" : attributes2, 
-      "tanggal" : datetime.now(),
-      "treatment" : solu[0]["treatment"],
-      "prevention" : solu[0]["prevention"]
-    }
-    mongo.db.diagnoses.insert_one(diagnose_insert)
-    responses.setData(diagnose_insert)
-    return jsonify(responses.getResponse())
+  # try:
+  #   model_testing = {}
+  #   model_for_saving = {}
+  #   attributes = get_features()
+  #   labels = get_label()
+  #   d = request.get_json()
+  #   headers = request.args
+  #   sapi_id = headers['sapi']
 
-  except:
-    responses = response()
-    responses.setStatus(False)
-    responses.setMessage("Something wrong :(")
-    return jsonify(responses.getResponse())
+  #   for i in range(len(attributes)):
+  #     model_testing.update({attributes[i]:[d.get(attributes[i])]})
+  #     model_for_saving.update({attributes[i]:d.get(attributes[i])})
+    
+  #   Z_test = pd.DataFrame(data=model_testing)
+  #   with open("pickle_model.pkl", 'rb') as file:
+  #     pickle_model = pickle.load(file)
+    
+  #   result = pickle_model.predict(Z_test)
+  #   responses = response()
+  #   responses.setStatus(True)
+  #   # responses.setData(labels[result[0]])
+  #   # Save
+  #   attributes2 = []
+  #   for i in model_for_saving:
+  #     attributes2.append({
+  #       "namaAttributes" : i,
+  #       "nilai" : model_for_saving[i]
+  #     })
+  #   res = labels[result[0]]
+  #   solu = get_solutions(int(result[0]))
+  #   diagnose_insert = {
+  #     "sapiId" : ObjectId(sapi_id),
+  #     "diagnose" : res,
+  #     "gejala" : attributes2, 
+  #     "tanggal" : datetime.now(),
+  #     "treatment" : solu[0]["treatment"],
+  #     "prevention" : solu[0]["prevention"]
+  #   }
+  #   mongo.db.diagnoses.insert_one(diagnose_insert)
+  #   responses.setData(diagnose_insert)
+  #   return jsonify(responses.getResponse())
+
+  # except:
+  #   responses = response()
+  #   responses.setStatus(False)
+  #   responses.setMessage("Something wrong :(")
+    # return jsonify(responses.getResponse())
 
 @app.route('/api/intelligent/all_attributes', methods=['GET'])
 def get_all_attributes():
@@ -253,7 +379,8 @@ def get_all_attributes():
     output = []
     for s in attribut.find():
       output.append(
-        {
+        { 
+          'idAttribute' : s['_id'],
           'namaAttribute' : s['namaAttribute'], 
           'attributeIdentitiy': s['attributeIdentitiy']
         })
@@ -356,7 +483,7 @@ def get_all_gejala():
               'total': {
                   '$sum': {
                       '$multiply': [
-                          '$gejala.nilai'
+                          '$gejala.true'
                       ]
                   }
               }
@@ -393,7 +520,7 @@ def get_all_gejala_limit():
               'total': {
                   '$sum': {
                       '$multiply': [
-                          '$gejala.nilai'
+                          '$gejala.true'
                       ]
                   }
               }
@@ -454,7 +581,7 @@ def get_all_gejala_in_time():
               'total': {
                   '$sum': {
                       '$multiply': [
-                          '$gejala.nilai'
+                          '$gejala.true'
                       ]
                   }
               }
@@ -509,7 +636,7 @@ def get_all_gejala_in_time_limit():
               'total': {
                   '$sum': {
                       '$multiply': [
-                          '$gejala.nilai'
+                          '$gejala.true'
                       ]
                   }
               }

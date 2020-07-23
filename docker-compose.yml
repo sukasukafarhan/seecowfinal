@@ -6,16 +6,16 @@
 
 version: '2'
 services:
-  authentication-service:
-    container_name: auth-container
+  authentication-services:
+    container_name: auth-containers
     build: ./auth/
     ports:
       - 3000:3000
     links:
       - mongo
 
-  sensor-server-service:
-    container_name: sensor-server-container
+  sensor-server-services:
+    container_name: sensor-server-containers
     build: ./sensor_server/
     ports:
       - 3001:3000
@@ -23,8 +23,8 @@ services:
       - mongo
   
 
-  expert-system-service:
-    container_name: expert-system-container
+  expert-system-services:
+    container_name: expert-system-containers
     build: ./expert_system/modules/
     # volumes:
     #   - ./expert_system/modules/static:/static
@@ -38,19 +38,20 @@ services:
       - DB=mongodb://mongo:27017/seecow_db
       - SECRET=nodeauthsecret
      
-  frontend-service:
-    container_name: frontend-container
+  frontend-services:
+    container_name: frontend-containers
     build: ./frontend/coreui/
     ports:
       - 8080:8080
   
   mongo:  
     image: mvertes/alpine-mongo
-    container_name: mongo-container
+    container_name: mongos-containers
     volumes:
       - ./mongo-db/mongo-data:/data/db
     ports:
       - "27017:27017"
+    # restart: always
       
   # portainer:  
   #     image: portainer/portainer

@@ -129,7 +129,7 @@ export default {
       const response = await PostsService.addPost({
                           username: this.username,
                           password: this.password,
-                          role: 2,
+                          role: 1,
                           nama:this.nama,
                           alamat:this.alamat,
                           telp: this.telp

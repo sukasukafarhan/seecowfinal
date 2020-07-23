@@ -126,12 +126,12 @@ export default {
       showDismissibleAlert: false,
       //====alert=====
       //  ===== pie chart ===
-      backgroundPie: ["#41B883", "#f4aa42", "#00D8FF", "#DD1B16"],
+      backgroundPie: ["#41B883", "#f4aa42", "#00D8FF", "#DD1B16", "#169ec7", "#fff387", "#f263b2", "#abfffb", "#fcb272", "#de358c"],
       labelPie: [],
       dataPie: [],
       // ==== pie chart ===
       //  ===== bar chart ===
-      backgroundBar: ["#41B883", "#f4aa42", "#00D8FF", "#DD1B16"],
+      backgroundBar: ["#41B883", "#f4aa42", "#00D8FF", "#DD1B16", "#169ec7", "#fff387", "#f263b2", "#abfffb", "#fcb272", "#de358c"],
       labelBar: [],
       dataBar: [],
       // ==== bar chart ===
